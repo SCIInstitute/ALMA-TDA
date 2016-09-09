@@ -1,22 +1,22 @@
 /*
- *     ALMA TDA - Contour tree based simplification and visualization for ALMA 
+ *     ALMA TDA - Contour tree based simplification and visualization for ALMA
  *     data cubes.
  *     Copyright (C) 2016 PAUL ROSEN
- *     
+ *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
- *     
+ *
  *     This program is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
- *     
+ *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *     
- *     You may contact the Paul Rosen at <prosen@usf.edu>. 
+ *
+ *     You may contact the Paul Rosen at <prosen@usf.edu>.
  */
 package usf.saav.alma.algorithm.mesh;
 
@@ -29,7 +29,7 @@ import usf.saav.common.algorithm.DisjointSet1D;
 
 public class ConnectedComponentMesh extends Mesh {
 	private static final long serialVersionUID = 8258598594472055291L;
-	
+
 	private DisjointSet1D djs;
 	private Vector<ConnectedComponent> tmpVec;
 
@@ -40,14 +40,14 @@ public class ConnectedComponentMesh extends Mesh {
 			float v0 = oldComp.get(i).value();
 			for( int n : oldComp.get(i).neighbors() ){
 				float v1 = oldComp.get(n).value();
-						
+
 				if( v0 == v1 ){
 					djs.union(i, n);
 				}
 				if( Float.isNaN(v0) && Float.isNaN(v1) ){
 					djs.union(i, n);
 				}
-				
+
 			}
 		}
 
@@ -69,20 +69,20 @@ public class ConnectedComponentMesh extends Mesh {
 	public class ConnectedComponent extends Vector<Vertex> implements Vertex {
 		private static final long serialVersionUID = -4014406590124257973L;
 		private int id;
-		
+
 		ConnectedComponent( int id, Vertex c ){
 			this.id = id;
-			add(c);				
+			add(c);
 		}
-		
+
 		@Override
 		public float value() {
 			return get(0).value();
 		}
-		
+
 		@Override
 		public int[] neighbors() {
-			Set<Integer> set = new HashSet<Integer>(); 
+			Set<Integer> set = new HashSet<Integer>();
 			for( Vertex c : this ){
 				for(int n : c.neighbors()){
 					set.add(tmpVec.get(n).id);
@@ -109,6 +109,4 @@ public class ConnectedComponentMesh extends Mesh {
 			return id;
 		}
 	}
-
-
 }
