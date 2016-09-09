@@ -73,8 +73,6 @@ public abstract class AugmentedJoinTree extends BasicObject implements Persisten
 	}
 	
 
-	
-	//abstract protected TreeNodeType findChild( JoinTreeNode current );
 	protected void calculatePersistence(){
 		print_info_message( "Finding Persistence");
 
@@ -121,25 +119,6 @@ public abstract class AugmentedJoinTree extends BasicObject implements Persisten
 				
 				}
 			}
-			/*
-			NodeType type = cnode.getType();
-			if( type == NodeType.MERGE && cnode.partner == null ){
-				System.out.println("uncancelled merge " + cnode.getLocation() );
-				return false; 
-			}
-			if( type == NodeType.SPLIT && cnode.partner == null ){
-				System.out.println("uncancelled merge " + cnode.getLocation() );
-				return false; 
-			}
-			if( type == NodeType.LEAF_MIN && cnode.partner == null ){
-				if( partner == null || cnode.value > partner.value )
-					partner = cnode;
-			}
-			if( type == NodeType.LEAF_MAX && cnode.partner == null ){
-				if( partner == null || cnode.value < partner.value )
-					partner = cnode;
-			}
-			*/
 			
 			wq.addAll( cnode.getChildren() );
 		}
@@ -191,11 +170,6 @@ public abstract class AugmentedJoinTree extends BasicObject implements Persisten
 		print_warning_message( "Error, split with " + current.childCount() + " children" );
 		return null;
 	}
-	
-	
-	
-	
-	
 	
 	public AugmentedJoinTreeNode getGlobalExtreme(){ return global_extreme; }
 

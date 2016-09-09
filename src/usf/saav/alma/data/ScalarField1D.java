@@ -56,9 +56,5 @@ public interface ScalarField1D extends ScalarFieldND, Surface1D {
 			if( nodeID > 0 && nodeID == (w-1) ) return new int[]{nodeID-1};
 			return new int[]{};
 		}
-
-		
 	}
-	
-	
 }

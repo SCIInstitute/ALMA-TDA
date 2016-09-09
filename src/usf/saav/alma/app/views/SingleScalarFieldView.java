@@ -168,9 +168,7 @@ public class SingleScalarFieldView {
 			
 			super.update();
 		}
-
 	}
-
 
 
 	public class Controller  extends ControllerComponent.Subcontroller implements ControllerComponent {
@@ -192,7 +190,6 @@ public class SingleScalarFieldView {
 			ctv.setCoordinateSystem( model.csCont );
 
 			model.csCont.addTranslationCallback( sfv, "setTranslation" );
-			//model.csCont.addTranslationCallback( ctv, "setTranslation" );
 
 			model.simp_sf2d.addMonitor( this, "simp_sf2d_update" );
 			model.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
@@ -249,8 +246,6 @@ public class SingleScalarFieldView {
 			}
 		}
 		
-		
-
 
 		public void update() {
 			if( !isEnabled() ) return;
@@ -316,8 +311,6 @@ public class SingleScalarFieldView {
 			}
 			view_sf3d.set( sf3D );
 
-
-
 			// update the color maps
 			if( COLORMAP_GLOBAL ){
 				double [] r = view_sf2d.get().getValueRange();
@@ -335,7 +328,6 @@ public class SingleScalarFieldView {
 			else{
 				colormap.setRange( new FloatRange1D( view_sf2d.get().getValueRange() ) );
 			}
-
 		}
 
 
@@ -344,8 +336,5 @@ public class SingleScalarFieldView {
 			if( super.keyPressed(key) ) return true;
 			return false;
 		}
-
-
-
 	}
 }

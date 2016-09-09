@@ -44,6 +44,4 @@ public class SplitTreeNode extends AugmentedJoinTreeNode {
 			return new SplitTreeNode(loc,val,c0,c1);
 		}
 	}
-	
-	
 }

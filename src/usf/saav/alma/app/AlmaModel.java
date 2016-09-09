@@ -87,8 +87,6 @@ public class AlmaModel extends ModelComponent.Default implements ModelComponent 
 		@Override protected Class<?> getClassType() { return Set.class; } 
 	};
 	
-	
-	
 	FitsReader reader; 
 
 	public AlmaGui gui;
@@ -99,7 +97,6 @@ public class AlmaModel extends ModelComponent.Default implements ModelComponent 
 	public SelectBoxDrawing sel;
 	
 
-	
 	public AlmaModel( AlmaTDADev mvc, String filename ){
 
 		try {
@@ -137,14 +134,7 @@ public class AlmaModel extends ModelComponent.Default implements ModelComponent 
 
 	}
 	
-
-
-
-
-	
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "usf.saav.alma.app.AlmaTDADev" });
 	}
-
-
 }

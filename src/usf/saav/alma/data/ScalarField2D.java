@@ -37,7 +37,6 @@ public interface ScalarField2D extends ScalarFieldND, Surface2D {
 	
 	PImage toPImage( PApplet papplet, Colormap colormap );
 	
-	
 	public abstract class Default extends ScalarFieldND.Default implements ScalarField2D {
 
 		protected Default( ){ }
@@ -97,11 +96,7 @@ public interface ScalarField2D extends ScalarFieldND, Surface2D {
 			}
 			return img;
 		}
-
-		
 	}	
-	
-	
 	
 	public class Empty extends ScalarField2D.Default {
 		int w,h;
@@ -122,8 +117,7 @@ public interface ScalarField2D extends ScalarFieldND, Surface2D {
 		@Override public float getValue(int x, int y) { return default_val; }
 	}
 	
-	
-	
+
 	public class Test extends Default {
 		
 		float [] data;
@@ -154,8 +148,5 @@ public interface ScalarField2D extends ScalarFieldND, Surface2D {
 		public float getValue(int x, int y) {
 			return data[y*width+x];
 		}
-		
 	}
-
-
 }

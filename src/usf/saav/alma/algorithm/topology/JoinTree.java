@@ -32,19 +32,12 @@ import usf.saav.common.algorithm.DisjointSet1D;
 
 public class JoinTree implements Runnable {
  
-	/***
-	 ***
-	 *** This section is for public functions and variables	
-	 ***
-	 ***/
-
 	private Comparator<? super JoinTreeNode> comparator;
 	private Mesh sf;
 	private int size;
 	private JoinTreeNode head;
 	private JoinTreeNode [] grid;
 	protected boolean operationComplete = false;
-	
 
 	public JoinTree( Mesh sf ) {
 		this.sf = sf;
@@ -108,15 +101,6 @@ public class JoinTree implements Runnable {
 		
 	}
 	
-
-	
-	/***
-	 ***
-	 *** This section is for private functions and variables
-	 ***	
-	 ***/
-
-	
 	private void init_grid( JoinTreeNode node ) {
 		// set node to grid an recurse
 		Queue< JoinTreeNode > queue = new LinkedList< JoinTreeNode >( );
@@ -156,13 +140,6 @@ public class JoinTree implements Runnable {
 
 	}
 	
-	
-
-	/***
-	 ***
-	 *** Main function for testing algorithm
-	 ***	
-	 ***/
 	public static void main( String args[] ){
 		usf.saav.alma.data.ScalarField2D sf = new usf.saav.alma.data.ScalarField2D.Test( 10, 10 );
 		JoinTree jt = new JoinTree( new ScalarFieldMesh( sf ) );
@@ -172,5 +149,3 @@ public class JoinTree implements Runnable {
 
 	
 }
-
-

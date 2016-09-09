@@ -26,7 +26,6 @@ import processing.core.PApplet;
 
 public class AlmaTDARelease extends AlmaTDADev {
 
-
 	public AlmaTDARelease( ){ super(false); }
 
 
@@ -42,8 +41,6 @@ public class AlmaTDARelease extends AlmaTDADev {
 			load( selection.getAbsolutePath() );
 		}
 	}
-
-
 
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "usf.saav.alma.app.AlmaTDARelease" });

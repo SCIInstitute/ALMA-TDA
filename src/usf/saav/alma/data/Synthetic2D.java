@@ -31,7 +31,6 @@ public abstract class Synthetic2D extends Default {
 		this.height = height;
 	}
 	
-	
 	@Override
 	public int getWidth() {
 		return width;
@@ -81,8 +80,6 @@ public abstract class Synthetic2D extends Default {
 			}
 			return (float) val;
 		}
-		
 	}
-
 }
 
