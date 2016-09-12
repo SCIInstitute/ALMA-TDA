@@ -29,7 +29,6 @@ public class AlmaView extends ViewComponent.Subview implements ViewComponent, Po
 	
 	private AlmaTDADev mvc;
 
-	
 	public AlmaView( AlmaTDADev mvc ){ 	
 		this.mvc = mvc;
 	}
@@ -74,9 +73,6 @@ public class AlmaView extends ViewComponent.Subview implements ViewComponent, Po
 			break;
 		}
 	}
-	
-
-
 	
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "usf.saav.alma.app.AlmaTDADev" });

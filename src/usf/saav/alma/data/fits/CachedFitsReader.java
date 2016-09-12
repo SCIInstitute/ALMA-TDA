@@ -89,10 +89,7 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			
 		}
-
 	}
 	
 	private long getOffset( int x, int y, int z ){
@@ -100,8 +97,6 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 			return page_size_elems + sliceOffset*z + partition.getOrdered2( x,  y );
 		return page_size_elems + sliceOffset*z + y*sy + x;
 	}
-	
-	
 	
 	private void loadSlice( int z ) throws IOException {
 		if( cache.get(z) == z ){

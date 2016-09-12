@@ -38,7 +38,6 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 	}
 	
 	@Override public File getFile() { return reader.getFile(); }
-	
 
 	@Override
 	public IntRange1D[] getAxesSize() {
@@ -97,10 +96,6 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		return new SafeVolume( x_range, y_range, z_range, w );
 	}
 	
-	
-	
-	
-	
 	class SafeVolume extends ScalarField3D.Default {
 
 		ScalarField3D baseVolume;
@@ -115,7 +110,6 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 			rx = x_range;
 			ry = y_range;
 			rz = z_range;
-			//w  = w;
 			
 			IntRange1D subVolRX;
 			IntRange1D subVolRY;
@@ -147,10 +141,7 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 			if( z < oz || z >= ez ) return Float.NaN;
 			return baseVolume.getValue(x-ox, y-oy, z-oz);
 		}
-
 	}
-	
-	
 
 	class SafeSlice extends ScalarField2D.Default {
 
@@ -192,10 +183,5 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 			if( y < oy || y >= ey ) return Float.NaN;
 			return baseSlice.getValue(x-ox, y-oy);
 		}
-
 	}
-	
-	
-	
-	
 }

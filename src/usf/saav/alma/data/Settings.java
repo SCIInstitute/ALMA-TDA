@@ -73,10 +73,6 @@ public class Settings extends BasicObject {
 		return new SettingsDouble( name, default_value );
 	}
 	
-	
-	
-	
-	
 	private void serialize(){
 		try {
 			PrintWriter pw = new PrintWriter( filename );
@@ -86,9 +82,6 @@ public class Settings extends BasicObject {
 			print_error_message("Serialization failed");
 		}
 	}
-	
-	
-	
 	
 	public class SettingsInt extends MonitoredInteger {
 		IntRange1D range = null;
@@ -119,9 +112,7 @@ public class Settings extends BasicObject {
 				serialize();
 			}
 		}
-		
 	}
-	
 	
 	public class SettingsDouble extends MonitoredDouble  {
 		private FloatRange1D range;
@@ -150,9 +141,5 @@ public class Settings extends BasicObject {
 				serialize();
 			}
 		}
-
 	}
-	
-	
-	
 }

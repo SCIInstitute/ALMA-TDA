@@ -23,7 +23,6 @@ package usf.saav.alma.algorithm.topology;
 import usf.saav.alma.algorithm.mesh.Mesh;
 
 public class SplitTree extends AugmentedJoinTree {
-
 	
 	/**
 	 * Default Split Tree constructor.
@@ -33,16 +32,4 @@ public class SplitTree extends AugmentedJoinTree {
 	public SplitTree( Mesh sf ){
 		super(sf, new JoinTreeNode.ComparatorValueDescending(), new SplitTreeNode.Factory() );
 	}
-	
-
-
-	
-
-	
-
-
-	
-
-	
-	
 }

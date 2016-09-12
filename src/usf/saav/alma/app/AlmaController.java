@@ -46,12 +46,10 @@ import usf.saav.common.range.IntRange1D;
 
 public class AlmaController extends ControllerComponent.Subcontroller implements ControllerComponent {
 
-	
 	ExecutorService threadPool = Executors.newFixedThreadPool(4);
 	
 	ViewMode viewmode = ViewMode.SCALARFIELD;
 
-	
 	boolean need2DSrcRefresh = true;
 	boolean need3DSrcRefresh = true;
 	boolean needSimpRefresh = true;
@@ -60,8 +58,6 @@ public class AlmaController extends ControllerComponent.Subcontroller implements
 
 	private DefaultApp<?,?,?> mvc;
 	private AlmaModel model;
-
-
 
 	public AlmaController( DefaultApp<?,?,?> mvc, AlmaModel _model, boolean verbose ) {
 		super(verbose);
@@ -101,7 +97,6 @@ public class AlmaController extends ControllerComponent.Subcontroller implements
 		model.gui.monBuildTree.addMonitor( this, "buildContourTree" );
 
 		super.setup();
-
 	}
 
 	
@@ -183,7 +178,6 @@ public class AlmaController extends ControllerComponent.Subcontroller implements
 			model.pss.set( pss );
 		}
 	}
-
 
 	
 	private void refresh2DSourceSF( ){ 
@@ -277,7 +271,6 @@ public class AlmaController extends ControllerComponent.Subcontroller implements
 	}
 	
 	
-
 	private void refreshSimplifiedSF2D( ){ 
 		
 		model.cur_ctt.set( model.ctt_map.containsKey( model.curZ.get() ) ? model.ctt_map.get( model.curZ.get() ) : null );
@@ -328,9 +321,7 @@ public class AlmaController extends ControllerComponent.Subcontroller implements
 			}
 		}
 		model.simp_sf3d.set(stack);
-
 	}
-
 
 	
 	@Override
@@ -347,10 +338,7 @@ public class AlmaController extends ControllerComponent.Subcontroller implements
 		return false;
 	}
 
-
-
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "usf.saav.alma.app.AlmaTDADev" });
 	}
-
 }

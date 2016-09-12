@@ -33,12 +33,6 @@ public interface ScalarField3D extends ScalarFieldND, Surface3D {
 	public float getValue( int x, int y, int z );
 
 	double [] getCoordinate( int x, int y, int z );
-
-	//public ScalarField1D getLine( int x, int y );
-	//public ScalarField1D getColumn( int x, int z );
-	//public ScalarField1D getRow( int y, int z );
-
-	//public ScalarField2D getSlice( int z );
 	
 	public class Empty extends ScalarField3D.Default {
 		int w,h,d;
@@ -75,7 +69,6 @@ public interface ScalarField3D extends ScalarFieldND, Surface3D {
 			
 			int width = getWidth();
 			int height = getHeight();
-			//int depth = getDepth();
 			
 			int x = nodeID%width;
 			int y = (nodeID%(width*height))/width;
@@ -96,7 +89,6 @@ public interface ScalarField3D extends ScalarFieldND, Surface3D {
 			int x = slcOff%width;
 			int y = slcOff/width;
 			int z = slc;
-					
 			
 			int [] ret = new int[26];
 			int cur = 0;
@@ -114,7 +106,5 @@ public interface ScalarField3D extends ScalarFieldND, Surface3D {
 			if( cur == ret.length ) return ret;
 			return Arrays.copyOf( ret, cur );
 		}
-
-
 	}
 }

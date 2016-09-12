@@ -35,7 +35,6 @@ public class PseudoContourTree implements PersistenceSet {
 	public PseudoContourTree( Mesh sf ){
 		System.out.println("[ContourTree] Building Contour Tree");
 		
-		
 		this.mt = new MergeTree(sf);
 		this.st = new SplitTree(sf);
 		

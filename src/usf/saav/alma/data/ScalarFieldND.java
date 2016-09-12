@@ -50,7 +50,5 @@ public interface ScalarFieldND {
 			}
 			return new double[]{min,max};
 		}
-		
-		
 	}
 }

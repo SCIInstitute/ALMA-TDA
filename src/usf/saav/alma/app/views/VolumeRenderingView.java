@@ -71,7 +71,6 @@ public class VolumeRenderingView {
 
 	public class View extends ViewComponent.Subview implements ViewComponent, PositionedComponent {
 
-
 		public void setup() {
 			registerSubView( vr,     25 );
 			registerSubView( tf1d,   26 );
@@ -92,8 +91,6 @@ public class VolumeRenderingView {
 			rangeLabel.setPosition( winX.start()+10, winY.end()-40, 20, 20 );
 
 		}
-
-
 	}
 
 
@@ -101,7 +98,6 @@ public class VolumeRenderingView {
 		public Controller( boolean verbose ) {
 			super(verbose);
 		}
-		
 
 		public void setup( ){
 			
@@ -115,7 +111,6 @@ public class VolumeRenderingView {
 			view_sf3d.addMonitor( tf1d, "setData" );
 			
 			super.setup();
-
 		}
 		
 		boolean needUpdate = true;
@@ -124,27 +119,17 @@ public class VolumeRenderingView {
 			needUpdate = true;
 		}
 		
-
-
 		public void update() {
 			if( !isEnabled() ) return;
-			
 			if( needUpdate ) refreshViewSF( );
-
 			needUpdate = false;
-
-
 			super.update();
 		}
 
-
 		private void refreshViewSF( ){ 
 			boolean showSimplified = model.gui.monShowSimp.get();
-
 			ScalarField3D sf3D = ((showSimplified)?(model.simp_sf3d):(model.src_sf3d)).get();
-
 			view_sf3d.set( sf3D );
 		}
-		
 	}
 }

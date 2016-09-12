@@ -166,9 +166,6 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 	public File getFile( ){ return file; }
 
-
-
-
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A SINGLE ELEMENT FROM THE DATA            //
 	/////////////////////////////////////////////////////////////////////
@@ -225,9 +222,6 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		return new FitsVolume(x_range, y_range, z_range, w);
 	}	
 
-
-
-
 	/////////////////////////////////////////////////////////////////////
 	// INTERNAL FUNCTIONS TO FORM DATA QUERY                           //
 	/////////////////////////////////////////////////////////////////////
@@ -239,26 +233,16 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		return new int[]{sw,sz,sy,sx};
 	}
 
-
-
-
 	class FitsRow extends ScalarField1D.Default {
 
 		float [] data;
 		int x0 = 0;
 
 		public FitsRow(IntRange1D x, int y, int z, int w) throws IOException {
-			/*
-			this.x0 = x_range[0];
-			int xN = x_range[1]-x0+1;
-			data = (float[]) tiler.getTile( new int[]{w,z,y,x0}, new int[]{1,1,1,xN} );
-			 */
-
 			data = (float[]) tiler.getTile( 
 					tilePosition( x.start(), y, z, w ), 
 					tileSize( x.length(), 1, 1, 1 ) 
 					);
-
 		}
 
 		@Override 
@@ -269,7 +253,6 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
 		@Override public float getValue(int nodeID) { return data[nodeID]; }
-
 	}
 
 	class FitsColumn extends ScalarField1D.Default {
@@ -278,12 +261,6 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		int y0 = 0;
 
 		public FitsColumn(int x, IntRange1D y, int z, int w) throws IOException {
-			/*
-			this.y0 = y_range[0];
-			int yN = y_range[1]-y0+1;
-			data = (float[]) tiler.getTile( new int[]{w,z,y0,x}, new int[]{1,1,yN,1} );
-			 */
-
 			data = (float[]) tiler.getTile( 
 					tilePosition( x, y.start(), z, w ), 
 					tileSize( 1, y.length(), 1, 1 ) 
@@ -299,7 +276,6 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
 		@Override public float getValue(int nodeID) { return data[nodeID]; }
-
 	}
 
 	class FitsLine extends ScalarField1D.Default {
@@ -308,12 +284,6 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		int z0 = 0;
 
 		public FitsLine(int x, int y, IntRange1D z, int w) throws IOException {
-			/*
-			this.z0 = z_range[0];
-			int zN = z_range[1]-z0+1;
-			data = (float[]) tiler.getTile( new int[]{w,z0,y,x}, new int[]{1,zN,1,1} );
-			 */
-
 			data = (float[]) tiler.getTile( 
 					tilePosition( x, y, z.start(), w ), 
 					tileSize( 1, 1, z.length(), 1 ) 
@@ -328,7 +298,6 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
 		@Override public float getValue(int nodeID) { return data[nodeID]; }
-
 	}
 
 
@@ -375,7 +344,6 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 					tilePosition( x.start(), y.start(), z.start(), w ), 
 					tileSize( x.length(), y.length(), z.length(), 1 ) 
 					);
-
 		}
 
 		@Override

@@ -81,13 +81,6 @@ public class JoinTreeNode {
 				if( !curr.hasChildren() ) leaf_list.add(curr);
 				work_queue.addAll( curr.children );
 			}
-
-			/*
-			if( !hasChildren() )
-				leaf_list.add(this);
-			for( TreeNode c : children )
-				c.findLeaves( leaf_list );
-			*/
 		}
 		
 		public void print( boolean recursive ){
@@ -200,8 +193,4 @@ public class JoinTreeNode {
 			}
 			return ret;
 		}
-
-
-
-		
 }

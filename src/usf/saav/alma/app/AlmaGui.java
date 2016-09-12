@@ -94,9 +94,6 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 	private IFLabel guiLblSlice, guiLblVol;
 	
 
-	//IFHAlign alnZ0Z1;
-	
-
 	public AlmaGui( PApplet papplet, MonitoredInteger curZ, MonitoredInteger z0, MonitoredInteger z1 ){
 
 		super.setPosition( papplet.width-130, 0, 130, papplet.height );
@@ -159,7 +156,6 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 		guiMMNav.setSelected();
 
 		
-		
 		rcTree = new IFRadioController("Tree Type");
 		rcTree.addActionListener( this );
 		
@@ -191,7 +187,6 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 		c.add( guiSimpGrp  = new IFAutoFrameGroup( "Simplification", u0, v0, 40, 40 ) );
 		
 	}
-	
 	
 	
 	public void refreshVariables( ){
@@ -251,8 +246,6 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 	}
 	
 
-
-
 	private void setControlPositions(){
 		
 		int u0 = winX.start();
@@ -261,7 +254,6 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 		int height = winY.length();
 
 		guiBuildTree.setSize( width-50, 20 );		
-
 		
 		c.setPosition( u0, v0 );
 		c.setSize( width, height );
@@ -318,5 +310,4 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 		super.setPosition(u0, v0, w, h);
 		setControlPositions();
 	}
-
 }
