@@ -1,11 +1,8 @@
 package usf.saav.alma.drawing;
 
-import java.util.Arrays;
-
-import processing.core.PConstants;
-import processing.core.PGraphics;
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.spline.LinearSpline;
 import usf.saav.common.spline.Spline;
@@ -18,7 +15,7 @@ public class SpectralLineDrawing  extends ViewComponent.Default implements ViewC
 	public SpectralLineDrawing( ){
 	}
 	
-	public void setData( ScalarField1D sf ){
+	public void setData( final ScalarField1D sf ){
 		if( sf == null ){
 			line = null;
 		}
@@ -43,11 +40,11 @@ public class SpectralLineDrawing  extends ViewComponent.Default implements ViewC
 
 	
 	@Override
-	public void draw(PGraphics g) {
+	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
 		if( line == null ) return;
 
-		g.hint( PConstants.DISABLE_DEPTH_TEST );
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 		
 		g.strokeWeight(2);
 		g.stroke(0);
@@ -59,12 +56,12 @@ public class SpectralLineDrawing  extends ViewComponent.Default implements ViewC
 		line.setDrawingScale( 1, (1.0f/(float)yr.getRange()) );
 		line.draw(g);
 		
-		g.hint( PConstants.ENABLE_DEPTH_TEST );
+		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 
 		
 	}
 
-	@Override public void drawLegend(PGraphics g) { }
+	@Override public void drawLegend(TGraphics g) { }
 	
 	
 

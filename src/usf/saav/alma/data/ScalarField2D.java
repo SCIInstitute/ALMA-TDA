@@ -23,10 +23,10 @@ package usf.saav.alma.data;
 import java.util.Arrays;
 import java.util.Random;
 
-import processing.core.PApplet;
-import processing.core.PImage;
 import usf.saav.common.algorithm.Surface2D;
 import usf.saav.common.colormap.Colormap;
+import usf.saav.common.mvc.swing.TGraphics;
+import usf.saav.common.mvc.swing.TImage;
 import usf.saav.common.types.Float4;
 
 public interface ScalarField2D extends ScalarFieldND, Surface2D {
@@ -35,7 +35,7 @@ public interface ScalarField2D extends ScalarFieldND, Surface2D {
 	
 	double [] getCoordinate( int x, int y );
 	
-	PImage toPImage( PApplet papplet, Colormap colormap );
+	TImage toPImage( TGraphics g, Colormap colormap );
 	
 	
 	public abstract class Default extends ScalarFieldND.Default implements ScalarField2D {
@@ -85,13 +85,14 @@ public interface ScalarField2D extends ScalarFieldND, Surface2D {
 		}
 		
 		@Override
-		public PImage toPImage( PApplet papplet, Colormap colormap ){
-			PImage img = papplet.createImage( getWidth(), getHeight(), PApplet.RGB);
+		public TImage toPImage( TGraphics g, Colormap colormap ){
+			TImage img = g.createImage( getWidth(), getHeight(), TGraphics.RGB);
 			int i = 0;
 			for(int h = 0; h < getHeight(); h++){
 				for(int w = 0; w < getWidth(); w++){
 					Float4 c = colormap.getColor( getValue(i) );
-					img.pixels[i] = papplet.color(c.x*255,c.y*255,c.z*255,c.w*255);
+					img.set( w, h, c.x,c.y,c.z,c.w );
+					//img.pixels[i] = TGraphics.color(c.x,c.y,c.z,c.w);
 					i++;
 				}
 			}

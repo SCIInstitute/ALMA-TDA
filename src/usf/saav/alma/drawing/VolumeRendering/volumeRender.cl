@@ -35,13 +35,21 @@ int intersectBox(float4 r_o, float4 r_d, float4 boxmin, float4 boxmax, float *tn
     return smallest_tmax > largest_tmin;
 }
 
-uint rgbaFloatToInt(float4 rgba)
+uint argbFloatToInt(float4 rgba)
 {
+	/*
     rgba.x = clamp(rgba.x,0.0f,1.0f);
     rgba.y = clamp(rgba.y,0.0f,1.0f);
     rgba.z = clamp(rgba.z,0.0f,1.0f);
     rgba.w = clamp(rgba.w,0.0f,1.0f);
-    return ((uint)(rgba.w*255.0f)<<24) | ((uint)(rgba.z*255.0f)<<16) | ((uint)(rgba.y*255.0f)<<8) | (uint)(rgba.x*255.0f);
+    return ((uint)(rgba.w*255.0f)<<24) | ((uint)(rgba.z*255.0f)<<0) | ((uint)(rgba.y*255.0f)<<8) | ((uint)(rgba.x*255.0f)<<16);
+    */
+
+    return    (clamp((uint)(rgba.x*255.0f),0,255) << 16)
+    		| (clamp((uint)(rgba.y*255.0f),0,255) << 8 )
+			| (clamp((uint)(rgba.z*255.0f),0,255) << 0 )
+			| (clamp((uint)(rgba.w*255.0f),0,255) << 24);
+
 }
 
 __kernel void
@@ -121,7 +129,7 @@ d_render(__global uint *d_output,
     if ((x < imageW) && (y < imageH)) {
         // write output color
         uint i =(y * imageW) + x;
-        d_output[i] = rgbaFloatToInt(temp);
+        d_output[i] = argbFloatToInt(temp);
     }
 }
 

@@ -37,10 +37,6 @@ import java.io.IOException;
 import org.jocl.cl_image_format;
 import org.jocl.cl_sampler;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
-import processing.core.PImage;
 import processing.core.PMatrix3D;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.jocl.joclController;
@@ -52,13 +48,15 @@ import usf.saav.common.jocl.joclMemory;
 import usf.saav.common.jocl.joclPlatform;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
+import usf.saav.common.mvc.swing.TImage;
 import usf.saav.common.types.Float4;
 
 public class VolumeRenderer extends ControllerComponent.Default implements ViewComponent, ControllerComponent {
 
 	private TransferFunction1D tf;
 	private ScalarField3D    sf;
-	private PApplet papplet;
+	private TGraphics papplet;
 
 	private joclKernel   kernel;
 	private joclPlatform platform;
@@ -73,7 +71,7 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 	private cl_sampler volumeSamplerLinear;
 	private cl_sampler volumeSamplerNearest;
 	private joclMemory d_output;
-	PImage img;
+	TImage img;
 	
 	boolean needUpdate = false;
 	
@@ -86,7 +84,7 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 
 
 
-	public VolumeRenderer( PApplet papplet, joclController jocl, int res ){
+	public VolumeRenderer( TGraphics papplet, joclController jocl, int res ){
 		this.papplet  = papplet;
 		this.platform = jocl.getPlatform(0);
 		this.res = res;
@@ -243,8 +241,9 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 			//kernel.EnqueueNDRangeKernel( new long[]{img.width,img.height} );
 			kernel.EnqueueNDRangeKernel( new long[]{res,res} );
 
-			img = papplet.createImage( res, res, PApplet.RGB);
-			d_output.EnqueueReadBuffer( true, img.pixels );
+			if( img == null ) img = papplet.createImage( res, res, TGraphics.RGB);
+			d_output.EnqueueReadBuffer( true, img.getPixels() );
+			img.update();
 
 		} catch (joclException e) {
 			e.printStackTrace();
@@ -254,7 +253,7 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 	}
 
 	@Override
-	public void draw(PGraphics g) {
+	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
 		if( tf == null ) return;
 		if( sf == null ) return;
@@ -264,21 +263,23 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 			matrixModel.rotate( 0.02f, 0.1f, 1.0f, 0.0f);
 			needUpdate = true;
 		}
-		//if( img_stack == null ) return;
 
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 		g.strokeWeight(2);
 		g.stroke(0);
 		g.fill(255);
 		g.rect( winX.start(), winY.start(),winX.length(), winY.length() );
 
-		g.imageMode(PConstants.CENTER);
+		g.imageMode(TGraphics.CENTER);
 		g.image( img, winX.start()+winX.length()/2, winY.start()+winY.length()/2, winX.length(), winY.length() );
+
+		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 
 	}
 	
 
 	@Override
-	public void drawLegend(PGraphics g) {
+	public void drawLegend(TGraphics g) {
 		return;
 	}
 

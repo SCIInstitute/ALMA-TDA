@@ -20,11 +20,11 @@
  */
 package usf.saav.alma.drawing.VolumeRendering;
 
-import processing.core.PGraphics;
 import usf.saav.alma.drawing.HistogramDrawing;
 import usf.saav.common.MathX;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.spline.LinearXCatmullYSpline;
 import usf.saav.common.spline.Spline;
 import usf.saav.common.spline.Spline.Constraint;
@@ -154,7 +154,7 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 
 	
 	@Override
-	public void draw(PGraphics g) {
+	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
 		if( range == null || histogram == null ) return;
 		
@@ -192,7 +192,7 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	boolean haveControl = false;
 	Pair<Float2,Float> sel = new Pair<Float2,Float>(null,3.0f);
 
-	@Override public void drawLegend(PGraphics g) { }
+	@Override public void drawLegend(TGraphics g) { }
 	
 	
 	
@@ -256,7 +256,7 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	}
 
 	@Override
-	public boolean mouseWheel(int mouseX, int mouseY, int count) {
+	public boolean mouseWheel(int mouseX, int mouseY, float count) {
 		return false;
 	}
 

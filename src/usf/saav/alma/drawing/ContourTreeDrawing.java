@@ -23,16 +23,15 @@ package usf.saav.alma.drawing;
 
 import java.util.Set;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
 import usf.saav.alma.algorithm.mesh.Mesh;
 import usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode;
 import usf.saav.alma.algorithm.topology.PersistenceSet;
 import usf.saav.alma.data.ScalarFieldND;
 import usf.saav.alma.util.CoordinateSystem;
+import usf.saav.common.MathX;
 import usf.saav.common.monitor.MonitoredInteger;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.IntRange1D;
 
 public class ContourTreeDrawing extends ViewComponent.Default implements ViewComponent {
@@ -100,7 +99,7 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 	
 	
 	
-	public void draw( PGraphics g ) {
+	public void draw( TGraphics g ) {
 		if( !isEnabled() ) return;
 		if( rx == null && ry == null ) return;
 		
@@ -143,7 +142,7 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 				float [] pos = Mesh.getComponentMidpoint( cl.get(n.getLocation()), sf );
 				
 				if( selected.contains(i) ) g.strokeWeight(3);
-				float size = PApplet.lerp(2,15,per/maxPersistence);
+				float size = MathX.lerp(2,15,per/maxPersistence);
 				if( Float.isNaN(size) ) size = 2;
 				if( size > 15 ) size = 20;
 	
@@ -183,11 +182,11 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 
 	}
 	
-	public void drawLegend( PGraphics g  ){
+	public void drawLegend( TGraphics g  ){
 		if( !isEnabled() ) return;
 		if( sf == null || cl == null || ct == null ) return;
 
-		g.hint( PConstants.DISABLE_DEPTH_TEST );
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 		
 		g.stroke(0);
 		g.fill(255,255,255,240);
@@ -201,14 +200,14 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 		
 		g.fill(0);
 		g.textSize(10);
-		g.textAlign( PConstants.LEFT, PConstants.TOP );
+		g.textAlign( TGraphics.LEFT, TGraphics.TOP );
 		g.text("Leaf",			winX.end()-85, winY.end()-90+10);
 		g.text("Merge",			winX.end()-85, winY.end()-75+10);
 		g.text("Split",			winX.end()-85, winY.end()-60+10);
 		g.text("Out of Layer",  winX.end()-85, winY.end()-45+10);
 		g.text("Unknown/Error", winX.end()-85, winY.end()-30+10);
 
-		g.hint( PConstants.ENABLE_DEPTH_TEST );
+		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 
 	}
 

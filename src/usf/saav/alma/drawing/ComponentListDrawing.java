@@ -20,10 +20,10 @@
  */
 package usf.saav.alma.drawing;
 
-import processing.core.PApplet;
 import usf.saav.alma.algorithm.mesh.Mesh;
 import usf.saav.alma.algorithm.mesh.Mesh.Vertex;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 
 public class ComponentListDrawing extends ViewComponent.Default implements ViewComponent  {
 
@@ -37,7 +37,7 @@ public class ComponentListDrawing extends ViewComponent.Default implements ViewC
 		this.field_width = fieldwidth;
 	}
 
-	public void draw( PApplet p ){
+	public void draw( TGraphics p ){
 		
 		if( cL == null )
 			return;

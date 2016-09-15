@@ -20,8 +20,6 @@
  */
 package usf.saav.alma.drawing;
 
-import processing.core.PConstants;
-import processing.core.PGraphics;
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
@@ -30,6 +28,7 @@ import usf.saav.common.MathX;
 import usf.saav.common.MathXv1.Gaussian;
 import usf.saav.common.histogram.Histogram1D;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 
 public class HistogramDrawing extends ViewComponent.Default implements ViewComponent {
@@ -85,16 +84,17 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 	}
 		
 	@Override
-	public void draw(PGraphics g) {
+	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
 		if( histogram == null || range == null ) return;
 		
-		g.hint( PConstants.DISABLE_DEPTH_TEST );
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 		
 		g.strokeWeight(2);
 		g.stroke(0);
 		g.fill(255);
 		g.rect( winX.start(), winY.start(),winX.length(), winY.length() );
+		
 		
 		draw3Sigma( g );
 		drawScales( g );
@@ -102,35 +102,33 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 		drawMean( g );
 		drawGaussian( g );
 		
-		g.hint( PConstants.ENABLE_DEPTH_TEST );
+		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 		
 	}
 	
 	
-	private void draw3Sigma( PGraphics g ){
+	private void draw3Sigma( TGraphics g ){
 		if( !show_3sigma ) return;
 		
 		double mean  = norm_dist.getMean();
 		double stdev = norm_dist.getStdev();
 		
-		float x0 = winX.interpolate( (float) range.getNormalized( mean + stdev*-3 ) );
-		float x1 = winX.interpolate( (float) range.getNormalized( mean + stdev*-2 ) );
-		float x2 = winX.interpolate( (float) range.getNormalized( mean + stdev*-1 ) );
-		float x3 = winX.interpolate( (float) range.getNormalized( mean + stdev*+1 ) );
-		float x4 = winX.interpolate( (float) range.getNormalized( mean + stdev*+2 ) );
-		float x5 = winX.interpolate( (float) range.getNormalized( mean + stdev*+3 ) );
+		float x0 = winX.clamptoRange( (int)winX.interpolate( (float) range.getNormalized( mean + stdev*-3 ) ) );
+		float x1 = winX.clamptoRange( (int)winX.interpolate( (float) range.getNormalized( mean + stdev*-2 ) ) );
+		float x2 = winX.clamptoRange( (int)winX.interpolate( (float) range.getNormalized( mean + stdev*-1 ) ) );
+		float x3 = winX.clamptoRange( (int)winX.interpolate( (float) range.getNormalized( mean + stdev*+1 ) ) );
+		float x4 = winX.clamptoRange( (int)winX.interpolate( (float) range.getNormalized( mean + stdev*+2 ) ) );
+		float x5 = winX.clamptoRange( (int)winX.interpolate( (float) range.getNormalized( mean + stdev*+3 ) ) );
 		
 		g.noStroke();
-		g.beginShape( PConstants.QUADS );
-		g.fill( 250,0,0,25 ); g.vertex( x0, winY.start()+1 ); g.vertex( x0, winY.end()-1 ); g.vertex( x1, winY.end()-1 ); g.vertex( x1, winY.start()+1 ); 
-		g.fill( 250,0,0,50 ); g.vertex( x1, winY.start()+1 ); g.vertex( x1, winY.end()-1 ); g.vertex( x2, winY.end()-1 ); g.vertex( x2, winY.start()+1 );
-		g.fill( 250,0,0,75 ); g.vertex( x2, winY.start()+1 ); g.vertex( x2, winY.end()-1 ); g.vertex( x3, winY.end()-1 ); g.vertex( x3, winY.start()+1 );
-		g.fill( 250,0,0,50 ); g.vertex( x3, winY.start()+1 ); g.vertex( x3, winY.end()-1 ); g.vertex( x4, winY.end()-1 ); g.vertex( x4, winY.start()+1 );
-		g.fill( 250,0,0,25 ); g.vertex( x4, winY.start()+1 ); g.vertex( x4, winY.end()-1 ); g.vertex( x5, winY.end()-1 ); g.vertex( x5, winY.start()+1 );
-		g.endShape();
+		if( x0 != x1 ){ g.fill( 250,0,0,25 ); g.rect( x0, winY.start()+1, x1-x0, winY.length()-2 ); } 
+		if( x1 != x2 ){ g.fill( 250,0,0,50 ); g.rect( x1, winY.start()+1, x2-x1, winY.length()-2 ); }
+		if( x2 != x3 ){ g.fill( 250,0,0,75 ); g.rect( x2, winY.start()+1, x3-x2, winY.length()-2 ); }
+		if( x3 != x4 ){ g.fill( 250,0,0,50 ); g.rect( x3, winY.start()+1, x4-x3, winY.length()-2 ); }
+		if( x4 != x5 ){ g.fill( 250,0,0,25 ); g.rect( x4, winY.start()+1, x5-x4, winY.length()-2 ); }
 	}
 	
-	private void drawScales( PGraphics g ){
+	private void drawScales( TGraphics g ){
 		if( !show_scales ) return;
 		
 		g.strokeWeight(1);
@@ -168,7 +166,7 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 	
 
 	
-	private void drawHistogram( PGraphics g ){
+	private void drawHistogram( TGraphics g ){
 
 		g.strokeWeight(1);
 		g.stroke(50);
@@ -187,7 +185,7 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 		
 	}
 	
-	private void drawMean( PGraphics g ){
+	private void drawMean( TGraphics g ){
 		if( !show_mean ) return;
 		
 		g.strokeWeight(3);
@@ -199,12 +197,12 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 	}
 	
 	
-	private void drawGaussian( PGraphics g ){
+	private void drawGaussian( TGraphics g ){
 		if( !show_distribution ) return;
 		
 		g.strokeWeight(1);
 		g.stroke(100,0,0);
-		g.beginShape( PConstants.LINE_STRIP );
+		g.beginShape( TGraphics.LINE_STRIP );
 		for( int i = 0; i <= 100; i++ ){
 			double x = MathX.lerp(range.getMinimum(),range.getMaximum(),(float)i/(float)100);
 			double y = norm_dist.get(x)/norm_dist.get( norm_dist.getMean() );

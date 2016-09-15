@@ -20,10 +20,10 @@
  */
 package usf.saav.alma.drawing;
 
-import processing.core.PGraphics;
 import usf.saav.alma.util.CoordinateSystem;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.IntRange1D;
 
 public class SelectBoxDrawing extends ControllerComponent.Default implements ViewComponent, ControllerComponent {
@@ -52,7 +52,7 @@ public class SelectBoxDrawing extends ControllerComponent.Default implements Vie
 	
 	
 	@Override
-	public void draw(PGraphics g) {
+	public void draw(TGraphics g) {
 		if( validSel ){
 			
 			float[] xy0 = cs.getWindowPosition( selU0, selV0);
@@ -74,7 +74,7 @@ public class SelectBoxDrawing extends ControllerComponent.Default implements Vie
 
 
 	@Override
-	public void drawLegend(PGraphics g) { }
+	public void drawLegend(TGraphics g) { }
 	
 	
 	

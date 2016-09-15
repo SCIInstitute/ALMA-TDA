@@ -22,30 +22,58 @@ package usf.saav.alma.app;
 
 import java.io.File;
 
-import processing.core.PApplet;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+
+import usf.saav.common.mvc.swing.TApp;
+import usf.saav.common.mvc.swing.TGLFrame;
 
 public class AlmaTDARelease extends AlmaTDADev {
 
 
-	public AlmaTDARelease( ){ super(false); }
+	public AlmaTDARelease( String title, int x, int y, int w, int h ){ super(title,x,y,w,h,false); }
 
 
 	public void setup( ){
 		this.selectInput( "Select a file", "fileSelected",  null, this );
 	}
 
+	private void selectInput(String string, String string2, Object object, AlmaTDARelease almaTDARelease) {
+		// TODO Auto-generated method stub
+	}
+
+
 	public void fileSelected(File selection) {
 		if (selection == null) {
-			println("Window was closed or the user hit cancel.");
-			exit();
+			System.err.println("Window was closed or the user hit cancel.");
+			System.exit(0);
 		} else {
 			load( selection.getAbsolutePath() );
 		}
 	}
 
 
+	public JInternalFrame createGLFrame() {
+		/*
+		TGLFrame frame = new AlmaTDADev( "GL Window", 0, 0, 600, 600 );
+		frame.putClientProperty("dragMode", "fixed");
+	    frame.setVisible(true);
+	    return frame;
+	    */
+		return null;
+	}
 
 	public static void main(String args[]) {
-		PApplet.main(new String[] { "usf.saav.alma.app.AlmaTDARelease" });
+		//TestFrame frame = new TestFrame();
+		javax.swing.SwingUtilities.invokeLater( new Runnable() {
+            public void run() {
+            	TApp frame = new TApp( 5, 5, 800, 800 );
+
+            	//frame.addFrame( createGLFrame() );
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
+            }
+        });
 	}
+	
 }

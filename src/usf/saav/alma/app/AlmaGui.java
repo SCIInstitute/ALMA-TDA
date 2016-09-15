@@ -20,25 +20,32 @@
  */
 package usf.saav.alma.app;
 
-import interfascia.GUIController;
-import interfascia.GUIEvent;
-import interfascia.IFAutoFrameGroup;
-import interfascia.IFAutoFrameGroup.Align;
-import interfascia.IFButton;
-import interfascia.IFCheckBox;
-import interfascia.IFHAlign;
-import interfascia.IFLabel;
-import interfascia.IFRadioButton;
-import interfascia.IFRadioController;
-import interfascia.IFTextField;
-import processing.core.PApplet;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+
 import usf.saav.common.monitor.MonitoredBoolean;
 import usf.saav.common.monitor.MonitoredEnum;
 import usf.saav.common.monitor.MonitoredInteger;
 import usf.saav.common.monitor.MonitoredTrigger;
-import usf.saav.common.mvc.ViewComponent;
 
-public class AlmaGui extends ViewComponent.Default implements ViewComponent {
+public class AlmaGui extends JInternalFrame implements ActionListener {
+
+	private static final long serialVersionUID = 6400845620173855634L;
+
 
 	public enum ViewMode {
 		SCALARFIELD, MOMENT0, MOMENT1, MOMENT2, VOLUME
@@ -48,7 +55,7 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 		NAVIGATE, SELECT_REGION, SELECT_LINE
 	}
 
-	public enum Dimension {
+	public enum TreeDimension {
 		DIM_2D, DIM_2D_STACK, DIM_3D
 	}
 	
@@ -56,50 +63,45 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 		MERGE, SPLIT, CONTOUR;
 	}
 
-	private GUIController c;
-	
-	private IFRadioController rcMM;
-	private IFRadioController rcView;
-	private IFRadioController rcDim;
-	private IFRadioController rcTree;
-
-
-	private IFTextField 	guiZ,guiZ0,guiZ1;
-	private IFRadioButton 	guiMMNav, guiMMSelReg, guiMMSelLine;
-	private IFRadioButton 	guiViewSF, guiViewM0, guiViewM1, guiViewM2, guiViewVol;
-	private IFButton		guiBuildTree;
-	private IFRadioButton	guiDim2D, guiDim2DStack, guiDim3D;
-	private IFCheckBox		guiShowTree;
-	private IFRadioButton	guiTreeSpl, guiTreeMer, guiTreeCon;
-	private IFCheckBox		guiShowSimp;
 
 
 	private MonitoredInteger 		 monZ,monZ0,monZ1;
 	public  MonitoredEnum<MouseMode> monMM	  	  = new MonitoredEnum<MouseMode>( MouseMode.NAVIGATE );
 	public  MonitoredEnum<ViewMode>  monView	  = new MonitoredEnum<ViewMode>( ViewMode.SCALARFIELD );
 	public  MonitoredTrigger		 monBuildTree = new MonitoredTrigger("Contour Tree");
-	public  MonitoredEnum<Dimension> monDim		  = new MonitoredEnum<Dimension>( Dimension.DIM_2D_STACK );
+	public  MonitoredEnum<TreeDimension> monDim		  = new MonitoredEnum<TreeDimension>( TreeDimension.DIM_2D_STACK );
 	public  MonitoredBoolean		 monShowTree  = new MonitoredBoolean( true );
 	public  MonitoredBoolean		 monShowSimp  = new MonitoredBoolean( true );
 	public  MonitoredEnum<TreeType>  monTree	  = new MonitoredEnum<TreeType>( TreeType.CONTOUR );
 
-
-	private IFAutoFrameGroup guiSliceGrp;
-	private IFAutoFrameGroup guiViewGrp;
-	private IFAutoFrameGroup guiSimpGrp;
-	private IFAutoFrameGroup guiDimGrp;
-	private IFAutoFrameGroup guiTreeGrp;
-	private IFAutoFrameGroup guiMouseGrp;
 	
-	private IFLabel guiLblSlice, guiLblVol;
+	private ButtonGroup rcView;
+	private ButtonGroup rcMM;
+	private ButtonGroup rcDim;
+	private ButtonGroup rcTree;
+
+	private JRadioButton 	guiMMNav, guiMMSelReg, guiMMSelLine;
+	private JRadioButton 	guiViewSF, guiViewM0, guiViewM1, guiViewM2, guiViewVol;
+	private JRadioButton	guiTreeSpl, guiTreeMer, guiTreeCon;
+	private JRadioButton	guiDim2D, guiDim2DStack, guiDim3D;
+	private JCheckBox		guiShowTree, guiShowSimp;
+
+	private JTextField 	guiZ,guiZ0,guiZ1;
+
+	private JButton		guiBuildTree;
 	
-
-	//IFHAlign alnZ0Z1;
 	
+	
+	public AlmaGui( int x, int y, MonitoredInteger curZ, MonitoredInteger z0, MonitoredInteger z1 ){
+	    super("Controls",
+		          false, //resizable
+		          false, //closable
+		          false, //maximizable
+		          true);//iconifiable
 
-	public AlmaGui( PApplet papplet, MonitoredInteger curZ, MonitoredInteger z0, MonitoredInteger z1 ){
 
-		super.setPosition( papplet.width-130, 0, 130, papplet.height );
+	    setLocation( x, y );
+	    setSize( 150, 800 );
 
 		this.monZ	 = curZ;
 		this.monZ0 	 = z0;
@@ -108,115 +110,134 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 		this.monZ.addMonitor(  this, "refreshVariables" );
 		this.monZ0.addMonitor( this, "refreshVariables" );
 		this.monZ1.addMonitor( this, "refreshVariables" );
-
-		initControls( papplet );
-		setControlPositions( );
 		
+
+		initControls( );
+
 	}
 	
-	private void initControls( PApplet papplet ){
+	
+	private JRadioButton createRadioButton( String label, boolean selected, ButtonGroup group ){
+		JRadioButton btn = new JRadioButton(label);
+		btn.setActionCommand(label);
+		btn.setSelected(selected);
+		btn.addActionListener(this);
+		group.add(btn);
+		return btn;
+	}
+	private JTextField createTextfield( String value ){
+		JTextField ret = new JTextField(value);
+		ret.addActionListener(this);
+		return ret;
+	}
+	
+	private JCheckBox createCheckbox( String label, boolean selected ){
+		JCheckBox ret = new JCheckBox( label );
+		ret.setSelected( selected );
+		ret.addActionListener(this);
+		return ret;
+	}
+	
 
-		int u0 = 0;
-		int v0 = 0;
-		 
-		c = new GUIController( papplet ); 
-
-		rcView = new IFRadioController("Mode Selector");
-		rcView.addActionListener( this );
-
-		c.add(guiViewSF  = new IFRadioButton("Slice",   u0, v0, rcView));
-		c.add(guiViewM0  = new IFRadioButton("Moment0", u0, v0, rcView));
-		c.add(guiViewM1  = new IFRadioButton("Moment1", u0, v0, rcView));
-		c.add(guiViewM2  = new IFRadioButton("Moment2", u0, v0, rcView));
-		c.add(guiViewVol = new IFRadioButton("Volume",  u0, v0, rcView));
-		guiViewSF.setSelected();
-
-		c.add( guiZ = new IFTextField( "Slice #",  u0, v0, 40, Integer.toString(monZ.get()) ) );
-		guiZ.addActionListener(this);
-
-		c.add(guiZ0 = new IFTextField( "Slice #",  u0, v0, 40, Integer.toString(monZ0.get()) ) );
-		guiZ0.addActionListener(this);
-
-		c.add(guiZ1 = new IFTextField( "Slice #",  u0, v0, 40, Integer.toString(monZ1.get()) ));
-		guiZ1.addActionListener(this);
-
-		
-		
-		c.add( guiShowTree = new IFCheckBox("Show Tree", u0, v0 ) );
-		guiShowTree.setSelected();
-		guiShowTree.addActionListener(this);
-
-		c.add( guiShowSimp = new IFCheckBox("Show Simp.", u0, v0 ) );
-		guiShowSimp.setSelected();
-		guiShowSimp.addActionListener(this);
-
-		
-		rcMM = new IFRadioController("Mouse Mode");
-		rcMM.addActionListener( this );
-
-		c.add( guiMMNav     = new IFRadioButton("Navigate",  u0, v0, rcMM) );
-		c.add( guiMMSelReg  = new IFRadioButton("Select Region", u0, v0, rcMM) );
-		c.add( guiMMSelLine = new IFRadioButton("Select Line", u0, v0, rcMM) );
-		guiMMNav.setSelected();
-
-		
-		
-		rcTree = new IFRadioController("Tree Type");
-		rcTree.addActionListener( this );
-		
-		c.add( guiTreeMer    = new IFRadioButton("Merge Tree",   u0, v0, rcTree) );
-		c.add( guiTreeSpl    = new IFRadioButton("Split Tree",   u0, v0, rcTree) );
-		c.add( guiTreeCon    = new IFRadioButton("Contour Tree", u0, v0, rcTree) );
-		guiTreeCon.setSelected();
-
-		rcDim = new IFRadioController("Tree Dimension");
-		rcDim.addActionListener( this );
-		
-		c.add( guiDim2D      = new IFRadioButton("2D",         u0, v0, rcDim) );
-		c.add( guiDim2DStack = new IFRadioButton("2D Stacked", u0, v0, rcDim) );
-		c.add( guiDim3D      = new IFRadioButton("3D",         u0, v0, rcDim) );
-		guiDim2DStack.setSelected();
-		
-		c.add( guiBuildTree = new IFButton("Calculate", u0, v0, 40, 40 ) );
-		guiBuildTree.addActionListener( this );
-		
-		c.add( guiLblSlice   = new IFLabel( "Active Slice",  u0, v0 ) );
-		c.add( guiLblVol     = new IFLabel( "Active Volume", u0, v0 ) );
-		
-		
-		c.add( guiSliceGrp = new IFAutoFrameGroup( null, u0, v0, 40, 40 ) );
-		c.add( guiViewGrp  = new IFAutoFrameGroup( "View Mode", u0, v0, 40, 40 ) );
-		c.add( guiMouseGrp = new IFAutoFrameGroup( "Mouse Mode", u0, v0, 40, 40 ) );
-		c.add( guiTreeGrp  = new IFAutoFrameGroup( "Tree Type", u0, v0, 40, 40 ) );
-		c.add( guiDimGrp   = new IFAutoFrameGroup( "Tree Dimension", u0, v0, 40, 40 ) );
-		c.add( guiSimpGrp  = new IFAutoFrameGroup( "Simplification", u0, v0, 40, 40 ) );
-		
+	private JButton createButton( String label  ){
+		JButton ret = new JButton( label );
+		ret.addActionListener(this);
+		return ret;
 	}
 	
 	
 	
-	public void refreshVariables( ){
-		try {
-		if( Integer.parseInt( guiZ.getValue() ) != monZ.get() ){
-			guiZ.setValue( Integer.toString(monZ.get()) );
-		}
-		if( Integer.parseInt( guiZ0.getValue() ) != monZ0.get() ){
-			guiZ0.setValue( Integer.toString(monZ0.get()) );
-		}
-		if( Integer.parseInt( guiZ1.getValue() ) != monZ1.get() ){
-			guiZ1.setValue( Integer.toString(monZ1.get()) );
-		}
-		} catch( NumberFormatException nfe ){
-			guiZ.setValue( Integer.toString(monZ.get()) );
-			guiZ0.setValue( Integer.toString(monZ0.get()) );
-			guiZ1.setValue( Integer.toString(monZ1.get()) );
-		}
-	}
 	
-	
-	public void actionPerformed( GUIEvent e ){
+	private void initControls( ){
+
+
+	    JPanel slicesubPanel = new JPanel(new GridLayout(0, 2));
+	    slicesubPanel.add( new  JLabel("Active Slice") );
+	    slicesubPanel.add( guiZ = createTextfield( Integer.toString(monZ.get()) ) );
+	    slicesubPanel.setPreferredSize( new Dimension(125,20) );
+	    
+	    JPanel volPanel = new JPanel(new GridLayout(0, 2));
+	    volPanel.add(guiZ0 = createTextfield( Integer.toString(monZ0.get()) ) );
+	    volPanel.add(guiZ1 = createTextfield( Integer.toString(monZ1.get()) ) );
+
+	    JPanel slicePanel = new JPanel(new GridLayout(0, 1));
+	    slicePanel.add(slicesubPanel);
+	    slicePanel.add( new JLabel("Active Volume") );
+	    slicePanel.add(volPanel);
 		
-		setControlPositions();
+		
+		
+	    rcView = new ButtonGroup();
+	    JPanel viewPanel = new JPanel(new GridLayout(0, 1));
+	    viewPanel.setBorder( BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.black), "View Mode" ) );
+
+        viewPanel.add( guiViewSF  = createRadioButton("Slice",   true,  rcView)  );
+        viewPanel.add( guiViewM0  = createRadioButton("Moment0", false, rcView) );
+        viewPanel.add( guiViewM1  = createRadioButton("Moment1", false, rcView) );
+        viewPanel.add( guiViewM2  = createRadioButton("Moment2", false, rcView) );
+        viewPanel.add( guiViewVol = createRadioButton("Volume",  false, rcView) );
+
+        viewPanel.add( guiShowTree = createCheckbox("Show Tree",  true ) );
+		viewPanel.add( guiShowSimp = createCheckbox("Show Simp.", true ) );
+        
+		viewPanel.setMinimumSize( new java.awt.Dimension(100,400)  );
+        
+		
+
+		rcMM = new ButtonGroup();
+	    JPanel panelMM = new JPanel(new GridLayout(0, 1));
+	    panelMM.setBorder( BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.black), "Mouse Mode" ) );
+		panelMM.add( guiMMNav     = createRadioButton("Navigate",      true,  rcMM ) );
+		panelMM.add( guiMMSelReg  = createRadioButton("Select Region", false, rcMM ) );
+		panelMM.add( guiMMSelLine = createRadioButton("Select Line",   false, rcMM ) );
+		
+
+        
+		rcTree = new ButtonGroup();
+		JPanel panelTree = new JPanel(new GridLayout(0, 1));
+		panelTree.setBorder( BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.black), "Tree Type" ) );
+		panelTree.add( guiTreeMer    = createRadioButton("Merge Tree",   false, rcTree) );
+		panelTree.add( guiTreeSpl    = createRadioButton("Split Tree",   false, rcTree) );
+		panelTree.add( guiTreeCon    = createRadioButton("Contour Tree", true,  rcTree) );
+	    
+
+		
+
+        
+		rcDim = new ButtonGroup();
+		JPanel panelDim = new JPanel(new GridLayout(0, 1));
+		panelDim.setBorder( BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.black), "Tree Calculation" ) );
+		panelDim.add( guiDim2D      = createRadioButton("2D",         false, rcDim) );
+		panelDim.add( guiDim2DStack = createRadioButton("2D Stacked", true,  rcDim) );
+		panelDim.add( guiDim3D      = createRadioButton("3D",         false, rcDim) );
+		panelDim.add( guiBuildTree  = createButton( "Calculate" ) );
+
+		slicePanel.setPreferredSize( new Dimension(125,65) );
+		viewPanel.setPreferredSize(  new Dimension(125,150) );
+		panelMM.setPreferredSize(    new Dimension(125,80) );
+		panelTree.setPreferredSize(  new Dimension(125,80) );
+		panelDim.setPreferredSize(   new Dimension(125,100) );
+
+		
+		JPanel mainPanel = new JPanel(new FlowLayout());
+        //JPanel mainPanel = new JPanel(new GridLayout(0, 1));
+		mainPanel.add( slicePanel );
+        mainPanel.add( viewPanel );
+		mainPanel.add( panelMM );
+		mainPanel.add( panelTree );
+		mainPanel.add( panelDim );
+			
+
+		this.add( mainPanel );
+		this.setPreferredSize( new Dimension(125,700) );
+		this.setSize( new Dimension(150,550) );
+		
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
 
 		if( e.getSource() == guiViewSF  ){		monView.set( ViewMode.SCALARFIELD );	}
 		if( e.getSource() == guiViewM0  ){		monView.set( ViewMode.MOMENT0 );		}
@@ -228,98 +249,53 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 		if( e.getSource() == guiMMSelReg ){		monMM.set( MouseMode.SELECT_REGION ); 	}
 		if( e.getSource() == guiMMSelLine ){	monMM.set( MouseMode.SELECT_LINE ); 	}
 		
-		if( e.getSource() == guiDim2D      ){		monDim.set( Dimension.DIM_2D ); 		}
-		if( e.getSource() == guiDim2DStack ){		monDim.set( Dimension.DIM_2D_STACK ); 		}
-		if( e.getSource() == guiDim3D      ){		monDim.set( Dimension.DIM_3D ); 		}
+		if( e.getSource() == guiDim2D      ){	monDim.set( TreeDimension.DIM_2D ); 		}
+		if( e.getSource() == guiDim2DStack ){	monDim.set( TreeDimension.DIM_2D_STACK );	}
+		if( e.getSource() == guiDim3D      ){	monDim.set( TreeDimension.DIM_3D ); 		}
+		
+		if( e.getSource() == guiTreeSpl ){	monTree.set( TreeType.SPLIT   ); }
+		if( e.getSource() == guiTreeMer ){	monTree.set( TreeType.MERGE   ); }
+		if( e.getSource() == guiTreeCon ){	monTree.set( TreeType.CONTOUR ); }
 
 		if( e.getSource() == guiShowTree ){		monShowTree.set( guiShowTree.isSelected() );	}
-
 		if( e.getSource() == guiShowSimp ){		monShowSimp.set( guiShowSimp.isSelected() );	}
-
-		if( e.getSource() == guiZ && e.getMessage().equals("Completed") ){
-			monZ.set( Integer.parseInt( guiZ.getValue() ) );
+		
+		try{
+			if( e.getSource() == guiZ  ){ monZ.set(  Integer.parseInt( guiZ.getText()  ) ); }
+			if( e.getSource() == guiZ0 ){ monZ0.set( Integer.parseInt( guiZ0.getText() ) ); }
+			if( e.getSource() == guiZ1 ){ monZ1.set( Integer.parseInt( guiZ1.getText() ) ); }
 		}
-		if( e.getSource() == guiZ0 && e.getMessage().equals("Completed") ){
-			monZ0.set( Integer.parseInt( guiZ0.getValue() ) );
-		}
-		if( e.getSource() == guiZ1 && e.getMessage().equals("Completed") ){
-			monZ1.set( Integer.parseInt( guiZ1.getValue() ) );
+		catch( NumberFormatException nfe ){
+			guiZ.setText(  Integer.toString(monZ.get()) );
+			guiZ0.setText( Integer.toString(monZ0.get()) );
+			guiZ1.setText( Integer.toString(monZ1.get()) );
 		}
 		
-		if( e.getSource() == guiBuildTree && e.getMessage().equals("Clicked")  ){
-			monBuildTree.trigger();
-		}
+		if( e.getSource() == guiBuildTree  ){ 	monBuildTree.trigger(); 	}
 		
 	}
 	
-
-
-
-	private void setControlPositions(){
-		
-		int u0 = winX.start();
-		int v0 = winY.start();
-		int width = winX.length();
-		int height = winY.length();
-
-		guiBuildTree.setSize( width-50, 20 );		
-
-		
-		c.setPosition( u0, v0 );
-		c.setSize( width, height );
-		
-		guiSliceGrp.clear();
-		guiSliceGrp.addComponent( guiLblSlice, Align.LEFT);
-		guiSliceGrp.addComponent( new IFHAlign(  u0, v0, 10, 10, guiZ ), 	     Align.LEFT);
-		guiSliceGrp.addComponent( guiLblVol,   Align.LEFT);
-		guiSliceGrp.addComponent( new IFHAlign(  u0, v0, 10, 10, guiZ0, guiZ1 ), Align.LEFT);
-		guiSliceGrp.setPosition( u0+10, 10 );
-		guiSliceGrp.setSize( width-20, 40 );
-
-		guiViewGrp.clear();
-		guiViewGrp.addComponent( guiViewSF,   Align.LEFT );
-		guiViewGrp.addComponent( guiViewM0,   Align.LEFT );
-		guiViewGrp.addComponent( guiViewM1,   Align.LEFT );
-		guiViewGrp.addComponent( guiViewM2,   Align.LEFT );
-		guiViewGrp.addComponent( guiViewVol,  Align.LEFT );
-		guiViewGrp.addComponent( guiShowTree, Align.LEFT );
-		guiViewGrp.addComponent( guiShowSimp, Align.LEFT );
-		guiViewGrp.setPosition( u0+10, guiSliceGrp.getY() + guiSliceGrp.getHeight() + 15 );
-		guiViewGrp.setSize( width-20, 40 );
-
-		guiMouseGrp.clear();
-		guiMouseGrp.addComponent( guiMMNav, Align.LEFT );
-		guiMouseGrp.addComponent( guiMMSelReg, Align.LEFT );
-		guiMouseGrp.addComponent( guiMMSelLine, Align.LEFT );
-		guiMouseGrp.setPosition( u0+10, guiViewGrp.getY() + guiViewGrp.getHeight() + 15 );
-		guiMouseGrp.setSize( width-20, 40 );
-
-		guiTreeGrp.clear();
-		guiTreeGrp.addComponent( guiTreeMer, Align.LEFT );
-		guiTreeGrp.addComponent( guiTreeSpl, Align.LEFT );
-		guiTreeGrp.addComponent( guiTreeCon, Align.LEFT );
-		guiTreeGrp.setSize( width-40, 40 );
-
-		guiDimGrp.clear();
-		guiDimGrp.addComponent( guiDim2D,      Align.LEFT );
-		guiDimGrp.addComponent( guiDim2DStack, Align.LEFT );
-		guiDimGrp.addComponent( guiDim3D,      Align.LEFT );
-		guiDimGrp.setSize( width-40, 40 );
-
-		guiSimpGrp.clear();
-		guiSimpGrp.addComponent( guiTreeGrp,   Align.CENTER );
-		guiSimpGrp.addComponent( guiDimGrp,    Align.CENTER );
-		guiSimpGrp.addComponent( guiBuildTree, Align.CENTER );
-		guiSimpGrp.setPosition( u0+10, guiMouseGrp.getY() + guiMouseGrp.getHeight() + 15 );
-		guiSimpGrp.setSize( width-20, 40 );
-
+	
+	
+	
+	public void refreshVariables( ){
+		try {
+			if( Integer.parseInt( guiZ.getText() ) != monZ.get() ){
+				guiZ.setText( Integer.toString(monZ.get()) );
+			}
+			if( Integer.parseInt( guiZ0.getText() ) != monZ0.get() ){
+				guiZ0.setText( Integer.toString(monZ0.get()) );
+			}
+			if( Integer.parseInt( guiZ1.getText() ) != monZ1.get() ){
+				guiZ1.setText( Integer.toString(monZ1.get()) );
+			}
+		} catch( NumberFormatException nfe ){
+			guiZ.setText(  Integer.toString(monZ.get()) );
+			guiZ0.setText( Integer.toString(monZ0.get()) );
+			guiZ1.setText( Integer.toString(monZ1.get()) );
+		}
 	}
 	
 	
-	@Override
-	public void setPosition(int u0, int v0, int w, int h) {
-		super.setPosition(u0, v0, w, h);
-		setControlPositions();
-	}
 
 }

@@ -24,14 +24,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
 import usf.saav.alma.algorithm.topology.PersistenceSet;
 import usf.saav.common.MathX;
 import usf.saav.common.monitor.MonitoredFloat;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.types.Float2;
 
@@ -86,21 +84,21 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 	}
 	
 	
-	public void draw( PGraphics g ){
+	public void draw( TGraphics g ){
 		if( !isEnabled() ) return;
 		if( !isActive() ) return;
 
-		g.hint( PConstants.DISABLE_DEPTH_TEST );
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 		
 		g.strokeWeight(2);
 		g.stroke(0);
 		g.fill(255);
 		g.rect( winX.start(), winY.start(),winX.length(), winY.length() );
 
-		float px0 = PApplet.lerp( winX.end()-5, winX.start()+5, 1 );
-		float py0 = PApplet.lerp( winY.end()-5, winY.start()+5, (float)(simp/bd_range.getRange()) );
-		float px1 = PApplet.lerp( winX.end()-5, winX.start()+5, (float)(simp/bd_range.getRange()) );
-		float py1 = PApplet.lerp( winY.end()-5, winY.start()+5, 1 );
+		float px0 = MathX.lerp( winX.end()-5, winX.start()+5, 1 );
+		float py0 = MathX.lerp( winY.end()-5, winY.start()+5, (float)(simp/bd_range.getRange()) );
+		float px1 = MathX.lerp( winX.end()-5, winX.start()+5, (float)(simp/bd_range.getRange()) );
+		float py1 = MathX.lerp( winY.end()-5, winY.start()+5, 1 );
 		
 		g.strokeWeight(5);
 		g.stroke(150,0,0);
@@ -113,8 +111,8 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		for( PersistenceSet _pd : pd ){
 			for(int i = 0; i < _pd.size(); i++){
 				
-				float x = PApplet.lerp( winX.start()+5, winX.end()-5, (float)bd_range.getNormalized( _pd.getBirth(i) ) );
-				float y = PApplet.lerp( winY.end()-5, winY.start()+5, (float)bd_range.getNormalized( _pd.getDeath(i) ) );
+				float x = MathX.lerp( winX.start()+5, winX.end()-5, (float)bd_range.getNormalized( _pd.getBirth(i) ) );
+				float y = MathX.lerp( winY.end()-5, winY.start()+5, (float)bd_range.getNormalized( _pd.getDeath(i) ) );
 				
 				if( selected.contains(i) ) g.strokeWeight( 3 );
 				
@@ -128,7 +126,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 			}
 		}
 		
-		g.hint( PConstants.ENABLE_DEPTH_TEST );
+		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 
 	}
 	
@@ -141,8 +139,8 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		float curD = 3*3;
 		for(int i = 0; i < curr.size(); i++){
 			
-			float x = PApplet.lerp( winX.start()+5, winX.end()-5, (float)bd_range.getNormalized( curr.getBirth(i) ) );
-			float y = PApplet.lerp( winY.end()-5, winY.start()+5, (float)bd_range.getNormalized( curr.getDeath(i) ) );
+			float x = MathX.lerp( winX.start()+5, winX.end()-5, (float)bd_range.getNormalized( curr.getBirth(i) ) );
+			float y = MathX.lerp( winY.end()-5, winY.start()+5, (float)bd_range.getNormalized( curr.getDeath(i) ) );
 			
 			float dx = x - mouseX;
 			float dy = y - mouseY;
@@ -157,7 +155,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 	}
 	
 	@Override public boolean keyPressed(char key) { return false; }
-	@Override public boolean mouseWheel(int mouseX, int mouseY, int count) { return false; }
+	@Override public boolean mouseWheel(int mouseX, int mouseY, float count) { return false; }
 	
 	@Override public boolean mouseMoved(int mouseX, int mouseY) { 
 		if( !isEnabled() ) return false;

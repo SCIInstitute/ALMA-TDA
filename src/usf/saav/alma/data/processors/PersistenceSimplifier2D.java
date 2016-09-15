@@ -20,13 +20,13 @@
  */
 package usf.saav.alma.data.processors;
 
-import processing.core.PApplet;
-import processing.core.PImage;
 import usf.saav.alma.algorithm.mesh.Mesh;
 import usf.saav.alma.algorithm.topology.PersistenceSet;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.common.Callback;
 import usf.saav.common.colormap.Colormap;
+import usf.saav.common.mvc.swing.TGraphics;
+import usf.saav.common.mvc.swing.TImage;
 import usf.saav.common.range.IntRange1D;
 
 public class PersistenceSimplifier2D extends PersistenceSimplifierND implements ScalarField2D {
@@ -45,7 +45,7 @@ public class PersistenceSimplifier2D extends PersistenceSimplifierND implements 
 	@Override public int getHeight() { return sf.getHeight(); }
 	@Override public float getValue(int x, int y) { return super.getValue( y*getWidth()+x ); }
 	@Override public double[] getCoordinate(int x, int y) { return sf.getCoordinate(x, y); }
-	@Override public PImage toPImage(PApplet papplet, Colormap colormap) { return sf.toPImage(papplet, colormap); }
+	@Override public TImage toPImage(TGraphics g, Colormap colormap) { return sf.toPImage(g, colormap); }
 	public int				getZ( ){			  	return z.start(); }
 
 	@Override
