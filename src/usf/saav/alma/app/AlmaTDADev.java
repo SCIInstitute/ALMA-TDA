@@ -87,14 +87,14 @@ public class AlmaTDADev extends TApp {
 	
 	 
 	public JInternalFrame createGLFrame(AlmaGui gui) {
-		TGLFrame frame = new SingleScalarFieldView( dataM, gui, "GL Window", 0, 0, 1000, 700 );
+		TGLFrame frame = new SingleScalarFieldView( dataM, gui, "Slice Viewer", 0, 0, 1000, 700 );
 		//frame.putClientProperty("dragMode", "fixed");
 	    frame.setVisible(true);
 	    return frame;
 	}
 	
 	public JInternalFrame createVolFrame( ) {
-		TGLFrame frame = new VolumeRenderingView( dataM, jocl, "GL Window", 0, 0, 1000, 700 );
+		TGLFrame frame = new VolumeRenderingView( dataM, jocl, "Volume Rendering", 0, 0, 1000, 700 );
 		//frame.putClientProperty("dragMode", "fixed");
 	    frame.setVisible(true);
 	    return frame;

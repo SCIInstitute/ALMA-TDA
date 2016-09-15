@@ -41,7 +41,7 @@ import usf.saav.common.mvc.swing.TGraphics;
  * setting the bottom row of the matrix to <code>[0 0 0 1]</code>. The
  * resulting point is then (x', y', z').
  */
-public final class PMatrix3D implements PMatrix /*, PConstants*/ {
+public final class PMatrix3D {
 
   public float m00, m01, m02, m03;
   public float m10, m11, m12, m13;
@@ -78,7 +78,7 @@ public final class PMatrix3D implements PMatrix /*, PConstants*/ {
   }
 
 
-  public PMatrix3D(PMatrix matrix) {
+  public PMatrix3D(PMatrix3D matrix) {
     set(matrix);
   }
 
@@ -133,9 +133,9 @@ public final class PMatrix3D implements PMatrix /*, PConstants*/ {
   }
 
 
-  public void set(PMatrix matrix) {
-    if (matrix instanceof PMatrix3D) {
-      PMatrix3D src = (PMatrix3D) matrix;
+  public void set(PMatrix3D pMatrix3D) {
+    if (pMatrix3D instanceof PMatrix3D) {
+      PMatrix3D src = (PMatrix3D) pMatrix3D;
       set(src.m00, src.m01, src.m02, src.m03,
           src.m10, src.m11, src.m12, src.m13,
           src.m20, src.m21, src.m22, src.m23,
@@ -301,13 +301,6 @@ public final class PMatrix3D implements PMatrix /*, PConstants*/ {
   }
 
 
-  public void apply(PMatrix source) {
-	  if (source instanceof PMatrix3D) {
-      apply((PMatrix3D) source);
-    }
-  }
-
-
 
 
 
@@ -361,15 +354,6 @@ public final class PMatrix3D implements PMatrix /*, PConstants*/ {
 
 
 
-
-  /**
-   * Apply another matrix to the left of this one.
-   */
-  public void preApply(PMatrix source) {
-    if (source instanceof PMatrix3D) {
-      preApply((PMatrix3D) source);
-    }
-  }
 
 
   /**
