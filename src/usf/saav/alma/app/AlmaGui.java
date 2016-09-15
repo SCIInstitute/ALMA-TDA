@@ -45,7 +45,7 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 	}
 	
 	public enum MouseMode {
-		NAVIGATE, SELECT
+		NAVIGATE, SELECT_REGION, SELECT_LINE
 	}
 
 	public enum Dimension {
@@ -65,7 +65,7 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 
 
 	private IFTextField 	guiZ,guiZ0,guiZ1;
-	private IFRadioButton 	guiMMNav, guiMMSel;
+	private IFRadioButton 	guiMMNav, guiMMSelReg, guiMMSelLine;
 	private IFRadioButton 	guiViewSF, guiViewM0, guiViewM1, guiViewM2, guiViewVol;
 	private IFButton		guiBuildTree;
 	private IFRadioButton	guiDim2D, guiDim2DStack, guiDim3D;
@@ -154,8 +154,9 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 		rcMM = new IFRadioController("Mouse Mode");
 		rcMM.addActionListener( this );
 
-		c.add( guiMMNav    = new IFRadioButton("Navigate",  u0, v0, rcMM) );
-		c.add( guiMMSel    = new IFRadioButton("Selection", u0, v0, rcMM) );
+		c.add( guiMMNav     = new IFRadioButton("Navigate",  u0, v0, rcMM) );
+		c.add( guiMMSelReg  = new IFRadioButton("Select Region", u0, v0, rcMM) );
+		c.add( guiMMSelLine = new IFRadioButton("Select Line", u0, v0, rcMM) );
 		guiMMNav.setSelected();
 
 		
@@ -224,7 +225,8 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 		if( e.getSource() == guiViewVol ){		monView.set( ViewMode.VOLUME ); 		}
 		
 		if( e.getSource() == guiMMNav ){		monMM.set( MouseMode.NAVIGATE ); 		}
-		if( e.getSource() == guiMMSel ){		monMM.set( MouseMode.SELECT ); 			}
+		if( e.getSource() == guiMMSelReg ){		monMM.set( MouseMode.SELECT_REGION ); 	}
+		if( e.getSource() == guiMMSelLine ){	monMM.set( MouseMode.SELECT_LINE ); 	}
 		
 		if( e.getSource() == guiDim2D      ){		monDim.set( Dimension.DIM_2D ); 		}
 		if( e.getSource() == guiDim2DStack ){		monDim.set( Dimension.DIM_2D_STACK ); 		}
@@ -287,7 +289,8 @@ public class AlmaGui extends ViewComponent.Default implements ViewComponent {
 
 		guiMouseGrp.clear();
 		guiMouseGrp.addComponent( guiMMNav, Align.LEFT );
-		guiMouseGrp.addComponent( guiMMSel, Align.LEFT );
+		guiMouseGrp.addComponent( guiMMSelReg, Align.LEFT );
+		guiMouseGrp.addComponent( guiMMSelLine, Align.LEFT );
 		guiMouseGrp.setPosition( u0+10, guiViewGrp.getY() + guiViewGrp.getHeight() + 15 );
 		guiMouseGrp.setSize( width-20, 40 );
 

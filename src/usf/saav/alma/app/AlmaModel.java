@@ -44,6 +44,7 @@ import usf.saav.alma.data.fits.SafeFitsReader;
 import usf.saav.alma.data.processors.LayeredVolume;
 import usf.saav.alma.data.processors.PersistenceSimplifierND;
 import usf.saav.alma.drawing.SelectBoxDrawing;
+import usf.saav.alma.drawing.SelectPointDrawing;
 import usf.saav.alma.util.ContourTreeThread;
 import usf.saav.alma.util.CoordinateSystemController;
 import usf.saav.common.monitor.MonitoredObject;
@@ -96,7 +97,8 @@ public class AlmaModel extends ModelComponent.Default implements ModelComponent 
 	public VolumeRenderingView   vrv;
 	
 	public CoordinateSystemController csCont;
-	public SelectBoxDrawing sel;
+	public SelectBoxDrawing   sel_box;
+	public SelectPointDrawing sel_pnt;
 	
 
 	
@@ -133,7 +135,8 @@ public class AlmaModel extends ModelComponent.Default implements ModelComponent 
 		this.ssfv = new SingleScalarFieldView( mvc, mvc, this );
 		this.vrv  = new VolumeRenderingView( mvc, this, mvc.jocl );
 		this.vrv.disable( );
-		this.sel  = new SelectBoxDrawing( );
+		this.sel_box  = new SelectBoxDrawing( );
+		this.sel_pnt  = new SelectPointDrawing( );
 
 	}
 	

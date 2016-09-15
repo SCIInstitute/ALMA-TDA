@@ -137,10 +137,10 @@ public class AlmaController extends ControllerComponent.Subcontroller implements
 	
 	public void buildContourTree( ){
 		
-		IntRange1D [] r = model.sel.getSelection();
+		IntRange1D [] r = model.sel_box.getSelection();
 		if( r == null ) return;
 		
-		model.sel.clearSelection();
+		model.sel_box.clearSelection();
 		
 		if( model.gui.monDim.get() == Dimension.DIM_2D ) {
 			ContourTreeThread ctt = new ContourTreeThread( model.reader, r[0], r[1], model.curZ.get() );

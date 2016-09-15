@@ -75,7 +75,9 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 		}
 		histogram = new Histogram1D( range, binCount ); 
 		for(int i = 0; i < sf.getSize(); i++){
-			histogram.Add( sf.getValue(i) );
+			float v = sf.getValue(i);
+			if( !Float.isNaN(v) )
+				histogram.Add( v );
 		}
 		binMax = histogram.GetMaximumBin() + histogram.GetMaximumBin()/20;
 		norm_dist = new Gaussian( histogram.getApproximateMean(), histogram.getApproximateStdev() );

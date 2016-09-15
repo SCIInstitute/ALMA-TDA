@@ -39,10 +39,10 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	//Histogram1D histogram;
 	//Gaussian distro;
 	
-	Spline red = new LinearXCatmullYSpline( new Float2(0.0,0.0),  new Float2(0.60,0.1), new Float2(0.75,0.5),  new Float2(0.90,0.8), new Float2(1.0,0.95) );
-	Spline grn = new LinearXCatmullYSpline( new Float2(0.0,0.0),  new Float2(0.35,0.1), new Float2(0.50,0.95), new Float2(0.65,0.1), new Float2(1.0,0.0) );
-	Spline blu = new LinearXCatmullYSpline( new Float2(0.0,0.95), new Float2(0.10,0.8), new Float2(0.25,0.5),  new Float2(0.40,0.1), new Float2(1.0,0.0) );
-	Spline alp = new LinearXCatmullYSpline( new Float2(0.0,0.4),  new Float2(0.05,0.4), new Float2(0.15,0.2),  new Float2(0.2,0.05), new Float2(0.8,0.05), new Float2(0.85,0.2), new Float2(0.95,0.4), new Float2(1.0,0.4) );
+	Spline red = new LinearXCatmullYSpline.Default( new Float2(0.0,0.0),  new Float2(0.60,0.1), new Float2(0.75,0.5),  new Float2(0.90,0.8), new Float2(1.0,0.95) );
+	Spline grn = new LinearXCatmullYSpline.Default( new Float2(0.0,0.0),  new Float2(0.35,0.1), new Float2(0.50,0.95), new Float2(0.65,0.1), new Float2(1.0,0.0) );
+	Spline blu = new LinearXCatmullYSpline.Default( new Float2(0.0,0.95), new Float2(0.10,0.8), new Float2(0.25,0.5),  new Float2(0.40,0.1), new Float2(1.0,0.0) );
+	Spline alp = new LinearXCatmullYSpline.Default( new Float2(0.0,0.4),  new Float2(0.05,0.4), new Float2(0.15,0.2),  new Float2(0.2,0.05), new Float2(0.8,0.05), new Float2(0.85,0.2), new Float2(0.95,0.4), new Float2(1.0,0.4) );
 	Constraint spline_constraint = new Constraint() {
 		public void constrainFirstPoint( Float2 p ){ 
 			p.x = 0;

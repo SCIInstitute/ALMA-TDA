@@ -10,6 +10,7 @@ import usf.saav.alma.app.AlmaModel;
 import usf.saav.alma.app.AlmaTDADev;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
+import usf.saav.alma.data.processors.Extract1Dfrom3D;
 import usf.saav.alma.data.processors.Moment0;
 import usf.saav.alma.data.processors.Moment1;
 import usf.saav.alma.data.processors.Moment2;
@@ -18,6 +19,7 @@ import usf.saav.alma.drawing.HistogramDrawing;
 import usf.saav.alma.drawing.LabelDrawing;
 import usf.saav.alma.drawing.PersistenceDiagramDrawing;
 import usf.saav.alma.drawing.ScalarFieldDrawing;
+import usf.saav.alma.drawing.SpectralLineDrawing;
 import usf.saav.alma.util.ContourTreeThread;
 import usf.saav.common.colormap.DivergentColormap;
 import usf.saav.common.monitor.MonitoredObject;
@@ -38,6 +40,7 @@ public class SingleScalarFieldView {
 	private LabelDrawing ctLabel;
 	private HistogramDrawing hist2d;
 	private HistogramDrawing hist3d;
+	private SpectralLineDrawing lineD;
 
 	private FloatRange1D sf_range = new FloatRange1D();
 	private FloatRange1D m0_range = new FloatRange1D();
@@ -71,6 +74,7 @@ public class SingleScalarFieldView {
 		ctv  = new ContourTreeDrawing( model.curZ );
 		hist2d = new HistogramDrawing( 32 );		
 		hist3d = new HistogramDrawing( 32 );
+		lineD  = new SpectralLineDrawing( );
 
 		////////////////////////////////////////////////
 		//
@@ -125,18 +129,21 @@ public class SingleScalarFieldView {
 		public View( ){  }
 
 		public void setup() {
-			registerSubView( sfv,   	 10 );
-			registerSubView( ctv,   	 20 );
-			registerSubView( hist2d,	 27 );
-			registerSubView( hist3d,	 28 );
-			registerSubView( model.sel,  30 );
-			registerSubView( pdd,   	 40 );
-			registerSubView( ctLabel, 	 45 );
-			registerSubView( sliceLabel, 55 );
-			registerSubView( rangeLabel, 60 );
-
+			registerSubView( sfv,   		 10 );
+			registerSubView( ctv,   		 20 );
+			registerSubView( hist2d,		 27 );
+			registerSubView( hist3d,		 28 );
+			registerSubView( lineD,			 29 );
+			registerSubView( model.sel_box,  30 );
+			registerSubView( model.sel_pnt,  31 );
+			registerSubView( pdd,   		 40 );
+			registerSubView( ctLabel,	 	 45 );
+			registerSubView( sliceLabel,	 55 );
+			registerSubView( rangeLabel,	 60 );
+			
 			super.setup();
 		}
+		
 
 		@Override
 		public void setPosition( int u0, int v0, int w, int h ){
@@ -144,12 +151,15 @@ public class SingleScalarFieldView {
 
 			sfv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			ctv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
-			model.sel.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
+			model.sel_box.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
+			model.sel_pnt.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 
 			pdd.setPosition( winX.start()+10, winY.start()+10, 200,   200 );
 
 			hist2d.setPosition( winX.start()+10, winY.start()+220, 200,   100 );
 			hist3d.setPosition( winX.start()+10, winY.start()+340, 200,   100 );
+			
+			lineD.setPosition( winX.end()-220, winY.start()+220, 200, 100 );
 
 			sliceLabel.setPosition( winX.start()+10, winY.end()-40, 20, 20 );
 			rangeLabel.setPosition( winX.start()+10, winY.end()-40, 20, 20 );
@@ -188,7 +198,8 @@ public class SingleScalarFieldView {
 			registerSubController( pdd,   5 );
 			registerSubController( model.csCont,		   15 );
 
-			model.sel.setCoordinateSystem( model.csCont );
+			model.sel_box.setCoordinateSystem( model.csCont );
+			model.sel_pnt.setCoordinateSystem( model.csCont );
 			ctv.setCoordinateSystem( model.csCont );
 
 			model.csCont.addTranslationCallback( sfv, "setTranslation" );
@@ -212,10 +223,19 @@ public class SingleScalarFieldView {
 			model.cur_ctt.addMonitor( this, "contourTreeUpdate" );
 
 			pdd.addPersistentSimplificationCallback( mvc.controller, "setSimplifyScalarField" );
-			
+
+			model.sel_pnt.addMonitor( this, "single_line_update" );
+
+
 			super.setup();
 
 		}
+		
+		public void single_line_update( int [] _p ){
+			float [] p = model.csCont.getWindowPosition( _p[0], _p[1] );
+			lineD.setData( new Extract1Dfrom3D( view_sf3d.get(), (int)p[0], (int)p[1] ) );
+		}
+
 		
 		public void setViewRefresh( ){
 			needUpdate = true;
@@ -242,10 +262,12 @@ public class SingleScalarFieldView {
 		
 		public void setMouseMode( MouseMode mm ){
 			unregisterSubController( model.csCont );
-			unregisterSubController( model.sel );
+			unregisterSubController( model.sel_box );
+			unregisterSubController( model.sel_pnt );
 			switch(mm){
 			case NAVIGATE: registerSubController(model.csCont, 10 ); break;
-			case SELECT: registerSubController( model.sel, 10 ); break;
+			case SELECT_REGION: registerSubController( model.sel_box, 10 ); break;
+			case SELECT_LINE: registerSubController( model.sel_pnt, 10 ); break;
 			}
 		}
 		
