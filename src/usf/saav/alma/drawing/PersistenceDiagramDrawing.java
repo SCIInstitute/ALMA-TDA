@@ -125,7 +125,6 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		
 		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 
-		g.hint( PConstants.ENABLE_DEPTH_TEST );
 	}
 
 

@@ -26,17 +26,13 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 
 import usf.saav.common.mvc.swing.TApp;
-import usf.saav.common.mvc.swing.TGLFrame;
 
 public class AlmaTDARelease extends AlmaTDADev {
 
-<<<<<<< HEAD
-	public AlmaTDARelease( ){ super(false); }
-=======
+	private static final long serialVersionUID = -226739546547617965L;
+
 
 	public AlmaTDARelease( String title, int x, int y, int w, int h ){ super(title,x,y,w,h,false); }
->>>>>>> swing-replace-processing
-
 
 	public void setup( ){
 		this.selectInput( "Select a file", "fileSelected",  null, this );
@@ -56,8 +52,6 @@ public class AlmaTDARelease extends AlmaTDADev {
 		}
 	}
 
-<<<<<<< HEAD
-=======
 
 	public JInternalFrame createGLFrame() {
 		/*
@@ -69,7 +63,7 @@ public class AlmaTDARelease extends AlmaTDADev {
 		return null;
 	}
 
->>>>>>> swing-replace-processing
+
 	public static void main(String args[]) {
 		//TestFrame frame = new TestFrame();
 		javax.swing.SwingUtilities.invokeLater( new Runnable() {

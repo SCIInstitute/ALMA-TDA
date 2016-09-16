@@ -91,10 +91,6 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 	private JButton		guiBuildTree;
 	
 	
-<<<<<<< HEAD
-
-	public AlmaGui( PApplet papplet, MonitoredInteger curZ, MonitoredInteger z0, MonitoredInteger z1 ){
-=======
 	
 	public AlmaGui( int x, int y, MonitoredInteger curZ, MonitoredInteger z0, MonitoredInteger z1 ){
 	    super("Controls",
@@ -102,8 +98,6 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 		          false, //closable
 		          false, //maximizable
 		          true);//iconifiable
-
->>>>>>> swing-replace-processing
 
 	    setLocation( x, y );
 	    setSize( 150, 800 );
@@ -206,19 +200,6 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 		panelTree.add( guiTreeCon    = createRadioButton("Contour Tree", true,  rcTree) );
 	    
 
-		
-<<<<<<< HEAD
-		rcTree = new IFRadioController("Tree Type");
-		rcTree.addActionListener( this );
-		
-		c.add( guiTreeMer    = new IFRadioButton("Merge Tree",   u0, v0, rcTree) );
-		c.add( guiTreeSpl    = new IFRadioButton("Split Tree",   u0, v0, rcTree) );
-		c.add( guiTreeCon    = new IFRadioButton("Contour Tree", u0, v0, rcTree) );
-		guiTreeCon.setSelected();
-=======
->>>>>>> swing-replace-processing
-
-        
 		rcDim = new ButtonGroup();
 		JPanel panelDim = new JPanel(new GridLayout(0, 1));
 		panelDim.setBorder( BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.black), "Tree Calculation" ) );
@@ -248,38 +229,12 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 		this.setSize( new Dimension(150,550) );
 		
 	}
-<<<<<<< HEAD
-	
-	
-	public void refreshVariables( ){
-		try {
-		if( Integer.parseInt( guiZ.getValue() ) != monZ.get() ){
-			guiZ.setValue( Integer.toString(monZ.get()) );
-		}
-		if( Integer.parseInt( guiZ0.getValue() ) != monZ0.get() ){
-			guiZ0.setValue( Integer.toString(monZ0.get()) );
-		}
-		if( Integer.parseInt( guiZ1.getValue() ) != monZ1.get() ){
-			guiZ1.setValue( Integer.toString(monZ1.get()) );
-		}
-		} catch( NumberFormatException nfe ){
-			guiZ.setValue( Integer.toString(monZ.get()) );
-			guiZ0.setValue( Integer.toString(monZ0.get()) );
-			guiZ1.setValue( Integer.toString(monZ1.get()) );
-		}
-	}
-	
-	
-	public void actionPerformed( GUIEvent e ){
-		
-		setControlPositions();
-=======
+
 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
->>>>>>> swing-replace-processing
 
 		if( e.getSource() == guiViewSF  ){		monView.set( ViewMode.SCALARFIELD );	}
 		if( e.getSource() == guiViewM0  ){		monView.set( ViewMode.MOMENT0 );		}
@@ -317,68 +272,6 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 		
 	}
 	
-<<<<<<< HEAD
-
-	private void setControlPositions(){
-		
-		int u0 = winX.start();
-		int v0 = winY.start();
-		int width = winX.length();
-		int height = winY.length();
-
-		guiBuildTree.setSize( width-50, 20 );		
-		
-		c.setPosition( u0, v0 );
-		c.setSize( width, height );
-		
-		guiSliceGrp.clear();
-		guiSliceGrp.addComponent( guiLblSlice, Align.LEFT);
-		guiSliceGrp.addComponent( new IFHAlign(  u0, v0, 10, 10, guiZ ), 	     Align.LEFT);
-		guiSliceGrp.addComponent( guiLblVol,   Align.LEFT);
-		guiSliceGrp.addComponent( new IFHAlign(  u0, v0, 10, 10, guiZ0, guiZ1 ), Align.LEFT);
-		guiSliceGrp.setPosition( u0+10, 10 );
-		guiSliceGrp.setSize( width-20, 40 );
-
-		guiViewGrp.clear();
-		guiViewGrp.addComponent( guiViewSF,   Align.LEFT );
-		guiViewGrp.addComponent( guiViewM0,   Align.LEFT );
-		guiViewGrp.addComponent( guiViewM1,   Align.LEFT );
-		guiViewGrp.addComponent( guiViewM2,   Align.LEFT );
-		guiViewGrp.addComponent( guiViewVol,  Align.LEFT );
-		guiViewGrp.addComponent( guiShowTree, Align.LEFT );
-		guiViewGrp.addComponent( guiShowSimp, Align.LEFT );
-		guiViewGrp.setPosition( u0+10, guiSliceGrp.getY() + guiSliceGrp.getHeight() + 15 );
-		guiViewGrp.setSize( width-20, 40 );
-
-		guiMouseGrp.clear();
-		guiMouseGrp.addComponent( guiMMNav, Align.LEFT );
-		guiMouseGrp.addComponent( guiMMSel, Align.LEFT );
-		guiMouseGrp.setPosition( u0+10, guiViewGrp.getY() + guiViewGrp.getHeight() + 15 );
-		guiMouseGrp.setSize( width-20, 40 );
-
-		guiTreeGrp.clear();
-		guiTreeGrp.addComponent( guiTreeMer, Align.LEFT );
-		guiTreeGrp.addComponent( guiTreeSpl, Align.LEFT );
-		guiTreeGrp.addComponent( guiTreeCon, Align.LEFT );
-		guiTreeGrp.setSize( width-40, 40 );
-
-		guiDimGrp.clear();
-		guiDimGrp.addComponent( guiDim2D,      Align.LEFT );
-		guiDimGrp.addComponent( guiDim2DStack, Align.LEFT );
-		guiDimGrp.addComponent( guiDim3D,      Align.LEFT );
-		guiDimGrp.setSize( width-40, 40 );
-
-		guiSimpGrp.clear();
-		guiSimpGrp.addComponent( guiTreeGrp,   Align.CENTER );
-		guiSimpGrp.addComponent( guiDimGrp,    Align.CENTER );
-		guiSimpGrp.addComponent( guiBuildTree, Align.CENTER );
-		guiSimpGrp.setPosition( u0+10, guiMouseGrp.getY() + guiMouseGrp.getHeight() + 15 );
-		guiSimpGrp.setSize( width-20, 40 );
-
-	}
-=======
->>>>>>> swing-replace-processing
-	
 	
 	
 	public void refreshVariables( ){
@@ -398,10 +291,5 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 			guiZ1.setText( Integer.toString(monZ1.get()) );
 		}
 	}
-<<<<<<< HEAD
-=======
-	
-	
 
->>>>>>> swing-replace-processing
 }

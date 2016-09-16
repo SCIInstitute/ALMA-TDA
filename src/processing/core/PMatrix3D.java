@@ -775,14 +775,6 @@ public final class PMatrix3D {
   //////////////////////////////////////////////////////////////
 
 
-  static private final float max(float a, float b) {
-    return (a > b) ? a : b;
-  }
-
-  static private final float abs(float a) {
-    return (a < 0) ? -a : a;
-  }
-
   static private final float sin(float angle) {
     return (float) Math.sin(angle);
   }

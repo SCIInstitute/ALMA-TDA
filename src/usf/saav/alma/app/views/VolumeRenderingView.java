@@ -1,5 +1,6 @@
 package usf.saav.alma.app.views;
 
+import usf.saav.alma.app.AlmaGui;
 import usf.saav.alma.app.DataManager;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.drawing.LabelDrawing;
@@ -12,7 +13,6 @@ import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.DefaultGLFrame;
 import usf.saav.common.mvc.PositionedComponent;
 import usf.saav.common.mvc.ViewComponent;
-import usf.saav.common.mvc.swing.TGraphics;
 
 public class VolumeRenderingView extends DefaultGLFrame {
 
@@ -24,15 +24,16 @@ public class VolumeRenderingView extends DefaultGLFrame {
 
 	VolumeRenderer vr;
 	InteractiveTF1D tf1d;
-
+	AlmaGui gui;
 
 	private MonitoredObject<ScalarField3D> view_sf3d = new MonitoredObject<ScalarField3D>( ){
 		@Override protected Class<?> getClassType() { return ScalarField3D.class; } 
 	};
 
-	public VolumeRenderingView( DataManager _dataM, joclController jocl, String title, int x, int y, int width, int height ){
+	public VolumeRenderingView( DataManager _dataM, AlmaGui gui, joclController jocl, String title, int x, int y, int width, int height ){
 		super(title,x,y,width,height);
 
+		this.gui = gui;
 		this.dataM = _dataM;
 		//this.model = _model;
 
@@ -53,11 +54,7 @@ public class VolumeRenderingView extends DefaultGLFrame {
 
 
 
-	@Override
-	protected void update() {
-		// TODO Auto-generated method stub
-		
-	}
+	@Override protected void update() { }
 	
 	public void disable( ){
 		getView().disable();
@@ -106,7 +103,7 @@ public class VolumeRenderingView extends DefaultGLFrame {
 			
 			registerSubController( tf1d, 15 );
 
-			model.gui.monShowSimp.addMonitor( this, "simp_sf3d_update" );
+			gui.monShowSimp.addMonitor( this, "simp_sf3d_update" );
 
 			dataM.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
 
@@ -130,8 +127,8 @@ public class VolumeRenderingView extends DefaultGLFrame {
 		}
 
 		private void refreshViewSF( ){ 
-			boolean showSimplified = model.gui.monShowSimp.get();
-			ScalarField3D sf3D = ((showSimplified)?(model.simp_sf3d):(model.src_sf3d)).get();
+			boolean showSimplified = gui.monShowSimp.get();
+			ScalarField3D sf3D = ((showSimplified)?(dataM.simp_sf3d):(dataM.src_sf3d)).get();
 			view_sf3d.set( sf3D );
 		}
 	}

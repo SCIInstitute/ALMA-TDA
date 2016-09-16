@@ -31,15 +31,6 @@ import usf.saav.common.mvc.swing.TGLFrame;
 
 public class AlmaTDADev extends TApp {
 
-<<<<<<< HEAD
-public class AlmaTDADev extends DefaultApp<AlmaModel, AlmaView, AlmaController> {
-	
-	joclController jocl;
-
-	public AlmaTDADev( ){ this(true); }
-	public AlmaTDADev( boolean verbose ){ 
-		super(verbose); 
-=======
 	private static final long serialVersionUID = 8573376435979745456L;
 
 	private joclController jocl;
@@ -52,22 +43,13 @@ public class AlmaTDADev extends DefaultApp<AlmaModel, AlmaView, AlmaController> 
 	
 	public AlmaTDADev( String title, int x, int y, int w, int h, boolean verbose ){ 
 		super(x,y,w,h); 
->>>>>>> swing-replace-processing
 		jocl = new joclController( );
 		init();
 	}
-<<<<<<< HEAD
-=======
-	
-
->>>>>>> swing-replace-processing
-
 	
 	//@Override
 	public void init( ){
-<<<<<<< HEAD
 		String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-=======
 		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
 		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
 		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_briggs.pbcor.fits";
@@ -75,11 +57,10 @@ public class AlmaTDADev extends DefaultApp<AlmaModel, AlmaView, AlmaController> 
 		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
 		//String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
 		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
-		String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
+		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
 		//String filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";
 		//String filename = "/Users/prosen/Code/alma/data/betsy/SO_7m+12m_natural.feather.fits";
 		
->>>>>>> swing-replace-processing
 		load( filename );
 	}
 	
@@ -89,12 +70,9 @@ public class AlmaTDADev extends DefaultApp<AlmaModel, AlmaView, AlmaController> 
 		dataM = new DataManager( filename );
 		//view = new AlmaView(this);
 		
-<<<<<<< HEAD
-	}
-=======
 		AlmaGui gui = createGUIFrame( );
 		JInternalFrame ssfv = createGLFrame( gui );
-		JInternalFrame vol = createVolFrame( );
+		JInternalFrame vol = createVolFrame( gui );
 		addFrame( gui );
     	addFrame( ssfv );
     	addFrame( vol );
@@ -102,8 +80,6 @@ public class AlmaTDADev extends DefaultApp<AlmaModel, AlmaView, AlmaController> 
 
 	}
 
->>>>>>> swing-replace-processing
-	
 	
 	 
 	public JInternalFrame createGLFrame(AlmaGui gui) {
@@ -112,11 +88,9 @@ public class AlmaTDADev extends DefaultApp<AlmaModel, AlmaView, AlmaController> 
 	    frame.setVisible(true);
 	    return frame;
 	}
-<<<<<<< HEAD
-=======
 	
-	public JInternalFrame createVolFrame( ) {
-		TGLFrame frame = new VolumeRenderingView( dataM, jocl, "Volume Rendering", 0, 0, 1000, 700 );
+	public JInternalFrame createVolFrame(AlmaGui gui) {
+		TGLFrame frame = new VolumeRenderingView( dataM, gui, jocl, "Volume Rendering", 0, 0, 1000, 700 );
 		//frame.putClientProperty("dragMode", "fixed");
 	    frame.setVisible(true);
 	    return frame;
@@ -129,7 +103,6 @@ public class AlmaTDADev extends DefaultApp<AlmaModel, AlmaView, AlmaController> 
 	    return frame;
 	}
 	
->>>>>>> swing-replace-processing
 	
 	public static void main(String args[]) {
 		//TestFrame frame = new TestFrame();

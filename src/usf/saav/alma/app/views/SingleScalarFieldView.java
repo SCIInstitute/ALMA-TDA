@@ -203,12 +203,8 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			dataM.sel_pnt.setCoordinateSystem( dataM.csCont );
 			ctv.setCoordinateSystem( dataM.csCont );
 
-<<<<<<< HEAD
-			model.csCont.addTranslationCallback( sfv, "setTranslation" );
-=======
 			dataM.csCont.addTranslationCallback( sfv, "setTranslation" );
-			//model.csCont.addTranslationCallback( ctv, "setTranslation" );
->>>>>>> swing-replace-processing
+			//dataM.csCont.addTranslationCallback( ctv, "setTranslation" );
 
 			dataM.simp_sf2d.addMonitor( this, "simp_sf2d_update" );
 			dataM.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
