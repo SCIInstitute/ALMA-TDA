@@ -1,7 +1,6 @@
 package usf.saav.alma.app.views;
 
-import processing.core.PApplet;
-import usf.saav.alma.app.AlmaModel;
+import usf.saav.alma.app.DataManager;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.drawing.LabelDrawing;
 import usf.saav.alma.drawing.LabelDrawing.BasicLabel;
@@ -10,12 +9,17 @@ import usf.saav.alma.drawing.VolumeRendering.VolumeRenderer;
 import usf.saav.common.jocl.joclController;
 import usf.saav.common.monitor.MonitoredObject;
 import usf.saav.common.mvc.ControllerComponent;
+import usf.saav.common.mvc.DefaultGLFrame;
 import usf.saav.common.mvc.PositionedComponent;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 
-public class VolumeRenderingView {
+public class VolumeRenderingView extends DefaultGLFrame {
 
-	private AlmaModel model;
+	private static final long serialVersionUID = -4977266239265456457L;
+
+	//private AlmaModel model;
+	private DataManager dataM;
 	private BasicLabel rangeLabel;
 
 	VolumeRenderer vr;
@@ -26,34 +30,33 @@ public class VolumeRenderingView {
 		@Override protected Class<?> getClassType() { return ScalarField3D.class; } 
 	};
 
-	public VolumeRenderingView( PApplet papplet, AlmaModel _model, joclController jocl ){
+	public VolumeRenderingView( DataManager _dataM, joclController jocl, String title, int x, int y, int width, int height ){
+		super(title,x,y,width,height);
 
-		this.model = _model;
+		this.dataM = _dataM;
+		//this.model = _model;
 
-		vr   = new VolumeRenderer( papplet, jocl, 512 );
+		vr   = new VolumeRenderer( graphics, jocl, 512 );
 		tf1d = new InteractiveTF1D( );
 		vr.setTransferFunction( tf1d );
 
 		rangeLabel = new LabelDrawing.BasicLabel() {
 			@Override
 			public void update( ){
-				label = "Range: " + model.z0.get() + "-" + model.z1.get();
+				label = "Range: " + dataM.z0.get() + "-" + dataM.z1.get();
 			}
 		};
-
-	}
-
-	private View view = null;
-	public View getView( ){
-		if( view == null ) view = new View();
-		return view;
+		
+		view = new View();
+		controller = new Controller(true);
 	}
 
 
-	private Controller controller = null;
-	public Controller getController( ){
-		if( controller == null ) controller = new Controller(true);
-		return controller;
+
+	@Override
+	protected void update() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public void disable( ){
@@ -105,7 +108,7 @@ public class VolumeRenderingView {
 
 			model.gui.monShowSimp.addMonitor( this, "simp_sf3d_update" );
 
-			model.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
+			dataM.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
 
 			view_sf3d.addMonitor( vr, "setVolume" );
 			view_sf3d.addMonitor( tf1d, "setData" );
@@ -132,4 +135,5 @@ public class VolumeRenderingView {
 			view_sf3d.set( sf3D );
 		}
 	}
+
 }

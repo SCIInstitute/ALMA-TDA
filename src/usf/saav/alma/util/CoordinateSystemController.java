@@ -130,7 +130,7 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 	}
 
 	@Override
-	public boolean mouseWheel(int mouseX, int mouseY, int count) {
+	public boolean mouseWheel(int mouseX, int mouseY, float count) {
 		if( !isEnabled() ) return false;
 		if( !winX.inRange(mouseX) || !winY.inRange(mouseY) ) return false;
 

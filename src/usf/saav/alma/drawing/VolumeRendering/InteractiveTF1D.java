@@ -20,11 +20,11 @@
  */
 package usf.saav.alma.drawing.VolumeRendering;
 
-import processing.core.PGraphics;
 import usf.saav.alma.drawing.HistogramDrawing;
 import usf.saav.common.MathX;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.spline.LinearXCatmullYSpline;
 import usf.saav.common.spline.Spline;
 import usf.saav.common.spline.Spline.Constraint;
@@ -35,11 +35,13 @@ import usf.saav.common.types.Pair;
 public class InteractiveTF1D extends HistogramDrawing implements ControllerComponent, ViewComponent, TransferFunction1D { // extends ControllerComponent.Default implements ControllerComponent, ViewComponent, TransferFunction1D {
 
 	Float4 [] tf = new Float4[64];
-
-	Spline red = new LinearXCatmullYSpline( new Float2(0.0,0.0),  new Float2(0.60,0.1), new Float2(0.75,0.5),  new Float2(0.90,0.8), new Float2(1.0,0.95) );
-	Spline grn = new LinearXCatmullYSpline( new Float2(0.0,0.0),  new Float2(0.35,0.1), new Float2(0.50,0.95), new Float2(0.65,0.1), new Float2(1.0,0.0) );
-	Spline blu = new LinearXCatmullYSpline( new Float2(0.0,0.95), new Float2(0.10,0.8), new Float2(0.25,0.5),  new Float2(0.40,0.1), new Float2(1.0,0.0) );
-	Spline alp = new LinearXCatmullYSpline( new Float2(0.0,0.4),  new Float2(0.05,0.4), new Float2(0.15,0.2),  new Float2(0.2,0.05), new Float2(0.8,0.05), new Float2(0.85,0.2), new Float2(0.95,0.4), new Float2(1.0,0.4) );
+	//Histogram1D histogram;
+	//Gaussian distro;
+	
+	Spline red = new LinearXCatmullYSpline.Default( new Float2(0.0,0.0),  new Float2(0.60,0.1), new Float2(0.75,0.5),  new Float2(0.90,0.8), new Float2(1.0,0.95) );
+	Spline grn = new LinearXCatmullYSpline.Default( new Float2(0.0,0.0),  new Float2(0.35,0.1), new Float2(0.50,0.95), new Float2(0.65,0.1), new Float2(1.0,0.0) );
+	Spline blu = new LinearXCatmullYSpline.Default( new Float2(0.0,0.95), new Float2(0.10,0.8), new Float2(0.25,0.5),  new Float2(0.40,0.1), new Float2(1.0,0.0) );
+	Spline alp = new LinearXCatmullYSpline.Default( new Float2(0.0,0.4),  new Float2(0.05,0.4), new Float2(0.15,0.2),  new Float2(0.2,0.05), new Float2(0.8,0.05), new Float2(0.85,0.2), new Float2(0.95,0.4), new Float2(1.0,0.4) );
 	Constraint spline_constraint = new Constraint() {
 		public void constrainFirstPoint( Float2 p ){
 			p.x = 0;
@@ -118,7 +120,7 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	}
 
 	@Override
-	public void draw(PGraphics g) {
+	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
 		if( range == null || histogram == null ) return;
 
@@ -133,7 +135,10 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	boolean haveControl = false;
 	Pair<Float2,Float> sel = new Pair<Float2,Float>(null,3.0f);
 
-	@Override public void drawLegend(PGraphics g) { }
+	@Override public void drawLegend(TGraphics g) { }
+	
+	
+	
 
 	@Override public boolean mouseDragged(int mouseX, int mouseY) {
 		if( !isEnabled() ) return false;
@@ -192,7 +197,7 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	}
 
 	@Override
-	public boolean mouseWheel(int mouseX, int mouseY, int count) {
+	public boolean mouseWheel(int mouseX, int mouseY, float count) {
 		return false;
 	}
 }

@@ -20,10 +20,10 @@
  */
 package usf.saav.alma.data.processors;
 
-import processing.core.PApplet;
-import processing.core.PImage;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.common.colormap.Colormap;
+import usf.saav.common.mvc.swing.TGraphics;
+import usf.saav.common.mvc.swing.TImage;
 
 public class StraightThru2D implements ScalarField2D {
 
@@ -41,5 +41,11 @@ public class StraightThru2D implements ScalarField2D {
 	@Override public float getValue(int x, int y) { return src.getValue(x, y); }
 	@Override public double[] getCoordinate(int x, int y) { return src.getCoordinate(x, y); }
 	@Override public double[] getValueRange() { return src.getValueRange(); }
+<<<<<<< HEAD
 	@Override public PImage toPImage(PApplet papplet, Colormap colormap) { return src.toPImage(papplet, colormap); }
+=======
+	@Override public TImage toPImage(TGraphics g, Colormap colormap) { return src.toPImage(g, colormap); }
+	
+
+>>>>>>> swing-replace-processing
 }

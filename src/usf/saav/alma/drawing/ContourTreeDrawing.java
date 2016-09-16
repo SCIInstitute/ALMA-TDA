@@ -22,16 +22,15 @@ package usf.saav.alma.drawing;
 
 import java.util.Set;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
 import usf.saav.alma.algorithm.mesh.Mesh;
 import usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode;
 import usf.saav.alma.algorithm.topology.PersistenceSet;
 import usf.saav.alma.data.ScalarFieldND;
 import usf.saav.alma.util.CoordinateSystem;
+import usf.saav.common.MathX;
 import usf.saav.common.monitor.MonitoredInteger;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.IntRange1D;
 
 public class ContourTreeDrawing extends ViewComponent.Default implements ViewComponent {
@@ -40,6 +39,9 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 	private PersistenceSet ct;
 	private Mesh  cl;
 	private Set<Integer>   selected;
+	//private int tx = 0, ty = 0;
+	//private MonitoredInteger x,y;
+	//private MonitoredDouble zoom;
 	private IntRange1D rx, ry;
 	private CoordinateSystem cs;
 	private MonitoredInteger z;
@@ -48,6 +50,15 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 	public ContourTreeDrawing( MonitoredInteger z ){
 		this.z = z;
 	}
+
+	/*
+	public ContourTreeDrawing( MonitoredInteger x, MonitoredInteger y, MonitoredDouble zoom ){ 
+		this.x = x;
+		this.y = y;
+		this.zoom = zoom;
+	}
+	*/
+	
 
 	public void setRegion( IntRange1D rx, IntRange1D ry ){
 		this.rx = rx;
@@ -65,6 +76,13 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 		this.zr = zr;
 	}
 
+	/*
+	public void setTranslation( int x, int y ){
+		this.tx = x;
+		this.ty = y;
+	}
+	*/
+	
 	public void setSelected( Set<Integer> sel ){
 		selected = sel;
 	}
@@ -76,8 +94,10 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 	public void setCoordinateSystem( CoordinateSystem csc ){
 		this.cs = csc;
 	}
-
-	public void draw( PGraphics g ) {
+	
+	
+	
+	public void draw( TGraphics g ) {
 		if( !isEnabled() ) return;
 		if( rx == null && ry == null ) return;
 
@@ -112,7 +132,7 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 				float [] pos = Mesh.getComponentMidpoint( cl.get(n.getLocation()), sf );
 
 				if( selected.contains(i) ) g.strokeWeight(3);
-				float size = PApplet.lerp(2,15,per/maxPersistence);
+				float size = MathX.lerp(2,15,per/maxPersistence);
 				if( Float.isNaN(size) ) size = 2;
 				if( size > 15 ) size = 20;
 
@@ -141,13 +161,13 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 
 			}
 	}
-
-	public void drawLegend( PGraphics g  ){
+	
+	public void drawLegend( TGraphics g  ){
 		if( !isEnabled() ) return;
 		if( sf == null || cl == null || ct == null ) return;
 
-		g.hint( PConstants.DISABLE_DEPTH_TEST );
-
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
+		
 		g.stroke(0);
 		g.fill(255,255,255,240);
 		g.rect( winX.end()-105, winY.end()-85, 100, 80);
@@ -160,13 +180,14 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 
 		g.fill(0);
 		g.textSize(10);
-		g.textAlign( PConstants.LEFT, PConstants.TOP );
+		g.textAlign( TGraphics.LEFT, TGraphics.TOP );
 		g.text("Leaf",			winX.end()-85, winY.end()-90+10);
 		g.text("Merge",			winX.end()-85, winY.end()-75+10);
 		g.text("Split",			winX.end()-85, winY.end()-60+10);
 		g.text("Out of Layer",  winX.end()-85, winY.end()-45+10);
 		g.text("Unknown/Error", winX.end()-85, winY.end()-30+10);
 
-		g.hint( PConstants.ENABLE_DEPTH_TEST );
+		g.hint( TGraphics.ENABLE_DEPTH_TEST );
+
 	}
 }

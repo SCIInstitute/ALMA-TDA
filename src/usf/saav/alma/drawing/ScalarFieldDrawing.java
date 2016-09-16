@@ -20,19 +20,17 @@
  */
 package usf.saav.alma.drawing;
 
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
-import processing.core.PImage;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.processors.Subsample2D;
 import usf.saav.common.MathX;
 import usf.saav.common.colormap.DivergentColormap;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
+import usf.saav.common.mvc.swing.TImage;
 
 public class ScalarFieldDrawing extends ViewComponent.Default implements ViewComponent {
 
-	public ScalarFieldDrawing( PApplet papplet ){
+	public ScalarFieldDrawing( TGraphics papplet ){
 		this.papplet = papplet;
 	}
 
@@ -64,33 +62,36 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 	}
 
 	@Override
-	public void draw(PGraphics g) {
+	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
 		if( img == null ) return;
 
-		g.imageMode(PConstants.CENTER);
-		g.image( img, winX.length()/2+tx, winY.length()/2+ty, (int)(winX.length()), (int)(winY.length()) );
+		g.imageMode(TGraphics.CENTER);
+		g.image( img, winX.length()/2+tx, winY.length()/2+ty, (int)(winX.length()), (int)(winY.length()) ); 
+
 	}
 
-	public void drawLegend(PGraphics g) {
+
+	public void drawLegend(TGraphics g) {
 		if( !isEnabled() ) return;
 		if( colormap == null ) return;
-
-		g.hint( PConstants.DISABLE_DEPTH_TEST );
+		
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 
 		g.stroke(0);
 		g.fill(255,255,255,240);
 		g.rect( winX.length()-105, 5, 100, 120);
 		colormap.drawScale(g, winX.length()-100, 10, 20, 110);
 
-		g.hint( PConstants.ENABLE_DEPTH_TEST );
+		g.hint( TGraphics.ENABLE_DEPTH_TEST );
+		
 	}
 
 	// Local pointers to global data
-	private PApplet papplet;
+	private TGraphics papplet;
 
 	// Image related variables
-	private PImage img = null;
+	private TImage img = null;
 	private DivergentColormap colormap = null;
 
 	// Input scalar field

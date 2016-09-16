@@ -20,9 +20,8 @@
  */
 package usf.saav.alma.drawing;
 
-import processing.core.PConstants;
-import processing.core.PGraphics;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.common.mvc.swing.TGraphics;
 
 public abstract class LabelDrawing extends ViewComponent.Default implements ViewComponent {
 
@@ -34,23 +33,23 @@ public abstract class LabelDrawing extends ViewComponent.Default implements View
 	}
 
 	public int getLabelSize(){ return textSize; }
-
-	@Override public void draw( PGraphics g ){
+	
+	@Override public void draw( TGraphics g ){
 		if( !isEnabled() ) return;
-
-		g.hint( PConstants.DISABLE_DEPTH_TEST );
+		
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 		g.textSize(textSize);
 		g.strokeWeight(1);
 		g.stroke(0);
 		g.fill(255,255,255,240);
 		g.rect( winX.start(), winY.start(), Math.max(winX.length(),g.textWidth(label)+10), Math.max(winY.length(), textSize+5) );
-
-		g.textAlign( PConstants.LEFT, PConstants.TOP );
+		
+		g.textAlign( TGraphics.LEFT, TGraphics.TOP );
 		g.stroke(0);
 		g.fill(0);
 		g.text(label, winX.start()+5, winY.start() );
 
-		g.hint( PConstants.ENABLE_DEPTH_TEST );
+		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 
 	}
 
@@ -83,7 +82,7 @@ public abstract class LabelDrawing extends ViewComponent.Default implements View
 		}
 
 		@Override
-		public void draw( PGraphics g ){
+		public void draw( TGraphics g ){
 			frameCount++;
 			g.textSize(textSize);
 			setPosition( getU0(), getV0(), (int)Math.max( getWidth( ), g.textWidth(label)+10 ), getHeight() );

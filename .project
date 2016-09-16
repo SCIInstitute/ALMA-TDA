@@ -14,13 +14,6 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>core</name>
-			<type>2</type>
-			<location>/Users/prosen/Code/ALMA-TDA/libraries/saav-core</location>
-		</link>
-	</linkedResources>
 	<filteredResources>
 		<filter>
 			<id>1469391969771</id>
