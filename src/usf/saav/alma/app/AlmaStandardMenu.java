@@ -19,9 +19,18 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 	private JMenuItem menuOpen;
 	private JMenuItem menuClose;
 	private JMenuItem menuExit;
-	
+
+	private JMenu menuProperties;
+
 	public  MonitoredTrigger monFileOpen  = new MonitoredTrigger("File Open");
 	public  MonitoredTrigger monFileClose = new MonitoredTrigger("File Close");
+
+	public  MonitoredTrigger monPropGen  = new MonitoredTrigger("General Properties");
+	public  MonitoredTrigger monPropHist = new MonitoredTrigger("History");
+
+	private JMenuItem menuProps;
+
+	private JMenuItem menuHist;
 
 	
 	public AlmaStandardMenu( ){
@@ -32,11 +41,9 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 
 		menuClose = new JMenuItem("Close", KeyEvent.VK_C );
 		menuClose.addActionListener( this );
-		menuClose.addActionListener( this );
-
 		
 		menuExit = new JMenuItem("Exit", KeyEvent.VK_Q );
-		menuOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+		menuExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 		menuExit.addActionListener( this );
 
 		menuFile = new JMenu("File");
@@ -48,6 +55,23 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 
 		this.add(menuFile);
 
+		
+		menuProps = new JMenuItem("Show Properties", KeyEvent.VK_P );
+		menuProps.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+		menuProps.addActionListener( this );
+
+		menuHist = new JMenuItem("Show History", KeyEvent.VK_H );
+		menuHist.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
+		menuHist.addActionListener( this );
+
+		menuProperties = new JMenu("Properties");
+		menuProperties.add(menuProps);
+		menuProperties.add(menuHist);
+
+		this.add(menuProperties);
+
+		
+
 	}
 
 	@Override
@@ -56,6 +80,8 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 		if( e.getSource() == menuExit  ){ System.exit(0);		  }
 		if( e.getSource() == menuOpen  ){ monFileOpen.trigger();  }
 		if( e.getSource() == menuClose ){ monFileClose.trigger(); }
+		if( e.getSource() == menuProps ){ monPropGen.trigger();   }
+		if( e.getSource() == menuHist  ){ monPropHist.trigger();  }
 		
 	}
 	

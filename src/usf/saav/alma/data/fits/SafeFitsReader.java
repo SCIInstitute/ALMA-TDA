@@ -22,12 +22,10 @@ package usf.saav.alma.data.fits;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
-import usf.saav.alma.data.fits.FitsReader.FitsProperty;
 import usf.saav.common.range.IntRange1D;
 
 public class SafeFitsReader extends FitsReader.Default implements FitsReader {
@@ -47,14 +45,20 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 	}
 	
 	@Override
-	public Vector<String> getHistory( ){
+	public FitsHistory getHistory( ){
 		return reader.getHistory();
 	}
 	
 	@Override
-	public Vector<FitsProperty> getProperties( ){
+	public FitsProperties getProperties( ){
 		return reader.getProperties();
 	}
+	
+	@Override
+	public FitsTable getTable( ){
+		return reader.getTable();
+	}
+
 
 	@Override
 	public float getElement(int x, int y, int z, int w) {

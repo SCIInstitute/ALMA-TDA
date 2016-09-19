@@ -29,7 +29,7 @@ public class AlmaStartupMenu  extends JMenuBar implements ActionListener {
 		menuOpen.addActionListener( this );
 
 		menuExit = new JMenuItem("Exit", KeyEvent.VK_Q );
-		menuOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+		menuExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 		menuExit.addActionListener( this );
 
 		menuFile = new JMenu("File");

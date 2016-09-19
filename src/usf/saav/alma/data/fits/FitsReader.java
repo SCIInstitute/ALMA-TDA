@@ -22,7 +22,6 @@ package usf.saav.alma.data.fits;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.alma.data.ScalarField2D;
@@ -36,8 +35,10 @@ public interface FitsReader {
 
 	public IntRange1D[] getAxesSize();
 	
-	public Vector<String> getHistory( );
-	public Vector<FitsProperty> getProperties( );
+	public FitsHistory getHistory( );
+	public FitsProperties getProperties( );
+	public FitsTable getTable();
+
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A SINGLE ELEMENT FROM THE DATA            //
@@ -108,22 +109,6 @@ public interface FitsReader {
 		}
 
 	}
-
-	public class FitsProperty {
-		String label;
-		String value;
-		String comment;
-		public FitsProperty( String _label, String _value, String _comment ){
-			label = _label;
-			value = _value;
-			comment = _comment;
-		}
-		@Override
-		public String toString( ){
-			String ret = label;
-			if( value != null ) ret += ": " + value; 
-			if( comment != null ) ret += "\t// " + comment;
-			return ret;
-		}
-	}
+	
+	
 }

@@ -134,7 +134,7 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 		if( !isEnabled() ) return false;
 		if( !winX.inRange(mouseX) || !winY.inRange(mouseY) ) return false;
 
-		zoom.set( zoom.get()*Math.pow(0.95, count) );
+		zoom.set( zoom.get()*Math.pow(0.9, count) );
 		return true;
 	}
 }

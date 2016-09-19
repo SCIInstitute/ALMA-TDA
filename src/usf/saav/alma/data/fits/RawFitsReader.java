@@ -22,7 +22,6 @@ package usf.saav.alma.data.fits;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 
 import nom.tam.fits.BasicHDU;
 import nom.tam.fits.BinaryTableHDU;
@@ -35,7 +34,6 @@ import nom.tam.util.Cursor;
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
-import usf.saav.alma.data.fits.FitsReader.FitsProperty;
 import usf.saav.common.range.IntRange1D;
 
 
@@ -47,11 +45,13 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	ImageTiler tiler;
 
 	IntRange1D [] axesRange;
+	
 	double [] coordOrigin = new double[4];
-	double [] coordDelta = new double[4];
+	double [] coordDelta  = new double[4];
 
-	Vector<String> history = new Vector<String>( );
-	Vector<FitsProperty> properties = new Vector<FitsProperty>( );
+	FitsHistory    history    = new FitsHistory( );
+	FitsProperties properties = new FitsProperties( );
+	FitsTable      table      = null;
 
 
 	public RawFitsReader( String filename, boolean verbose ) throws FitsException, IOException {
@@ -103,11 +103,6 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
       			   }
       		   }
       		   
-      		   for(FitsProperty fp : properties){
-      			 print_info_message(fp.toString());
-      		   }
-				 
-
 				tiler = img.getTiler();
 
 			}
@@ -115,48 +110,29 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 				BinaryTableHDU bt = (BinaryTableHDU)header;
 
+				table = new FitsTable( bt.getNRows(), bt.getNCols() );
+				for( int i = 0; i < bt.getNCols(); i++){
+					table.setColumnLabel(i, bt.getColumnName(i));
+				}
+				
+				for( int row = 0; row < bt.getNRows(); row++){
+					for(int col = 0; col < bt.getNCols(); col++){
+						table.setData( row, col, bt.getElement( row, col) );
+					}
+				}
 
 				for( int s : bt.getAxes() ){
 					print_info_message( Integer.toString(s) );
 				}
-
-				for( int i = 0; i < bt.getNCols(); i++){
-					print_info_message(bt.getColumnName(i));
-				}
-
-				print_info_message(bt.getNCols() + "x" + bt.getNRows() );
-
-				float[] c0 = (float[])bt.getColumn(0);
-				print_info_message( Integer.toString(c0.length) );
-
-				for( int row = 0; row < bt.getNRows(); row++){
-					String msg = "";
-					for(int col = 0; col < bt.getNCols(); col++){
-						Object o = bt.getElement( row, col);
-						if( o instanceof int[] ){
-							for(int i : (int[])o){
-								msg += i + ", ";
-							}
-						}
-						if( o instanceof float[] ){
-							for(float i : (float[])o){
-								msg += i + ", ";
-							}
-						}
-						msg += "| ";
-					}
-					print_info_message(msg);
-				}
-				print_info_message("got binary table");
+				
+				print_info_message( table.toString() );
+				
 			}
 			else{
 				print_warning_message("Unknown Header Type: " + header.getClass().getSimpleName() );
 			}
 
 		}
-
-
-		//s.close();
 
 	}
 
@@ -168,16 +144,22 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		}
 	}
 	
-	
-	public Vector<String> getHistory( ){
+	@Override
+	public FitsHistory getHistory( ){
 		return history;
 	}
 	
-	public Vector<FitsProperty> getProperties( ){
+	@Override
+	public FitsProperties getProperties( ){
 		return properties;
 	}
 
+	@Override
+	public FitsTable getTable( ){
+		return table;
+	}
 
+	
 
 	public IntRange1D[] getAxesSize(){ return this.axesRange; } 
 
@@ -380,12 +362,6 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	}
 
 
-	public static void main( String [] args ){
-		try {
-			new RawFitsReader("/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits", true);
-		} catch (FitsException | IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("operation complete");
-	}
+
 }
+

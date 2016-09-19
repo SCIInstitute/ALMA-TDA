@@ -31,7 +31,6 @@ public class AlmaTDARelease extends AlmaTDADev {
 
 	
 	public static void main(String args[]) {
-		//TestFrame frame = new TestFrame();
 		javax.swing.SwingUtilities.invokeLater( new Runnable() {
             public void run() {
             	TApp frame = new AlmaTDARelease( 5, 5, 1200, 800 );

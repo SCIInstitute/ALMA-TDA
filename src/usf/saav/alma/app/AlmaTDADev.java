@@ -20,11 +20,13 @@
  */
 package usf.saav.alma.app;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.filechooser.FileFilter;
 
 import nom.tam.fits.common.FitsException;
 import usf.saav.alma.app.views.SingleScalarFieldView;
@@ -34,6 +36,36 @@ import usf.saav.common.mvc.swing.TApp;
 import usf.saav.common.mvc.swing.TGLFrame;
 
 public class AlmaTDADev extends TApp {
+	
+
+	public static void main(String args[]) {
+		javax.swing.SwingUtilities.invokeLater( new Runnable() {
+            public void run() {
+            	AlmaTDADev frame = new AlmaTDADev( 5, 5, 1200, 800, true );
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
+                
+           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
+           		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_briggs.pbcor.fits";
+           		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_uniform.pbcor.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
+           		String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/betsy/SO_7m+12m_natural.feather.fits";
+            		
+           		frame.loadFile( filename );
+
+            }
+        });
+	}
+	
+	
+	
+	
 
 	private static final long serialVersionUID = 8573376435979745456L;
 
@@ -65,22 +97,33 @@ public class AlmaTDADev extends TApp {
 		menuStandard = new AlmaStandardMenu( );
 		menuStandard.monFileOpen.addMonitor(  this, "fileOpen" );
 		menuStandard.monFileClose.addMonitor( this, "fileClose" );
+		menuStandard.monPropGen.addMonitor(   this, "showGeneralProperties" );
+		menuStandard.monPropHist.addMonitor(  this, "showHistory" );
 		
 		this.setJMenuBar( menuStartup );
 		
 		this.setTitle( "ALMA TDA" );
 
 	}
-
+	
+	public void showGeneralProperties( ){
+		// TODO: Display window
+	}
+	
+	public void showHistory( ){
+		// TODO: Display window
+	}
+	
 	
 	public void fileOpen( ){
 		
 		final JFileChooser fc = new JFileChooser();
+		fc.setFileFilter( new FitsFileFilter() );
 
 		switch( fc.showOpenDialog(this) ){
 			case JFileChooser.APPROVE_OPTION: 
-				closeFile(); 
-				openFile( fc.getSelectedFile().getAbsolutePath() ); 
+				fileClose(); 
+				loadFile( fc.getSelectedFile().getAbsolutePath() ); 
 				break;
 			case JFileChooser.CANCEL_OPTION:  
 				return;
@@ -92,10 +135,6 @@ public class AlmaTDADev extends TApp {
 	}
 
 	public void fileClose( ){
-		closeFile( );
-	}
-	
-	public void closeFile( ){
 		if( guiFrame != null ) guiFrame.hide();
 		if( slcFrame != null ) slcFrame.hide();
 		if( volFrame != null ) volFrame.hide();
@@ -106,8 +145,8 @@ public class AlmaTDADev extends TApp {
 		this.setTitle( "ALMA TDA" );
 		this.setJMenuBar( menuStartup );
 	}
-
-	public void openFile( String filename ){
+	
+	public void loadFile( String filename ){
 		
 		try {
 			dataSM = new DataSetManager( filename );
@@ -134,30 +173,23 @@ public class AlmaTDADev extends TApp {
 	}
 
 	
-	public static void main(String args[]) {
-		javax.swing.SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-            	AlmaTDADev frame = new AlmaTDADev( 5, 5, 1200, 800, true );
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setVisible(true);
-                
-           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
-           		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_briggs.pbcor.fits";
-           		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_uniform.pbcor.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
-           		String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/betsy/SO_7m+12m_natural.feather.fits";
-            		
-           		frame.openFile( filename );
-
-            }
-        });
-	}
 	
+	
+	private class FitsFileFilter extends FileFilter {
+
+		@Override
+		public boolean accept(File f){
+	        if(f.isDirectory()) return true;
+	        else if(f.getName().toLowerCase().endsWith(".fits")) return true;
+	            else return false;
+	    }
+
+		@Override
+		public String getDescription(){
+	        return "FITS files";
+	    }
+	}
+
+
 	
 }

@@ -22,7 +22,6 @@ package usf.saav.alma.data.fits;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.alma.data.ScalarField2D;
@@ -95,14 +94,20 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	
 	
 	@Override
-	public Vector<String> getHistory( ){
+	public FitsHistory getHistory( ){
 		return reader.getHistory();
 	}
 	
 	@Override
-	public Vector<FitsProperty> getProperties( ){
+	public FitsProperties getProperties( ){
 		return reader.getProperties();
 	}
+	
+	@Override
+	public FitsTable getTable( ){
+		return reader.getTable();
+	}
+
 	
 	private long getOffset( int x, int y, int z ){
 		if( use_zorder )
