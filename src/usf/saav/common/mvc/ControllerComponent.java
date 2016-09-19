@@ -53,7 +53,7 @@ public interface ControllerComponent extends PositionedComponent {
 				} 
 			});
 		}
-		
+
 		public void unregisterSubController( ControllerComponent ctl ){
 			for(int i = 0; i < subcontrols.size(); i++){
 				if( subcontrols.get(i).getSecond().equals(ctl) ){
@@ -61,6 +61,11 @@ public interface ControllerComponent extends PositionedComponent {
 					return;
 				}
 			}
+		}
+		
+
+		public void unregisterAll( ){
+			subcontrols.clear();
 		}
 				
 		@Override public void setup( ){ 

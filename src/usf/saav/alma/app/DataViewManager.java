@@ -32,19 +32,15 @@ import usf.saav.alma.drawing.SelectBoxDrawing;
 import usf.saav.alma.drawing.SelectPointDrawing;
 import usf.saav.alma.util.ContourTreeThread;
 import usf.saav.alma.util.CoordinateSystemController;
+import usf.saav.common.monitor.MonitoredDouble;
+import usf.saav.common.monitor.MonitoredInteger;
 import usf.saav.common.monitor.MonitoredObject;
 import usf.saav.common.range.IntRange1D;
 
-public class DataManager {
+public class DataViewManager {
 
 
-	private Settings settings;
-	public SettingsInt curZ;
-	public SettingsInt x0;
-	public SettingsInt y0;
-	public SettingsInt z0;
-	public SettingsInt z1; 
-	public SettingsDouble zoom;
+
 	
 	public Map< Integer, PersistenceSimplifierND > psf_map = new HashMap< Integer, PersistenceSimplifierND >( );
 	public Map< Integer, ContourTreeThread >       ctt_map = new HashMap< Integer, ContourTreeThread >( );
@@ -63,13 +59,6 @@ public class DataManager {
 	};
 	
 	
-	
-
-
-	
-	FitsReader reader; 
-	
-
 
 	ExecutorService threadPool = Executors.newFixedThreadPool(4);
 	
@@ -86,40 +75,32 @@ public class DataManager {
 	public SelectPointDrawing sel_pnt;
 
 
+	public MonitoredInteger curZ;
+	public MonitoredInteger x0;
+	public MonitoredInteger y0;
+	public MonitoredInteger z0;
+	public MonitoredInteger z1; 
+	public MonitoredDouble zoom;
+	
+	private DataSetManager dsm;
 	
 	
-	
 
-	public DataManager( String filename ){
+	public DataViewManager( DataSetManager dsm ){
 
-		try {
-			reader = new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true );
-		} catch (FitsException | IOException e) {
-			e.printStackTrace();
-		}
+		this.dsm  = dsm;
 
-		try {
-			settings = new Settings( filename + ".snapshot" );
-			x0 = settings.initInteger( "x0", 0 );
-			y0 = settings.initInteger( "y0", 0 );
-			z0 = settings.initInteger( "z0", 0 );
-			z1 = settings.initInteger( "z1", 20 );
-			curZ = settings.initInteger( "curZ", 0 );
-			zoom = settings.initDouble( "zoom", 1 );
-			
-			x0.setValidRange( reader.getAxesSize()[0] );
-			y0.setValidRange( reader.getAxesSize()[1] );
-			z0.setValidRange( reader.getAxesSize()[2] );
-			z1.setValidRange( reader.getAxesSize()[2] );
-			curZ.setValidRange( reader.getAxesSize()[2] );
-			
-		} catch (JSONException | IOException e) {
-			e.printStackTrace();
-		}
-
-		this.csCont = new CoordinateSystemController( x0, y0, zoom );
-		this.sel_box  = new SelectBoxDrawing( );
-		this.sel_pnt  = new SelectPointDrawing( );
+		this.curZ = dsm.curZ;
+		this.x0   = dsm.x0;
+		this.y0   = dsm.y0;
+		this.z0   = dsm.z0;
+		this.z1   = dsm.z1;
+		this.zoom = dsm.zoom;
+		
+		
+		this.csCont  = new CoordinateSystemController( x0, y0, zoom );
+		this.sel_box = new SelectBoxDrawing( );
+		this.sel_pnt = new SelectPointDrawing( );
 
 		
 		x0.addMonitor(   this, "set2DSrcRefresh" );
@@ -148,6 +129,10 @@ public class DataManager {
 		
 		//gui.monBuildTree.addMonitor( this, "buildContourTree" );
 
+	}
+	
+	public void setData( ){
+		
 	}
 
 	
@@ -244,11 +229,7 @@ public class DataManager {
 		IntRange1D yr = new IntRange1D( (int)xy0[1], (int)xy1[1] );
 		
 		// Update 2D scalar field
-		try {
-			src_sf2d.set( reader.getSlice( xr, yr, curZ.get(), 0) );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		src_sf2d.set( dsm.getSlice( xr, yr, curZ.get(), 0) );
 	}
 
 
@@ -264,11 +245,7 @@ public class DataManager {
 		// Update 3D scalar field
 		LayeredVolume stack = new LayeredVolume( );
 		for(int z = z0.get(); z<= z1.get(); z++){
-			try{ 
-				stack.addLayers( reader.getSlice( xr, yr, z, 0) );
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			stack.addLayers( dsm.getSlice( xr, yr, z, 0) );
 		}
 		src_sf3d.set(stack);
 		

@@ -51,6 +51,10 @@ public interface ViewComponent extends PositionedComponent {
 				}
 			}
 		}
+		
+		public void unregisterAll( ){
+			subviews.clear();
+		}
 						
 		@Override 
 		public void draw( TGraphics g ){ 

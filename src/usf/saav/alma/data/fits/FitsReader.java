@@ -22,6 +22,7 @@ package usf.saav.alma.data.fits;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.alma.data.ScalarField2D;
@@ -32,76 +33,97 @@ import usf.saav.common.range.IntRange1D;
 public interface FitsReader {
 
 	public File getFile();
-	
+
 	public IntRange1D[] getAxesSize();
 	
+	public Vector<String> getHistory( );
+	public Vector<FitsProperty> getProperties( );
+
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A SINGLE ELEMENT FROM THE DATA            //
 	/////////////////////////////////////////////////////////////////////
 	public float getElement( int x, int y, int z, int w );
 
-	
+
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A ROW FROM THE DATA                       //
 	/////////////////////////////////////////////////////////////////////
 	public ScalarField1D getRow( int y, int z, int w ) throws IOException;
 	public ScalarField1D getRow( IntRange1D x_range, int y, int z, int w ) throws IOException;
-	
-	
+
+
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A COLUMN FROM THE DATA                    //
 	/////////////////////////////////////////////////////////////////////
 	public ScalarField1D getColumn( int x, int z, int w ) throws IOException;
 	public ScalarField1D getColumn( int x, IntRange1D y_range, int z, int w ) throws IOException;
-	
-	
+
+
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A LINE FROM THE DATA                      //
 	/////////////////////////////////////////////////////////////////////
 	public ScalarField1D getLine( int x, int y, int w ) throws IOException;
 	public ScalarField1D getLine( int x, int y, IntRange1D z_range, int w ) throws IOException;
-	
-	
+
+
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A SLICE FROM THE DATA                     //
 	/////////////////////////////////////////////////////////////////////
 	public ScalarField2D getSlice( int z, int w ) throws IOException;
 	public ScalarField2D getSlice( IntRange1D x_range, IntRange1D y_range, int z, int w ) throws IOException;
-	
+
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A CUBE/VOLUME FROM THE DATA               //
 	/////////////////////////////////////////////////////////////////////
 	public ScalarField3D getVolume( int w ) throws IOException;
 	public ScalarField3D getVolume( IntRange1D x_range, IntRange1D y_range, IntRange1D z_range, int w ) throws IOException;
-	
-	
-	
+
+
+
 	public abstract class Default extends BasicObject implements FitsReader {
 
 		public Default(boolean verbose) {
 			super(verbose);
 		}
-		
+
 		public ScalarField1D getRow( int y, int z, int w ) throws IOException {
 			return getRow( getAxesSize()[0], y, z, w );
 		}
-		
+
 		public ScalarField1D getColumn( int x, int z, int w ) throws IOException {
 			return getColumn( x, getAxesSize()[1], z, w );
 		}
-		
+
 		public ScalarField1D getLine( int x, int y, int w ) throws IOException {
 			return getLine( x, y, getAxesSize()[2], w );
 		}
-		
+
 		public ScalarField2D getSlice( int z, int w ) throws IOException {
 			return getSlice( getAxesSize()[0], getAxesSize()[1], z, w );
 		}
-		
+
 		public ScalarField3D getVolume( int w ) throws IOException {
 			return getVolume( getAxesSize()[0], getAxesSize()[1], getAxesSize()[2], w );
 		}
-		
+
+	}
+
+	public class FitsProperty {
+		String label;
+		String value;
+		String comment;
+		public FitsProperty( String _label, String _value, String _comment ){
+			label = _label;
+			value = _value;
+			comment = _comment;
+		}
+		@Override
+		public String toString( ){
+			String ret = label;
+			if( value != null ) ret += ": " + value; 
+			if( comment != null ) ret += "\t// " + comment;
+			return ret;
+		}
 	}
 }

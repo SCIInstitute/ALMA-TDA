@@ -20,9 +20,13 @@
  */
 package usf.saav.alma.app;
 
+import java.io.IOException;
+
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 
+import nom.tam.fits.common.FitsException;
 import usf.saav.alma.app.views.SingleScalarFieldView;
 import usf.saav.alma.app.views.VolumeRenderingView;
 import usf.saav.common.jocl.joclController;
@@ -33,85 +37,124 @@ public class AlmaTDADev extends TApp {
 
 	private static final long serialVersionUID = 8573376435979745456L;
 
-	private joclController jocl;
-	private DataManager    dataM;
+	private joclController  jocl;
+	
+	private DataViewManager dataVM;
+	private DataSetManager  dataSM;
+
+	private AlmaStartupMenu  menuStartup;
+	private AlmaStandardMenu menuStandard;
+
+	private JInternalFrame guiFrame;
+	private TGLFrame	   slcFrame;
+	private TGLFrame	   volFrame;
 
 	
-	public AlmaTDADev( String title, int x, int y, int w, int h ){ 
-		this(title, x,y,w,h, true);
+	public AlmaTDADev( int x, int y, int w, int h ){ 
+		this( x, y, w, h, true );
 	}
 	
-	public AlmaTDADev( String title, int x, int y, int w, int h, boolean verbose ){ 
-		super(x,y,w,h); 
-		jocl = new joclController( );
-		init();
-	}
-	
-	//@Override
-	public void init( ){
-		String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
-		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_briggs.pbcor.fits";
-		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_uniform.pbcor.fits";
-		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
-		//String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
-		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
-		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
-		//String filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";
-		//String filename = "/Users/prosen/Code/alma/data/betsy/SO_7m+12m_natural.feather.fits";
+	public AlmaTDADev( int x, int y, int w, int h, boolean verbose ){ 
+		super( x, y, w, h ); 
 		
-		load( filename );
-	}
-	
-	
-	public void load( String filename ){
+		jocl = new joclController( ); 
 		
-		dataM = new DataManager( filename );
-		//view = new AlmaView(this);
+		menuStartup = new AlmaStartupMenu( );
+		menuStartup.monFileOpen.addMonitor(  this, "fileOpen" );
 		
-		AlmaGui gui = createGUIFrame( );
-		JInternalFrame ssfv = createGLFrame( gui );
-		JInternalFrame vol = createVolFrame( gui );
-		addFrame( gui );
-    	addFrame( ssfv );
-    	addFrame( vol );
-    	
+		menuStandard = new AlmaStandardMenu( );
+		menuStandard.monFileOpen.addMonitor(  this, "fileOpen" );
+		menuStandard.monFileClose.addMonitor( this, "fileClose" );
+		
+		this.setJMenuBar( menuStartup );
+		
+		this.setTitle( "ALMA TDA" );
 
 	}
 
 	
-	 
-	public JInternalFrame createGLFrame(AlmaGui gui) {
-		TGLFrame frame = new SingleScalarFieldView( dataM, gui, "Slice Viewer", 0, 0, 1000, 700 );
-		//frame.putClientProperty("dragMode", "fixed");
-	    frame.setVisible(true);
-	    return frame;
+	public void fileOpen( ){
+		
+		final JFileChooser fc = new JFileChooser();
+
+		switch( fc.showOpenDialog(this) ){
+			case JFileChooser.APPROVE_OPTION: 
+				closeFile(); 
+				openFile( fc.getSelectedFile().getAbsolutePath() ); 
+				break;
+			case JFileChooser.CANCEL_OPTION:  
+				return;
+			case JFileChooser.ERROR_OPTION:   
+				System.err.println( "JFileChooser error" );
+				return;
+		};
+		
+	}
+
+	public void fileClose( ){
+		closeFile( );
 	}
 	
-	public JInternalFrame createVolFrame(AlmaGui gui) {
-		TGLFrame frame = new VolumeRenderingView( dataM, gui, jocl, "Volume Rendering", 0, 0, 1000, 700 );
-		//frame.putClientProperty("dragMode", "fixed");
-	    frame.setVisible(true);
-	    return frame;
+	public void closeFile( ){
+		if( guiFrame != null ) guiFrame.hide();
+		if( slcFrame != null ) slcFrame.hide();
+		if( volFrame != null ) volFrame.hide();
+		
+		dataSM = null;
+		dataVM = null;
+		
+		this.setTitle( "ALMA TDA" );
+		this.setJMenuBar( menuStartup );
 	}
-	
-	public AlmaGui createGUIFrame() {
-		AlmaGui frame = new AlmaGui( 1000, 0, dataM.curZ, dataM.z0, dataM.z1 );
-		//frame.putClientProperty("dragMode", "fixed");
-	    frame.setVisible(true);
-	    return frame;
+
+	public void openFile( String filename ){
+		
+		try {
+			dataSM = new DataSetManager( filename );
+		} catch (FitsException | IOException e) {
+			System.err.println("Unable to read file");
+			return;
+		}
+		dataVM = new DataViewManager(dataSM );
+		
+		if( guiFrame == null ) addFrame( guiFrame = new AlmaGui( 1000, 0, dataVM.curZ, dataVM.z0, dataVM.z1 ) );
+    	if( slcFrame == null ) addFrame( slcFrame = new SingleScalarFieldView( (AlmaGui) guiFrame, "Slice Viewer", 0, 0, 1000, 700 ) );
+    	if( volFrame == null ) addFrame( volFrame = new VolumeRenderingView(   (AlmaGui) guiFrame, jocl, "Volume Rendering", 100, 100, 1000, 700 ) );
+
+    	((SingleScalarFieldView)slcFrame).setData( dataVM );
+    	(  (VolumeRenderingView)volFrame).setData( dataVM );
+    			
+    	guiFrame.setVisible(true);
+    	slcFrame.setVisible(true);
+		volFrame.setVisible(true);
+		
+		this.setTitle( "ALMA TDA -- " + filename );
+		this.setJMenuBar( menuStandard );
+		
 	}
-	
+
 	
 	public static void main(String args[]) {
-		//TestFrame frame = new TestFrame();
 		javax.swing.SwingUtilities.invokeLater( new Runnable() {
             public void run() {
-            	TApp frame = new AlmaTDADev( "ALMA TDA", 5, 5, 1200, 800, true );
-
+            	AlmaTDADev frame = new AlmaTDADev( 5, 5, 1200, 800, true );
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
+                
+           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
+           		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_briggs.pbcor.fits";
+           		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_uniform.pbcor.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
+           		String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/betsy/SO_7m+12m_natural.feather.fits";
+            		
+           		frame.openFile( filename );
+
             }
         });
 	}

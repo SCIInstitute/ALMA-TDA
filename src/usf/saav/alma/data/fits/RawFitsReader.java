@@ -22,16 +22,20 @@ package usf.saav.alma.data.fits;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 
 import nom.tam.fits.BasicHDU;
 import nom.tam.fits.BinaryTableHDU;
 import nom.tam.fits.Fits;
+import nom.tam.fits.HeaderCard;
 import nom.tam.fits.ImageHDU;
 import nom.tam.fits.common.FitsException;
 import nom.tam.image.ImageTiler;
+import nom.tam.util.Cursor;
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
+import usf.saav.alma.data.fits.FitsReader.FitsProperty;
 import usf.saav.common.range.IntRange1D;
 
 
@@ -46,29 +50,21 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	double [] coordOrigin = new double[4];
 	double [] coordDelta = new double[4];
 
+	Vector<String> history = new Vector<String>( );
+	Vector<FitsProperty> properties = new Vector<FitsProperty>( );
 
 
 	public RawFitsReader( String filename, boolean verbose ) throws FitsException, IOException {
 		super(verbose);
 
-		//BufferedDataInputStream s = new BufferedDataInputStream(new FileInputStream(filename));
-
-		//Fits f = new Fits (s);
 		file = new File(filename);
 		fits = new Fits( file );
-		//f.
 
-		//ImageHDU hdu = (ImageHDU) f.getHDU(0);
-		//ImageTiler tiler = hdu.getTiler();
-		/*short[][] center = (short[][]) tiler.getTile(
-         new int[]{950,950}, new int[]{100,100});
-		 */
-
-
+		
 		for(BasicHDU<?> header : fits.read() ){
 
-
 			if( header instanceof ImageHDU ){
+				
 				ImageHDU img = (ImageHDU)header;
 				int [] axes;
 				axes = img.getAxes();
@@ -89,17 +85,28 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 				coordDelta[2] = img.getHeader().getDoubleValue("CDELT3");
 				coordDelta[3] = img.getHeader().getDoubleValue("CDELT4");
 
-				/*
+				
       		   Cursor<String, HeaderCard> iter = img.getHeader().iterator();
       		   HeaderCard card;
       		   while( (card=iter.next()) != null ){
-      			   if( card.getKey().compareTo("HISTORY")==0 ) continue;
-      			   System.out.print( card.getKey() );
-      			   if( card.getValue() != null ) System.out.print(": " + card.getValue()); 
-      			   if( card.getComment() != null ) System.out.print("\t// " + card.getComment() );
-      			   System.out.println();
+      			   if( card.getKey().compareTo("HISTORY")==0 ){
+      				   history.add( card.getComment() );
+      			   }
+      			   else if( card.getKey().compareTo("END")==0 ){
+      				   break;
+      			   }
+      			   else if( card.getKey().length()==0 ){
+      				   continue;
+      			   }
+      			   else{
+      				 properties.add( new FitsProperty( card.getKey(), card.getValue(), card.getComment() ) );
+      			   }
       		   }
-				 */
+      		   
+      		   for(FitsProperty fp : properties){
+      			 print_info_message(fp.toString());
+      		   }
+				 
 
 				tiler = img.getTiler();
 
@@ -160,6 +167,16 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public Vector<String> getHistory( ){
+		return history;
+	}
+	
+	public Vector<FitsProperty> getProperties( ){
+		return properties;
+	}
+
 
 
 	public IntRange1D[] getAxesSize(){ return this.axesRange; } 

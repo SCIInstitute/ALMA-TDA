@@ -22,6 +22,7 @@ package usf.saav.alma.data.fits;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.alma.data.ScalarField2D;
@@ -90,6 +91,17 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	
+	@Override
+	public Vector<String> getHistory( ){
+		return reader.getHistory();
+	}
+	
+	@Override
+	public Vector<FitsProperty> getProperties( ){
+		return reader.getProperties();
 	}
 	
 	private long getOffset( int x, int y, int z ){

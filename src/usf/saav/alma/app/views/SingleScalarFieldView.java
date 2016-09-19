@@ -6,7 +6,7 @@ import usf.saav.alma.algorithm.topology.PersistenceSet;
 import usf.saav.alma.app.AlmaGui;
 import usf.saav.alma.app.AlmaGui.MouseMode;
 import usf.saav.alma.app.AlmaGui.ViewMode;
-import usf.saav.alma.app.DataManager;
+import usf.saav.alma.app.DataViewManager;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.processors.Extract1Dfrom3D;
@@ -51,7 +51,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 	private DivergentColormap colormap = new DivergentColormap.OrangePurple();
 
 	
-	private DataManager dataM;
+	private DataViewManager dataM;
 
 	private ViewMode viewmode = ViewMode.SCALARFIELD;
 
@@ -67,20 +67,17 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 	AlmaGui gui;
 
 
-	public SingleScalarFieldView( DataManager _dataM, AlmaGui gui, String title, int x, int y, int width, int height ){
+	public SingleScalarFieldView( AlmaGui gui, String title, int x, int y, int width, int height ){
 		super(title,x,y,width,height);
 		
 		this.gui = gui;
 		
-		dataM = _dataM;
-		dataM.ssfv = this;
-
 		view = new View();
 		controller = new Controller(true);
 		
 		sfv  = new ScalarFieldDrawing( this.graphics );
 		pdd  = new PersistenceDiagramDrawing();
-		ctv  = new ContourTreeDrawing( dataM.curZ );
+
 		hist2d = new HistogramDrawing( 32 );		
 		hist3d = new HistogramDrawing( 32 );
 		lineD  = new SpectralLineDrawing( );
@@ -95,6 +92,18 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			}
 		};
 
+	}
+
+	
+
+
+	public void setData( DataViewManager _dataM ) {
+
+		dataM = _dataM;
+		dataM.ssfv = this;
+
+		ctv  = new ContourTreeDrawing( dataM.curZ );
+
 		sliceLabel = new LabelDrawing.BasicLabel() {
 			@Override public void update( ){
 				label = "Slice: " + dataM.curZ.get( );
@@ -106,9 +115,14 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 				label = "Range: " + dataM.z0.get() + "-" + dataM.z1.get();
 			}
 		};
-
+		
+		((View)getView()).setData(dataM);
+		((Controller)getController()).setData(dataM);
+		
 	}
 
+	
+	
 
 	@Override
 	protected void update() {
@@ -129,8 +143,8 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 
 		public View( ){  }
 
-		public void setup() {
-			
+		public void setData( DataViewManager dataM ){
+			this.unregisterAll( );
 			registerSubView( sfv,   		 10 );
 			registerSubView( ctv,   		 20 );
 			registerSubView( hist2d,		 27 );
@@ -143,7 +157,6 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			registerSubView( sliceLabel,	 55 );
 			registerSubView( rangeLabel,	 60 );
 			
-			super.setup();
 		}
 		
 
@@ -196,6 +209,25 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 
 		public void setup( ){
 			
+			gui.monMM.addMonitor( this, "setMouseMode" );
+			gui.monView.addMonitor( this, "setViewMode" );
+			gui.monShowSimp.addMonitor( this, "setViewRefresh" );
+			gui.monShowTree.addMonitor( ctv, "setEnabled" );
+			
+			view_sf2d.addMonitor( hist2d, "setData" );
+			view_sf2d.addMonitor( sfv, "setScalarField" );
+			
+			view_sf3d.addMonitor( hist3d, "setData" );
+
+			//pdd.addPersistentSimplificationCallback( mvc.controller, "setSimplifyScalarField" );
+
+			super.setup();
+
+		}
+		
+		public void setData( DataViewManager dataM ){
+			
+			unregisterAll( );
 			registerSubController( pdd,   5 );
 			registerSubController( dataM.csCont,		   15 );
 
@@ -209,26 +241,13 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			dataM.simp_sf2d.addMonitor( this, "simp_sf2d_update" );
 			dataM.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
 
-			gui.monMM.addMonitor( this, "setMouseMode" );
-			gui.monView.addMonitor( this, "setViewMode" );
-			gui.monShowSimp.addMonitor( this, "setViewRefresh" );
-			gui.monShowTree.addMonitor( ctv, "setEnabled" );
-			
-			view_sf2d.addMonitor( hist2d, "setData" );
-			view_sf2d.addMonitor( sfv, "setScalarField" );
-			
-			view_sf3d.addMonitor( hist3d, "setData" );
-			
+
 			dataM.pss.addMonitor( this,  "need_pdd_update" );
 			
 			dataM.cur_ctt.addMonitor( this, "contourTreeUpdate" );
 
-			//pdd.addPersistentSimplificationCallback( mvc.controller, "setSimplifyScalarField" );
 
 			dataM.sel_pnt.addMonitor( this, "single_line_update" );
-
-
-			super.setup();
 
 		}
 		
@@ -266,9 +285,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			unregisterSubController( dataM.sel_box );
 			unregisterSubController( dataM.sel_pnt );
 			switch(mm){
-			case NAVIGATE: registerSubController(dataM.csCont, 10 ); break;
-			case SELECT_REGION: registerSubController( dataM.sel_box, 10 ); break;
-			case SELECT_LINE: registerSubController( dataM.sel_pnt, 10 ); break;
+				case NAVIGATE:		registerSubController( dataM.csCont,  10 ); break;
+				case SELECT_REGION: registerSubController( dataM.sel_box, 10 ); break;
+				case SELECT_LINE:	registerSubController( dataM.sel_pnt, 10 ); break;
 			}
 		}
 		
