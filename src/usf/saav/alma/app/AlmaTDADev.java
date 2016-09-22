@@ -49,7 +49,7 @@ public class AlmaTDADev extends TApp {
 	
 	//@Override
 	public void init( ){
-		String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+		String filename = "/Users/dwhite/Dropbox/alma/Continuum_33GHz.fits";
 		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
 		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
 		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_briggs.pbcor.fits";

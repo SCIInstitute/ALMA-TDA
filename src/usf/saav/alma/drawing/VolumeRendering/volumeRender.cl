@@ -37,18 +37,10 @@ int intersectBox(float4 r_o, float4 r_d, float4 boxmin, float4 boxmax, float *tn
 
 uint argbFloatToInt(float4 rgba)
 {
-	/*
-    rgba.x = clamp(rgba.x,0.0f,1.0f);
-    rgba.y = clamp(rgba.y,0.0f,1.0f);
-    rgba.z = clamp(rgba.z,0.0f,1.0f);
-    rgba.w = clamp(rgba.w,0.0f,1.0f);
-    return ((uint)(rgba.w*255.0f)<<24) | ((uint)(rgba.z*255.0f)<<0) | ((uint)(rgba.y*255.0f)<<8) | ((uint)(rgba.x*255.0f)<<16);
-    */
-
-    return    (clamp((uint)(rgba.x*255.0f),0,255) << 16)
-    		| (clamp((uint)(rgba.y*255.0f),0,255) << 8 )
-			| (clamp((uint)(rgba.z*255.0f),0,255) << 0 )
-			| (clamp((uint)(rgba.w*255.0f),0,255) << 24);
+    return    (clamp((uint)(rgba.x*255.0f),0u,255u) << 16)
+    		| (clamp((uint)(rgba.y*255.0f),0u,255u) << 8 )
+			| (clamp((uint)(rgba.z*255.0f),0u,255u) << 0 )
+			| (clamp((uint)(rgba.w*255.0f),0u,255u) << 24);
 
 }
 

@@ -72,7 +72,7 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 	private cl_sampler volumeSamplerNearest;
 	private joclMemory d_output;
 	TImage img;
-	
+
 	boolean needUpdate = false;
 
 	PMatrix3D matrixView  = new PMatrix3D();
@@ -89,7 +89,7 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		this.platform = jocl.getPlatform(0);
 		this.res = res;
 
-		init( new File("/Users/prosen/Code/alma/src/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl") );
+		init( new File("/Users/dwhite/Desktop/Dev/ALMA-TDA/src/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl") );
 
 		matrixView.translate(0, 0, -4);
 	}
