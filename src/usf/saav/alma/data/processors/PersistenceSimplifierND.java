@@ -36,6 +36,10 @@ import usf.saav.alma.data.ScalarFieldND;
 import usf.saav.common.Callback;
 import usf.saav.common.range.IntRange1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceSimplifierND.
+ */
 public abstract class PersistenceSimplifierND extends ScalarFieldND.Default implements ScalarFieldND, Runnable {
 
 	private ScalarFieldND sf;
@@ -50,10 +54,29 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 	protected Callback cb = null;
 
 
+	/**
+	 * Instantiates a new persistence simplifier ND.
+	 *
+	 * @param sf the sf
+	 * @param ct the ct
+	 * @param cl the cl
+	 * @param z the z
+	 * @param runImmediately the run immediately
+	 */
 	public PersistenceSimplifierND( ScalarFieldND sf, PersistenceSet ct, Mesh cl, IntRange1D z, boolean runImmediately ){
 		this( sf, ct, cl, z, runImmediately, true );
 	}
 
+	/**
+	 * Instantiates a new persistence simplifier ND.
+	 *
+	 * @param sf the sf
+	 * @param ct the ct
+	 * @param cl the cl
+	 * @param z the z
+	 * @param runImmediately the run immediately
+	 * @param verbose the verbose
+	 */
 	public PersistenceSimplifierND( ScalarFieldND sf, PersistenceSet ct, Mesh cl, IntRange1D z, boolean runImmediately, boolean verbose ){
 		super( verbose );
 		this.sf = sf;
@@ -64,16 +87,53 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 	}
 
 
+	/**
+	 * Gets the tree.
+	 *
+	 * @return the tree
+	 */
 	public PersistenceSet			getTree( ){				return ct; }
+	
+	/**
+	 * Gets the component list.
+	 *
+	 * @return the component list
+	 */
 	public Mesh			getComponentList(){ 	return cl; }
+	
+	/**
+	 * Gets the scalar field.
+	 *
+	 * @return the scalar field
+	 */
 	public ScalarFieldND			getScalarField( ){  	return sf; }
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarFieldND#getSize()
+	 */
 	@Override public int getSize() {	return sf.getSize();	}
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarFieldND#getValue(int)
+	 */
 	@Override public float getValue(int idx) { 	return img[idx]; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarFieldND#getNeighbors(int)
+	 */
 	@Override public int[] getNeighbors(int nodeID) { 	return sf.getNeighbors(nodeID); }
 
+	/**
+	 * Sets the callback.
+	 *
+	 * @param obj the obj
+	 * @param func_name the func name
+	 */
 	public abstract void setCallback( Object obj, String func_name );
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		if( hasRun ){

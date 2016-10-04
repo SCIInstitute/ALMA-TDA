@@ -8,6 +8,10 @@ import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SelectPointDrawing.
+ */
 public class SelectPointDrawing  extends ControllerComponent.Default implements ViewComponent, ControllerComponent {
 
 	
@@ -21,19 +25,35 @@ public class SelectPointDrawing  extends ControllerComponent.Default implements 
 	private Vector<Callback> cb = new Vector<Callback>();
 	
 
+	/**
+	 * Instantiates a new select point drawing.
+	 */
 	public SelectPointDrawing( ){
 		super( false );
 	}
 	
+	/**
+	 * Gets the selection.
+	 *
+	 * @return the selection
+	 */
 	public int [] getSelection( ){
 		return new int[]{ (int)selU0, (int)selV0 };
 	}
 	
+	/**
+	 * Sets the coordinate system.
+	 *
+	 * @param csc the new coordinate system
+	 */
 	public void setCoordinateSystem( CoordinateSystem csc ){
 		this.cs = csc;
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent#draw(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override
 	public void draw(TGraphics g) {
 		if( validSel ){
@@ -53,11 +73,17 @@ public class SelectPointDrawing  extends ControllerComponent.Default implements 
 	}
 
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent#drawLegend(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override
 	public void drawLegend(TGraphics g) { }
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent.Default#mousePressed(int, int)
+	 */
 	@Override
 	public boolean mousePressed( int mouseX, int mouseY ) {
 		if( !winX.inRange(mouseX) || !winY.inRange(mouseY) ) return false;
@@ -82,11 +108,20 @@ public class SelectPointDrawing  extends ControllerComponent.Default implements 
 
 
 
+	/**
+	 * Clear selection.
+	 */
 	public void clearSelection() {
 		validSel = false;
 	}
 
 	
+	/**
+	 * Adds the monitor.
+	 *
+	 * @param obj the obj
+	 * @param func_name the func name
+	 */
 	public void addMonitor( Object obj, String func_name ) {
 		try {
 			this.cb.add(new Callback( obj, func_name, int[].class ) );

@@ -33,14 +33,27 @@ import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.types.Float2;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceDiagramDrawing.
+ */
 public class PersistenceDiagramDrawing extends ViewComponent.Default implements ControllerComponent, ViewComponent {
 
 	Vector<Float2> splinePoints = new Vector<Float2>( );
 
+	/**
+	 * Instantiates a new persistence diagram drawing.
+	 */
 	public PersistenceDiagramDrawing() { }
 
 	PersistenceSet curr = null;
 
+	/**
+	 * Sets the parameterizations.
+	 *
+	 * @param curr the curr
+	 * @param pd the pd
+	 */
 	public void setParameterizations( PersistenceSet curr, PersistenceSet ... pd ){
 
 		if( curr == null || pd == null || pd.length == 0 ){
@@ -64,23 +77,44 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		splinePoints.add( new Float2(getWidth(), getHeight()) );
 	}
 
+	/**
+	 * Sets the selected.
+	 *
+	 * @param sel the new selected
+	 */
 	public void setSelected( Set<Integer> sel ){
 		selected = sel;
 	}
 
+	/**
+	 * Gets the selected.
+	 *
+	 * @return the selected
+	 */
 	public Set<Integer> getSelected( ){
 		return selected;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.PositionedComponent.Default#setPosition(int, int, int, int)
+	 */
 	public void setPosition( int x0, int y0, int size_x, int size_y ){
 		super.setPosition( x0, y0, Math.min(size_x, size_y), Math.min(size_x, size_y) );
 	}
 
+	/**
+	 * Checks if is active.
+	 *
+	 * @return true, if is active
+	 */
 	public boolean isActive(){
 		return ( pd != null );
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#draw(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	public void draw( TGraphics g ){
 		if( !isEnabled() ) return;
 		if( !isActive() ) return;
@@ -149,9 +183,19 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		return ret;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#keyPressed(char)
+	 */
 	@Override public boolean keyPressed(char key) { return false; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mouseWheel(int, int, float)
+	 */
 	@Override public boolean mouseWheel(int mouseX, int mouseY, float count) { return false; }
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mouseMoved(int, int)
+	 */
 	@Override public boolean mouseMoved(int mouseX, int mouseY) { 
 		if( !isEnabled() ) return false;
 		if( !isActive() ) return false;
@@ -159,6 +203,9 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mouseDragged(int, int)
+	 */
 	@Override
 	public boolean mouseDragged(int mouseX, int mouseY) {
 		if( !isEnabled() ) return false;
@@ -174,6 +221,9 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mousePressed(int, int)
+	 */
 	@Override
 	public boolean mousePressed(int mouseX, int mouseY) {
 		if( !isEnabled() ) return false;
@@ -184,6 +234,9 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mouseDoubleClick(int, int)
+	 */
 	@Override
 	public boolean mouseDoubleClick(int mouseX, int mouseY) {
 		if( !isEnabled() ) return false;
@@ -193,6 +246,9 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mouseReleased()
+	 */
 	@Override
 	public boolean mouseReleased() {
 		if( !isEnabled() ) return false;
@@ -204,6 +260,12 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		return false;
 	}
 
+	/**
+	 * Adds the persistent simplification callback.
+	 *
+	 * @param obj the obj
+	 * @param func_name the func name
+	 */
 	public void addPersistentSimplificationCallback( Object obj, String func_name ){
 		simplification.addMonitor(obj, func_name);
 	}

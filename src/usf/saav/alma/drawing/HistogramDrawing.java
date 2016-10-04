@@ -31,6 +31,10 @@ import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HistogramDrawing.
+ */
 public class HistogramDrawing extends ViewComponent.Default implements ViewComponent {
 
 	protected FloatRange1D range;
@@ -45,26 +49,66 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 	protected boolean show_mean			= true;
 	protected boolean show_scales		= true;
 
+	/**
+	 * Instantiates a new histogram drawing.
+	 *
+	 * @param bins the bins
+	 */
 	public HistogramDrawing( int bins ){
 		binCount = bins;
 	}
 
+	/**
+	 * Instantiates a new histogram drawing.
+	 *
+	 * @param bins the bins
+	 * @param verbose the verbose
+	 */
 	public HistogramDrawing( int bins, boolean verbose ){
 		super(verbose);
 		binCount = bins;
 	}
 
+	/**
+	 * Sets the log scale.
+	 */
 	public void setLogScale( ){
 		log_scale = true;
 	}
 
+	/**
+	 * Sets the linear scale.
+	 */
 	public void setLinearScale( ){
 		log_scale = false;
 	}
 
+	/**
+	 * Sets the data.
+	 *
+	 * @param sf the new data
+	 */
 	public void setData( ScalarField1D sf ){ _setData( sf ); }
+	
+	/**
+	 * Sets the data.
+	 *
+	 * @param sf the new data
+	 */
 	public void setData( ScalarField2D sf ){ _setData( sf ); }
+	
+	/**
+	 * Sets the data.
+	 *
+	 * @param sf the new data
+	 */
 	public void setData( ScalarField3D sf ){ _setData( sf ); }
+	
+	/**
+	 * Sets the data.
+	 *
+	 * @param sf the new data
+	 */
 	public void setData( ScalarFieldND sf ){ _setData( sf ); }
 
 	protected void _setData( ScalarFieldND sf ){
@@ -83,6 +127,9 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#draw(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override
 	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;

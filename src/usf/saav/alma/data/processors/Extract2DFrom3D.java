@@ -23,18 +23,39 @@ package usf.saav.alma.data.processors;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Extract2DFrom3D.
+ */
 public class Extract2DFrom3D extends ScalarField2D.Default implements ScalarField2D {
 
 	private ScalarField3D sf;
 	private int layer;
 
+	/**
+	 * Instantiates a new extract 2 D from 3 D.
+	 *
+	 * @param sf the sf
+	 * @param layer the layer
+	 */
 	public Extract2DFrom3D( ScalarField3D sf, int layer ){
 		this.sf = sf;
 		this.layer = layer;
 	}
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getWidth()
+	 */
 	@Override public int getWidth() { return sf.getWidth(); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getHeight()
+	 */
 	@Override public int getHeight() { return sf.getHeight(); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+	 */
 	@Override public float getValue(int x, int y) { return sf.getValue(x, y, layer); }
 
 }

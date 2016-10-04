@@ -20,9 +20,28 @@
  */
 package usf.saav.alma.util;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface CoordinateSystem.
+ */
 public interface CoordinateSystem {
 
+	/**
+	 * Gets the coordinate system position.
+	 *
+	 * @param wx the wx
+	 * @param wy the wy
+	 * @return the coordinate system position
+	 */
 	public float [] getCoordinateSystemPosition( float wx, float wy );
+	
+	/**
+	 * Gets the window position.
+	 *
+	 * @param csx the csx
+	 * @param csy the csy
+	 * @return the window position
+	 */
 	public float [] getWindowPosition( float csx, float csy );
 
 }

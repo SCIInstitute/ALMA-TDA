@@ -22,32 +22,67 @@ package usf.saav.alma.data;
 
 import usf.saav.common.algorithm.Surface1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface ScalarField1D.
+ */
 public interface ScalarField1D extends ScalarFieldND, Surface1D {
 	
 	double getCoordinate( int nodeID );
 	
+	/**
+	 * The Class Empty.
+	 */
 	public class Empty extends ScalarField1D.Default {
 		int w;
 		float default_val;
+		
+		/**
+		 * Instantiates a new empty.
+		 *
+		 * @param w the w
+		 * @param default_val the default val
+		 */
 		public Empty( int w, float default_val ) {
 			this.w = w;
 			this.default_val = default_val;
 		}
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarFieldND#getSize()
+		 */
 		@Override public int getSize() { return w; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarFieldND#getValue(int)
+		 */
 		@Override public float getValue(int x) { return default_val; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.common.algorithm.Surface1D#getWidth()
+		 */
 		@Override public int getWidth() { return w; }
 	}
 	
+	/**
+	 * The Class Default.
+	 */
 	public abstract class Default extends ScalarFieldND.Default implements ScalarField1D {
 
 		protected Default( ){ }
 		protected Default( boolean verbose ){ super(verbose); }
 		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField1D#getCoordinate(int)
+		 */
 		@Override
 		public double getCoordinate( int x ){
 			return x;
 		}
 		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarFieldND#getNeighbors(int)
+		 */
 		@Override
 		public int[] getNeighbors(int nodeID) {
 			int w = getSize();

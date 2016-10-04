@@ -29,38 +29,70 @@ import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.mvc.swing.TImage;
 import usf.saav.common.types.Float4;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface ScalarField2D.
+ */
 public interface ScalarField2D extends ScalarFieldND, Surface2D {
 
+	/**
+	 * Gets the value.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @return the value
+	 */
 	public float getValue( int x, int y );
 	
 	double [] getCoordinate( int x, int y );
 	
 	TImage toPImage( TGraphics g, Colormap colormap );
 	
+	/**
+	 * The Class Default.
+	 */
 	public abstract class Default extends ScalarFieldND.Default implements ScalarField2D {
 
 		protected Default( ){ }
 		protected Default( boolean verbose ){ super(verbose); }
 		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField2D#getCoordinate(int, int)
+		 */
 		@Override
 		public double [] getCoordinate( int x, int y ){
 			return new double[]{x,y};
 		}
 		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarFieldND#getSize()
+		 */
 		@Override
 		public int getSize() {
 			return getWidth()*getHeight();
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarFieldND#getValue(int)
+		 */
 		@Override
 		public float getValue(int nodeID) {
 			return getValue( nodeID%getWidth(), nodeID/getWidth() );
 		}
 		
+		/**
+		 * Checks if is valid.
+		 *
+		 * @param nodeID the node ID
+		 * @return true, if is valid
+		 */
 		public boolean isValid( int nodeID ){
 			return !Float.isNaN( getValue( nodeID ) );
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarFieldND#getNeighbors(int)
+		 */
 		@Override
 		public int[] getNeighbors(int nodeID) { 
 			int width = getWidth();
@@ -83,6 +115,9 @@ public interface ScalarField2D extends ScalarFieldND, Surface2D {
 			return Arrays.copyOf( ret, cur );
 		}
 		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField2D#toPImage(usf.saav.common.mvc.swing.TGraphics, usf.saav.common.colormap.Colormap)
+		 */
 		@Override
 		public TImage toPImage( TGraphics g, Colormap colormap ){
 			TImage img = g.createImage( getWidth(), getHeight(), TGraphics.RGB);
@@ -99,31 +134,72 @@ public interface ScalarField2D extends ScalarFieldND, Surface2D {
 		}
 	}	
 	
+	/**
+	 * The Class Empty.
+	 */
 	public class Empty extends ScalarField2D.Default {
 		int w,h;
 		float default_val;
+		
+		/**
+		 * Instantiates a new empty.
+		 *
+		 * @param w the w
+		 * @param h the h
+		 * @param default_val the default val
+		 */
 		public Empty( int w, int h, float default_val ) {
 			this.w = w;
 			this.h = h;
 			this.default_val = default_val;
 		}
+		
+		/**
+		 * Instantiates a new empty.
+		 *
+		 * @param w the w
+		 * @param h the h
+		 * @param default_val the default val
+		 * @param verbose the verbose
+		 */
 		public Empty( int w, int h, float default_val, boolean verbose ) {
 			super(verbose);
 			this.w = w;
 			this.h = h;
 			this.default_val = default_val;
 		}
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.common.algorithm.Surface2D#getWidth()
+		 */
 		@Override public int getWidth()  {	return w; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.common.algorithm.Surface2D#getHeight()
+		 */
 		@Override public int getHeight() {	return h; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+		 */
 		@Override public float getValue(int x, int y) { return default_val; }
 	}
 	
 
+	/**
+	 * The Class Test.
+	 */
 	public class Test extends Default {
 		
 		float [] data;
 		int width, height;
 		
+		/**
+		 * Instantiates a new test.
+		 *
+		 * @param w the w
+		 * @param h the h
+		 */
 		public Test( int w, int h ){
 			super(true);
 			Random random = new Random();
@@ -135,16 +211,25 @@ public interface ScalarField2D extends ScalarFieldND, Surface2D {
 			}
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.algorithm.Surface2D#getWidth()
+		 */
 		@Override
 		public int getWidth() {
 			return width;
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.algorithm.Surface2D#getHeight()
+		 */
 		@Override
 		public int getHeight() {
 			return height;
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+		 */
 		@Override
 		public float getValue(int x, int y) {
 			return data[y*width+x];

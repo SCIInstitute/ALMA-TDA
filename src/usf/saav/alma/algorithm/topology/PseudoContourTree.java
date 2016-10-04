@@ -22,6 +22,10 @@ package usf.saav.alma.algorithm.topology;
 
 import usf.saav.alma.algorithm.mesh.Mesh;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PseudoContourTree.
+ */
 public class PseudoContourTree implements PersistenceSet {
 
 	private MergeTree mt;
@@ -32,6 +36,11 @@ public class PseudoContourTree implements PersistenceSet {
 	float simplify = 0.0f;
 	
 
+	/**
+	 * Instantiates a new pseudo contour tree.
+	 *
+	 * @param sf the sf
+	 */
 	public PseudoContourTree( Mesh sf ){
 		System.out.println("[ContourTree] Building Contour Tree");
 		
@@ -65,18 +74,46 @@ public class PseudoContourTree implements PersistenceSet {
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#setPersistentSimplification(float)
+	 */
 	public void setPersistentSimplification( float threshold ){ simplify = threshold; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getPersistentSimplification()
+	 */
 	public float getPersistentSimplification( ){ return simplify; }
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getMaxPersistence()
+	 */
 	public float getMaxPersistence(){ return persistence_max; }
+	
+	/**
+	 * Gets the global min.
+	 *
+	 * @return the global min
+	 */
 	public AugmentedJoinTreeNode getGlobalMin(){ return global_min; }
+	
+	/**
+	 * Gets the global max.
+	 *
+	 * @return the global max
+	 */
 	public AugmentedJoinTreeNode getGlobalMax(){ return global_max; }
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#size()
+	 */
 	@Override
 	public int size() {
 		return mt.size() + st.size();
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getBirth(int)
+	 */
 	@Override
 	public float getBirth(int i) {
 		if( i < mt.size() )
@@ -84,6 +121,9 @@ public class PseudoContourTree implements PersistenceSet {
 		return st.getBirth(i-mt.size());
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getDeath(int)
+	 */
 	@Override
 	public float getDeath(int i) {
 		if( i < mt.size() )
@@ -91,6 +131,9 @@ public class PseudoContourTree implements PersistenceSet {
 		return st.getDeath(i-mt.size());
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getPersistence(int)
+	 */
 	@Override
 	public float getPersistence(int i) {
 		if( i < mt.size() )
@@ -98,12 +141,18 @@ public class PseudoContourTree implements PersistenceSet {
 		return st.getPersistence(i-mt.size());
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getNode(int)
+	 */
 	public AugmentedJoinTreeNode getNode(int i) {
 		if( i < mt.size() )
 			return mt.getNode(i);
 		return st.getNode(i-mt.size());
 	}
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#isActive(int)
+	 */
 	public boolean isActive(int i){
 		return getPersistence(i) >= simplify;
 	}

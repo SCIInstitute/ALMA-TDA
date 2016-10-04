@@ -30,6 +30,10 @@ import usf.saav.alma.algorithm.mesh.ScalarFieldMesh;
 import usf.saav.common.algorithm.BinaryMask1D;
 import usf.saav.common.algorithm.DisjointSet1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JoinTree.
+ */
 public class JoinTree implements Runnable {
  
 	private Comparator<? super JoinTreeNode> comparator;
@@ -39,6 +43,11 @@ public class JoinTree implements Runnable {
 	private JoinTreeNode [] grid;
 	protected boolean operationComplete = false;
 
+	/**
+	 * Instantiates a new join tree.
+	 *
+	 * @param sf the sf
+	 */
 	public JoinTree( Mesh sf ) {
 		this.sf = sf;
 		this.comparator = new JoinTreeNode.ComparatorValueAscending();
@@ -50,16 +59,30 @@ public class JoinTree implements Runnable {
 	}
 
 		
+	/**
+	 * Gets the node.
+	 *
+	 * @param x the x
+	 * @return the node
+	 */
 	public JoinTreeNode getNode( int x ){
 		if( !operationComplete ) return null;
 		return grid[x];
 	}
 	
+	/**
+	 * Gets the root.
+	 *
+	 * @return the root
+	 */
 	public JoinTreeNode getRoot( ){
 		if( !operationComplete ) return null;
 		return head;
 	}
 	
+	/**
+	 * Prints the.
+	 */
 	public void print( ){
 		if( !operationComplete ) return;
 		System.out.println("join tree");
@@ -67,6 +90,9 @@ public class JoinTree implements Runnable {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		
@@ -140,6 +166,11 @@ public class JoinTree implements Runnable {
 
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main( String args[] ){
 		usf.saav.alma.data.ScalarField2D sf = new usf.saav.alma.data.ScalarField2D.Test( 10, 10 );
 		JoinTree jt = new JoinTree( new ScalarFieldMesh( sf ) );

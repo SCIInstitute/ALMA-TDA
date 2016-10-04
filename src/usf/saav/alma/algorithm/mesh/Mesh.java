@@ -27,13 +27,30 @@ import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.ScalarFieldND;
 import usf.saav.common.algorithm.Surface1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Mesh.
+ */
 public abstract class Mesh extends Vector<Mesh.Vertex> implements Surface1D {
 	private static final long serialVersionUID = 2187532695992737840L;
 
+	/**
+	 * Instantiates a new mesh.
+	 */
 	public Mesh( ){ }
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface1D#getWidth()
+	 */
 	@Override public int getWidth() { return size(); }
 
+	/**
+	 * Gets the component midpoint.
+	 *
+	 * @param c the c
+	 * @param sf the sf
+	 * @return the component midpoint
+	 */
 	public static float [] getComponentMidpoint( Vertex c, ScalarFieldND sf ){
 		if( sf instanceof ScalarField2D ){
 			return getComponentMidpoint( c, ((ScalarField2D)sf).getWidth(), ((ScalarField2D)sf).getHeight() );
@@ -44,6 +61,14 @@ public abstract class Mesh extends Vector<Mesh.Vertex> implements Surface1D {
 		return null;
 	}
 
+	/**
+	 * Gets the component midpoint.
+	 *
+	 * @param c the c
+	 * @param width the width
+	 * @param height the height
+	 * @return the component midpoint
+	 */
 	public static float [] getComponentMidpoint( Vertex c, int width, int height ){
 		float retX = 0, retY = 0, retZ = 0;
 		int cnt = 0;
@@ -57,6 +82,9 @@ public abstract class Mesh extends Vector<Mesh.Vertex> implements Surface1D {
 		return new float[]{retX/cnt,retY/cnt,retZ/cnt};
 	}
 
+	/**
+	 * The Interface Vertex.
+	 */
 	public interface Vertex {
 		float value();
 		int [] neighbors();

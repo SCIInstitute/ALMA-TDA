@@ -27,13 +27,29 @@ import javax.swing.JInternalFrame;
 
 import usf.saav.common.mvc.swing.TApp;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AlmaTDARelease.
+ */
 public class AlmaTDARelease extends AlmaTDADev {
 
 	private static final long serialVersionUID = -226739546547617965L;
 
 
+	/**
+	 * Instantiates a new alma TDA release.
+	 *
+	 * @param title the title
+	 * @param x the x
+	 * @param y the y
+	 * @param w the w
+	 * @param h the h
+	 */
 	public AlmaTDARelease( String title, int x, int y, int w, int h ){ super(title,x,y,w,h,false); }
 
+	/**
+	 * Setup.
+	 */
 	public void setup( ){
 		this.selectInput( "Select a file", "fileSelected",  null, this );
 	}
@@ -43,6 +59,11 @@ public class AlmaTDARelease extends AlmaTDADev {
 	}
 
 
+	/**
+	 * File selected.
+	 *
+	 * @param selection the selection
+	 */
 	public void fileSelected(File selection) {
 		if (selection == null) {
 			System.err.println("Window was closed or the user hit cancel.");
@@ -53,6 +74,11 @@ public class AlmaTDARelease extends AlmaTDADev {
 	}
 
 
+	/**
+	 * Creates the GL frame.
+	 *
+	 * @return the j internal frame
+	 */
 	public JInternalFrame createGLFrame() {
 		/*
 		TGLFrame frame = new AlmaTDADev( "GL Window", 0, 0, 600, 600 );
@@ -64,6 +90,11 @@ public class AlmaTDARelease extends AlmaTDADev {
 	}
 
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String args[]) {
 		//TestFrame frame = new TestFrame();
 		javax.swing.SwingUtilities.invokeLater( new Runnable() {

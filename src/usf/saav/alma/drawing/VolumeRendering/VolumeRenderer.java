@@ -52,6 +52,10 @@ import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.mvc.swing.TImage;
 import usf.saav.common.types.Float4;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class VolumeRenderer.
+ */
 public class VolumeRenderer extends ControllerComponent.Default implements ViewComponent, ControllerComponent {
 
 	private TransferFunction1D tf;
@@ -84,6 +88,13 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 
 
 
+	/**
+	 * Instantiates a new volume renderer.
+	 *
+	 * @param papplet the papplet
+	 * @param jocl the jocl
+	 * @param res the res
+	 */
 	public VolumeRenderer( TGraphics papplet, joclController jocl, int res ){
 		this.papplet  = papplet;
 		this.platform = jocl.getPlatform(0);
@@ -123,6 +134,11 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		}
 	}
 
+	/**
+	 * Sets the transfer function.
+	 *
+	 * @param tf the new transfer function
+	 */
 	public void setTransferFunction( TransferFunction1D tf ){
 		this.tf = tf;
 
@@ -153,6 +169,11 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		needUpdate = true;
 	}
 
+	/**
+	 * Sets the volume.
+	 *
+	 * @param sf the new volume
+	 */
 	public void setVolume( ScalarField3D sf ){
 		this.sf = sf;
 
@@ -184,6 +205,9 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		needUpdate = true;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.BasicComponent.Default#update()
+	 */
 	@Override
 	public void update( ) {
 		if( tf == null ) return;
@@ -237,6 +261,9 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		needUpdate = false;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent#draw(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override
 	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
@@ -262,11 +289,17 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent#drawLegend(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override
 	public void drawLegend(TGraphics g) {
 		return;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent.Default#keyPressed(char)
+	 */
 	@Override public boolean keyPressed(char key) {
 		if( !isEnabled() ) return false;
 		if( key == ' ' ){

@@ -25,11 +25,15 @@ import java.util.Arrays;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 
+// TODO: Auto-generated Javadoc
 // Let’s assume that the spectrum is given in terms of intensity A(v) (e.g. brightness
 // temperature T_B) as a function of radial velocity v with a bin width of Δv. The
 // zeroth moment of the spectrum is simply the integrated flux over the spectral line:
 // M0=Δv∑A(v)
 
+/**
+ * The Class Moment0.
+ */
 public class Moment0 extends ScalarField2D.Default {
 
 	int w,h;
@@ -37,6 +41,11 @@ public class Moment0 extends ScalarField2D.Default {
 	ScalarField3D src;
 	double dV;
 
+	/**
+	 * Instantiates a new moment 0.
+	 *
+	 * @param src the src
+	 */
 	public Moment0( ScalarField3D src ){
 		this.src = src;
 		w = src.getWidth();
@@ -47,8 +56,19 @@ public class Moment0 extends ScalarField2D.Default {
 		Arrays.fill(data, Double.NaN);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getWidth()
+	 */
 	@Override public int getWidth() { return w; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getHeight()
+	 */
 	@Override public int getHeight() { return h; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+	 */
 	@Override public float getValue(int x, int y) {
 		if( Double.isNaN(data[y*w+x]) ){
 			data[y*w+x] = 0;
@@ -59,6 +79,9 @@ public class Moment0 extends ScalarField2D.Default {
 		return (float) data[y*w+x];
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField2D.Default#getCoordinate(int, int)
+	 */
 	@Override public double[] getCoordinate(int x, int y) {
 		return Arrays.copyOf(src.getCoordinate(x, y, 0),2);
 	}

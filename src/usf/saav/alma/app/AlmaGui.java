@@ -42,23 +42,39 @@ import usf.saav.common.monitor.MonitoredEnum;
 import usf.saav.common.monitor.MonitoredInteger;
 import usf.saav.common.monitor.MonitoredTrigger;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AlmaGui.
+ */
 public class AlmaGui extends JInternalFrame implements ActionListener {
 
 	private static final long serialVersionUID = 6400845620173855634L;
 
 
+	/**
+	 * The Enum ViewMode.
+	 */
 	public enum ViewMode {
 		SCALARFIELD, MOMENT0, MOMENT1, MOMENT2, VOLUME
 	}
 	
+	/**
+	 * The Enum MouseMode.
+	 */
 	public enum MouseMode {
 		NAVIGATE, SELECT_REGION, SELECT_LINE
 	}
 
+	/**
+	 * The Enum TreeDimension.
+	 */
 	public enum TreeDimension {
 		DIM_2D, DIM_2D_STACK, DIM_3D
 	}
 	
+	/**
+	 * The Enum TreeType.
+	 */
 	public enum TreeType {
 		MERGE, SPLIT, CONTOUR;
 	}
@@ -92,6 +108,15 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 	
 	
 	
+	/**
+	 * Instantiates a new alma gui.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param curZ the cur Z
+	 * @param z0 the z 0
+	 * @param z1 the z 1
+	 */
 	public AlmaGui( int x, int y, MonitoredInteger curZ, MonitoredInteger z0, MonitoredInteger z1 ){
 	    super("Controls",
 		          false, //resizable
@@ -232,6 +257,9 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 
 
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -274,6 +302,9 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 	
 	
 	
+	/**
+	 * Refresh variables.
+	 */
 	public void refreshVariables( ){
 		try {
 			if( Integer.parseInt( guiZ.getText() ) != monZ.get() ){

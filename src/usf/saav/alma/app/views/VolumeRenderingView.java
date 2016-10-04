@@ -14,6 +14,10 @@ import usf.saav.common.mvc.DefaultGLFrame;
 import usf.saav.common.mvc.PositionedComponent;
 import usf.saav.common.mvc.ViewComponent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class VolumeRenderingView.
+ */
 public class VolumeRenderingView extends DefaultGLFrame {
 
 	private static final long serialVersionUID = -4977266239265456457L;
@@ -30,6 +34,18 @@ public class VolumeRenderingView extends DefaultGLFrame {
 		@Override protected Class<?> getClassType() { return ScalarField3D.class; } 
 	};
 
+	/**
+	 * Instantiates a new volume rendering view.
+	 *
+	 * @param _dataM the data M
+	 * @param gui the gui
+	 * @param jocl the jocl
+	 * @param title the title
+	 * @param x the x
+	 * @param y the y
+	 * @param width the width
+	 * @param height the height
+	 */
 	public VolumeRenderingView( DataManager _dataM, AlmaGui gui, joclController jocl, String title, int x, int y, int width, int height ){
 		super(title,x,y,width,height);
 
@@ -56,12 +72,18 @@ public class VolumeRenderingView extends DefaultGLFrame {
 
 	@Override protected void update() { }
 	
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#disable()
+	 */
 	public void disable( ){
 		getView().disable();
 		getController().disable();
 		rangeLabel.disable();
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#enable()
+	 */
 	public void enable( ){
 		getView().enable();
 		getController().enable();
@@ -69,8 +91,14 @@ public class VolumeRenderingView extends DefaultGLFrame {
 	}
 
 
+	/**
+	 * The Class View.
+	 */
 	public class View extends ViewComponent.Subview implements ViewComponent, PositionedComponent {
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.ViewComponent.Subview#setup()
+		 */
 		public void setup() {
 			registerSubView( vr,     25 );
 			registerSubView( tf1d,   26 );
@@ -79,6 +107,9 @@ public class VolumeRenderingView extends DefaultGLFrame {
 			super.setup();
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.PositionedComponent.Default#setPosition(int, int, int, int)
+		 */
 		@Override
 		public void setPosition( int u0, int v0, int w, int h ){
 			super.setPosition(u0, v0, w, h);
@@ -94,11 +125,23 @@ public class VolumeRenderingView extends DefaultGLFrame {
 	}
 
 
+	/**
+	 * The Class Controller.
+	 */
 	public class Controller extends ControllerComponent.Subcontroller implements ControllerComponent {
+		
+		/**
+		 * Instantiates a new controller.
+		 *
+		 * @param verbose the verbose
+		 */
 		public Controller( boolean verbose ) {
 			super(verbose);
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.ControllerComponent.Subcontroller#setup()
+		 */
 		public void setup( ){
 			
 			registerSubController( tf1d, 15 );
@@ -115,10 +158,16 @@ public class VolumeRenderingView extends DefaultGLFrame {
 		
 		boolean needUpdate = true;
 		
+		/**
+		 * Simp sf 3 d update.
+		 */
 		public void simp_sf3d_update( ){
 			needUpdate = true;
 		}
 		
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.ControllerComponent.Subcontroller#update()
+		 */
 		public void update() {
 			if( !isEnabled() ) return;
 			if( needUpdate ) refreshViewSF( );

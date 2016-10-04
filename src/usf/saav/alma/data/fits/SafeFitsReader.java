@@ -28,22 +28,41 @@ import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.range.IntRange1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SafeFitsReader.
+ */
 public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 	
 	private FitsReader reader;
 
+	/**
+	 * Instantiates a new safe fits reader.
+	 *
+	 * @param reader the reader
+	 * @param verbose the verbose
+	 */
 	public SafeFitsReader(FitsReader reader, boolean verbose){
 		super(verbose);
 		this.reader = reader;
 	}
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getFile()
+	 */
 	@Override public File getFile() { return reader.getFile(); }
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getAxesSize()
+	 */
 	@Override
 	public IntRange1D[] getAxesSize() {
 		return reader.getAxesSize();
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getElement(int, int, int, int)
+	 */
 	@Override
 	public float getElement(int x, int y, int z, int w) {
 		if( !reader.getAxesSize()[0].inRange(x) ) return Float.NaN;
@@ -53,6 +72,9 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		return reader.getElement(x, y, z, w);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getRow(usf.saav.common.range.IntRange1D, int, int, int)
+	 */
 	@Override
 	public ScalarField1D getRow(IntRange1D x_range, int y, int z, int w) throws IOException {
 		if( !reader.getAxesSize()[1].inRange(y) ) return new ScalarField1D.Empty( x_range.length(), Float.NaN );
@@ -63,6 +85,9 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		return reader.getRow(x_range, y, z, w);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getColumn(int, usf.saav.common.range.IntRange1D, int, int)
+	 */
 	@Override
 	public ScalarField1D getColumn(int x, IntRange1D y_range, int z, int w) throws IOException {
 		if( !reader.getAxesSize()[0].inRange(x) ) return new ScalarField1D.Empty( y_range.length(), Float.NaN );
@@ -73,6 +98,9 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		return reader.getColumn(x, y_range, z, w);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getLine(int, int, usf.saav.common.range.IntRange1D, int)
+	 */
 	@Override
 	public ScalarField1D getLine(int x, int y, IntRange1D z_range, int w) throws IOException {
 		if( !reader.getAxesSize()[0].inRange(x) ) return new ScalarField1D.Empty( z_range.length(), Float.NaN );
@@ -83,6 +111,9 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		return reader.getLine(x, y, z_range, w);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getSlice(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int, int)
+	 */
 	@Override
 	public ScalarField2D getSlice(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {
 		if( !reader.getAxesSize()[2].inRange(z) ) return new ScalarField2D.Empty( x_range.length(), y_range.length(), Float.NaN );
@@ -90,6 +121,9 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		return new SafeSlice( x_range, y_range, z, w);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getVolume(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int)
+	 */
 	@Override
 	public ScalarField3D getVolume(IntRange1D x_range, IntRange1D y_range, IntRange1D z_range, int w) throws IOException {
 		if( !reader.getAxesSize()[3].inRange(w) ) return new ScalarField3D.Empty( x_range.length(), y_range.length(), z_range.length(), Float.NaN );

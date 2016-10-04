@@ -30,6 +30,10 @@ import usf.saav.common.data.cache.FloatDMCache;
 import usf.saav.common.data.zorder.Partition2D;
 import usf.saav.common.range.IntRange1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CachedFitsReader.
+ */
 public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 
 	FitsReader reader = null;
@@ -43,6 +47,12 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	private static final int	 page_count      = 2048;
 	private static final boolean use_zorder 	 = true; 
 	
+	/**
+	 * Instantiates a new cached fits reader.
+	 *
+	 * @param reader the reader
+	 * @param verbose the verbose
+	 */
 	public CachedFitsReader( FitsReader reader, boolean verbose ){
 		super(verbose);
 		
@@ -123,40 +133,64 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		cache.writeBackAll();
 	}
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getFile()
+	 */
 	@Override public File getFile() { return reader.getFile(); }
 
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getAxesSize()
+	 */
 	@Override
 	public IntRange1D[] getAxesSize() {
 		return reader.getAxesSize();
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getElement(int, int, int, int)
+	 */
 	@Override
 	public float getElement(int x, int y, int z, int w) {
 		return reader.getElement(x, y, z, w);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getRow(usf.saav.common.range.IntRange1D, int, int, int)
+	 */
 	@Override
 	public ScalarField1D getRow(IntRange1D x_range, int y, int z, int w) throws IOException {
 		return reader.getRow(x_range, y, z, w);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getColumn(int, usf.saav.common.range.IntRange1D, int, int)
+	 */
 	@Override
 	public ScalarField1D getColumn(int x, IntRange1D y_range, int z, int w) throws IOException {
 		return reader.getColumn(x, y_range, z, w);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getLine(int, int, usf.saav.common.range.IntRange1D, int)
+	 */
 	@Override
 	public ScalarField1D getLine(int x, int y, IntRange1D z_range, int w) throws IOException {
 		return reader.getLine(x, y, z_range, w);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getSlice(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int, int)
+	 */
 	@Override
 	public ScalarField2D getSlice(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {
 		if( w != 0 ) return reader.getSlice(x_range, y_range, z, w);
 		return new CachedSlice(x_range,y_range,z);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getVolume(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int)
+	 */
 	@Override
 	public ScalarField3D getVolume(IntRange1D x_range, IntRange1D y_range, IntRange1D z_range, int w) throws IOException {
 		if( w != 0 ) return reader.getVolume(x_range, y_range, z_range, w);

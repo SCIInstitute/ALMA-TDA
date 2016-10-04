@@ -26,17 +26,34 @@ import java.util.Vector;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LayeredVolume.
+ */
 public class LayeredVolume extends ScalarField3D.Default implements ScalarField3D {
 
 	private Vector<ScalarField2D> layers = new Vector<ScalarField2D>( );
 	private int w = Integer.MAX_VALUE, h = Integer.MAX_VALUE;
 
+	/**
+	 * Instantiates a new layered volume.
+	 */
 	public LayeredVolume( ){ }
 
+	/**
+	 * Instantiates a new layered volume.
+	 *
+	 * @param _layers the layers
+	 */
 	public LayeredVolume( ScalarField2D ... _layers ){
 		addLayers(_layers);
 	}
 
+	/**
+	 * Adds the layers.
+	 *
+	 * @param _layers the layers
+	 */
 	public void addLayers( ScalarField2D ... _layers ){
 		for( ScalarField2D l : _layers ){
 			w = Math.min(w, l.getWidth());
@@ -45,15 +62,35 @@ public class LayeredVolume extends ScalarField3D.Default implements ScalarField3
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getWidth()
+	 */
 	@Override public int getWidth()  { return w; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getHeight()
+	 */
 	@Override public int getHeight() { return h; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getDepth()
+	 */
 	@Override public int getDepth()  { return layers.size(); }
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getValue(int, int, int)
+	 */
 	@Override
 	public float getValue(int x, int y, int z) {
 		return layers.get(z).getValue(x, y);
 	}
 
+	/**
+	 * Gets the layer.
+	 *
+	 * @param i the i
+	 * @return the layer
+	 */
 	public ScalarField2D getLayer(int i) {
 		return layers.get(i);
 	}

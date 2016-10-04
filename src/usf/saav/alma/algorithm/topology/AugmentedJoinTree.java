@@ -30,6 +30,10 @@ import usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode.Factory;
 import usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode.NodeType;
 import usf.saav.common.BasicObject;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AugmentedJoinTree.
+ */
 public abstract class AugmentedJoinTree extends BasicObject implements PersistenceSet, Runnable {
 	
 	protected Vector<AugmentedJoinTreeNode> nodes = new Vector<AugmentedJoinTreeNode>();
@@ -49,6 +53,9 @@ public abstract class AugmentedJoinTree extends BasicObject implements Persisten
 		this.factory = factory;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		print_info_message( "Building tree..." );
@@ -171,45 +178,77 @@ public abstract class AugmentedJoinTree extends BasicObject implements Persisten
 		return null;
 	}
 	
+	/**
+	 * Gets the global extreme.
+	 *
+	 * @return the global extreme
+	 */
 	public AugmentedJoinTreeNode getGlobalExtreme(){ return global_extreme; }
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getMaxPersistence()
+	 */
 	@Override public float getMaxPersistence(){ return persistence_max; }
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#setPersistentSimplification(float)
+	 */
 	@Override 
 	public void setPersistentSimplification( float threshold ){
 		simplify = threshold;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getPersistentSimplification()
+	 */
 	@Override
 	public float getPersistentSimplification( ){
 		return simplify;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#isActive(int)
+	 */
 	@Override
 	public boolean isActive(int i){
 		return getPersistence(i) >= simplify;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#size()
+	 */
 	@Override
 	public int size() {
 		return nodes.size();
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getBirth(int)
+	 */
 	@Override
 	public float getBirth(int i) {
 		return nodes.get(i).getBirth();
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getDeath(int)
+	 */
 	@Override
 	public float getDeath(int i) {
 		return nodes.get(i).getDeath();
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getPersistence(int)
+	 */
 	@Override
 	public float getPersistence(int i) {
 		return nodes.get(i).getPersistence();
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.PersistenceSet#getNode(int)
+	 */
 	public AugmentedJoinTreeNode getNode(int i) {
 		return nodes.get(i);
 	}

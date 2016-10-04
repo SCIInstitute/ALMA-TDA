@@ -35,6 +35,10 @@ import usf.saav.alma.util.CoordinateSystemController;
 import usf.saav.common.monitor.MonitoredObject;
 import usf.saav.common.range.IntRange1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DataManager.
+ */
 public class DataManager {
 
 
@@ -90,6 +94,11 @@ public class DataManager {
 	
 	
 
+	/**
+	 * Instantiates a new data manager.
+	 *
+	 * @param filename the filename
+	 */
 	public DataManager( String filename ){
 
 		try {
@@ -151,6 +160,9 @@ public class DataManager {
 	}
 
 	
+	/**
+	 * Update.
+	 */
 	public void update() {
 		
 		if( need2DSrcRefresh  )   this.refresh2DSourceSF();
@@ -168,12 +180,29 @@ public class DataManager {
 	}
 	
 	
+	/**
+	 * Sets the 2 D src refresh.
+	 */
 	public void set2DSrcRefresh( ){ System.out.println("set refresh"); need2DSrcRefresh = true; }
+	
+	/**
+	 * Sets the 3 D src refresh.
+	 */
 	public void set3DSrcRefresh( ){ need3DSrcRefresh = true; }
 
+	/**
+	 * Sets the 2 D simplification refresh.
+	 */
 	public void set2DSimplificationRefresh( ){ need2DSimpSFRefresh = true; }
+	
+	/**
+	 * Sets the 3 D simplification refresh.
+	 */
 	public void set3DSimplificationRefresh( ){ need3DSimpSFRefresh = true; }
 	
+	/**
+	 * Sets the simplify scalar field.
+	 */
 	public void setSimplifyScalarField( ){
 		psf_map.clear();
 		needSimpRefresh = true;
@@ -310,12 +339,22 @@ public class DataManager {
 		
 	}
 	
+	/**
+	 * Completed simplification.
+	 *
+	 * @param pst the pst
+	 */
 	public void completedSimplification( PersistenceSimplifier2D pst ){
 		psf_map.put( pst.getZ(), pst );
 		need2DSimpSFRefresh = true;
 		need3DSimpSFRefresh = true;
 	}
 	
+	/**
+	 * Completed simplification.
+	 *
+	 * @param pst the pst
+	 */
 	public void completedSimplification( PersistenceSimplifier3D pst ){
 		for( int i = pst.getZ().start(); i <= pst.getZ().end(); i++ ){
 			psf_map.put( i,  pst ); 
@@ -382,18 +421,30 @@ public class DataManager {
 
 
 
+	/**
+	 * The Class MonitoredScalarField2D.
+	 */
 	public class MonitoredScalarField2D extends MonitoredObject<ScalarField2D>{
 		@Override protected Class<?> getClassType() { return ScalarField2D.class; } 
 	}
 	
+	/**
+	 * The Class MonitoredLayeredVolume.
+	 */
 	public class MonitoredLayeredVolume extends MonitoredObject<LayeredVolume>{
 		@Override protected Class<?> getClassType() { return LayeredVolume.class; } 
 	};
 
+	/**
+	 * The Class MonitoredScalarField3D.
+	 */
 	public class MonitoredScalarField3D extends MonitoredObject<ScalarField3D>{
 		@Override protected Class<?> getClassType() { return ScalarField3D.class; } 
 	};	
 
+	/**
+	 * The Class MonitoredContourTreeThread.
+	 */
 	public class MonitoredContourTreeThread extends MonitoredObject< ContourTreeThread >{
 		@Override protected Class<?> getClassType() { return ContourTreeThread.class; } 
 	};
@@ -404,6 +455,11 @@ public class DataManager {
 	
 	
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String args[]) {
 		AlmaTDADev.main(args);
 	}

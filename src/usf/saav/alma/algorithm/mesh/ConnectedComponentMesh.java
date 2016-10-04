@@ -27,12 +27,21 @@ import java.util.Vector;
 import usf.saav.common.IntegerX;
 import usf.saav.common.algorithm.DisjointSet1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ConnectedComponentMesh.
+ */
 public class ConnectedComponentMesh extends Mesh {
 	private static final long serialVersionUID = 8258598594472055291L;
 
 	private DisjointSet1D djs;
 	private Vector<ConnectedComponent> tmpVec;
 
+	/**
+	 * Instantiates a new connected component mesh.
+	 *
+	 * @param oldComp the old comp
+	 */
 	public ConnectedComponentMesh(Mesh oldComp){
 		djs = new DisjointSet1D( oldComp.getWidth() );
 
@@ -66,6 +75,9 @@ public class ConnectedComponentMesh extends Mesh {
 	}
 
 
+	/**
+	 * The Class ConnectedComponent.
+	 */
 	public class ConnectedComponent extends Vector<Vertex> implements Vertex {
 		private static final long serialVersionUID = -4014406590124257973L;
 		private int id;
@@ -75,11 +87,17 @@ public class ConnectedComponentMesh extends Mesh {
 			add(c);
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.algorithm.mesh.Mesh.Vertex#value()
+		 */
 		@Override
 		public float value() {
 			return get(0).value();
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.algorithm.mesh.Mesh.Vertex#neighbors()
+		 */
 		@Override
 		public int[] neighbors() {
 			Set<Integer> set = new HashSet<Integer>();
@@ -93,6 +111,9 @@ public class ConnectedComponentMesh extends Mesh {
 			return IntegerX.IntegerCollectionToArray(set);
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.algorithm.mesh.Mesh.Vertex#positions()
+		 */
 		@Override
 		public int[] positions() {
 			Vector<Integer> tmp = new Vector<Integer>();
@@ -104,6 +125,9 @@ public class ConnectedComponentMesh extends Mesh {
 			return IntegerX.IntegerCollectionToArray(tmp);
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.algorithm.mesh.Mesh.Vertex#id()
+		 */
 		@Override
 		public int id() {
 			return id;

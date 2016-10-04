@@ -21,26 +21,58 @@
 package usf.saav.alma.algorithm.topology;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MergeTreeNode.
+ */
 public class MergeTreeNode extends AugmentedJoinTreeNode {
 	
+	/**
+	 * Instantiates a new merge tree node.
+	 *
+	 * @param loc the loc
+	 * @param val the val
+	 */
 	public MergeTreeNode( int loc, float val ){
 		super(loc,val);
 	}
 	
+	/**
+	 * Instantiates a new merge tree node.
+	 *
+	 * @param loc the loc
+	 * @param val the val
+	 * @param c0 the c 0
+	 * @param c1 the c 1
+	 */
 	public MergeTreeNode( int loc, float val, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
 		super(loc,val,c0,c1);
 	}
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode#getType()
+	 */
 	public NodeType getType() {
 		if( child0 == null && child1 == null ) return NodeType.LEAF_MIN;
 		if( child0 != null && child1 != null ) return NodeType.MERGE;
 		return NodeType.UNKNOWN;
 	}
 	
+	/**
+	 * The Class Factory.
+	 */
 	public static class Factory implements AugmentedJoinTreeNode.Factory {
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode.Factory#createNode(int, float)
+		 */
 		public AugmentedJoinTreeNode createNode( int loc, float val ){
 			return new MergeTreeNode(loc,val);
 		}
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode.Factory#createNode(int, float, usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode, usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode)
+		 */
 		public AugmentedJoinTreeNode createNode( int loc, float val, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1  ){
 			return new MergeTreeNode(loc,val,c0,c1);
 		}

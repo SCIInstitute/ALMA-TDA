@@ -28,6 +28,10 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Vector;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JoinTreeNode.
+ */
 public class JoinTreeNode {
 
 		private int position;
@@ -35,43 +39,102 @@ public class JoinTreeNode {
 		private JoinTreeNode parent;
 		private Vector< JoinTreeNode > children = new Vector< JoinTreeNode >( );
 
+		/**
+		 * Instantiates a new join tree node.
+		 *
+		 * @param value the value
+		 * @param position the position
+		 */
 		public JoinTreeNode( float value, int position ) {
 			this.position = position;
 			this.value 	  = value;
 		}
 		
+		/**
+		 * Sets the parent.
+		 *
+		 * @param p the new parent
+		 */
 		public void setParent( JoinTreeNode p ){
 			parent = p;
 		}
 		
+		/**
+		 * Adds the child.
+		 *
+		 * @param c the c
+		 */
 		public void addChild( JoinTreeNode c ){
 			children.add(c);
 		}
 		
+		/**
+		 * Gets the parent.
+		 *
+		 * @return the parent
+		 */
 		public JoinTreeNode getParent( ){
 			return parent;
 		}
 		
+		/**
+		 * Child count.
+		 *
+		 * @return the int
+		 */
 		public int childCount() {
 			return children.size();
 		}
 		
 
+		/**
+		 * Gets the child.
+		 *
+		 * @param idx the idx
+		 * @return the child
+		 */
 		public JoinTreeNode getChild( int idx ){
 			return children.get(idx);
 		}
 		
+		/**
+		 * Gets the children.
+		 *
+		 * @return the children
+		 */
 		public List<JoinTreeNode> getChildren( ){
 			return children;
 		}
 		
+		/**
+		 * Checks if is child.
+		 *
+		 * @param node the node
+		 * @return true, if is child
+		 */
 		public boolean isChild(JoinTreeNode node) {
 			return children.contains(node);
 		}
 
+		/**
+		 * Gets the value.
+		 *
+		 * @return the value
+		 */
 		public float getValue( ){ return value; }
+		
+		/**
+		 * Gets the position.
+		 *
+		 * @return the position
+		 */
 		public int   getPosition( ){ return position; }
 		
+		/**
+		 * Find leaves.
+		 *
+		 * @param leaf_list the leaf list
+		 */
 		public void findLeaves( Queue<JoinTreeNode> leaf_list ) {
 			Queue<JoinTreeNode> work_queue = new LinkedList<JoinTreeNode>();
 			work_queue.add(this);
@@ -83,10 +146,21 @@ public class JoinTreeNode {
 			}
 		}
 		
+		/**
+		 * Prints the.
+		 *
+		 * @param recursive the recursive
+		 */
 		public void print( boolean recursive ){
 			print( "", false );
 		}
 
+		/**
+		 * Prints the.
+		 *
+		 * @param splitTree the split tree
+		 * @param recursive the recursive
+		 */
 		public void print( boolean splitTree, boolean recursive ){
 			print( "", splitTree );
 		}
@@ -104,14 +178,29 @@ public class JoinTreeNode {
 			}
 		}
 
+		/**
+		 * Checks for parent.
+		 *
+		 * @return true, if successful
+		 */
 		public boolean hasParent() {
 			return parent != null;
 		}
 		
+		/**
+		 * Checks for children.
+		 *
+		 * @return true, if successful
+		 */
 		public boolean hasChildren( ){
 			return children.size() != 0;
 		}
 
+		/**
+		 * Removes the child.
+		 *
+		 * @param node the node
+		 */
 		public void removeChild(JoinTreeNode node) {
 			children.remove(node);
 		}
@@ -129,7 +218,14 @@ public class JoinTreeNode {
 			}	
 		}
 
+		/**
+		 * The Class ComparatorValueDescending.
+		 */
 		public static class ComparatorValueDescending implements Comparator<Object> {
+			
+			/* (non-Javadoc)
+			 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+			 */
 			@Override
 			public int compare(Object o1, Object o2) {
 				if( o1 instanceof JoinTreeNode && o2 instanceof JoinTreeNode ){
@@ -152,6 +248,13 @@ public class JoinTreeNode {
 			}	
 		}
 
+		/**
+		 * First common ancestor.
+		 *
+		 * @param node0 the node 0
+		 * @param node1 the node 1
+		 * @return the join tree node
+		 */
 		public static JoinTreeNode firstCommonAncestor(JoinTreeNode node0, JoinTreeNode node1) {
 			Vector<JoinTreeNode> list0 = ancestorList(node0);
 			Vector<JoinTreeNode> list1 = ancestorList(node1);
@@ -173,6 +276,12 @@ public class JoinTreeNode {
 			return null;
 		}
 		
+		/**
+		 * Ancestor list.
+		 *
+		 * @param node the node
+		 * @return the vector
+		 */
 		public static Vector<JoinTreeNode> ancestorList( JoinTreeNode node ){
 			Vector<JoinTreeNode> ret = new Vector<JoinTreeNode>();
 			while(node.hasParent()){
@@ -182,6 +291,12 @@ public class JoinTreeNode {
 			return ret;
 		}
 		
+		/**
+		 * Gets the sublevelset.
+		 *
+		 * @param node the node
+		 * @return the sublevelset
+		 */
 		public static Set<JoinTreeNode> getSublevelset( JoinTreeNode node ){
 			HashSet<JoinTreeNode> ret = new HashSet<JoinTreeNode>( );
 			Queue<JoinTreeNode> proc = new LinkedList<JoinTreeNode>( );

@@ -28,6 +28,10 @@ import usf.saav.common.mvc.PositionedComponent;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.range.FloatRange1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SingleScalarFieldView.
+ */
 public class SingleScalarFieldView extends DefaultGLFrame {
 	private static final long serialVersionUID = 7078442093905364332L;
 
@@ -67,6 +71,17 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 	AlmaGui gui;
 
 
+	/**
+	 * Instantiates a new single scalar field view.
+	 *
+	 * @param _dataM the data M
+	 * @param gui the gui
+	 * @param title the title
+	 * @param x the x
+	 * @param y the y
+	 * @param width the width
+	 * @param height the height
+	 */
 	public SingleScalarFieldView( DataManager _dataM, AlmaGui gui, String title, int x, int y, int width, int height ){
 		super(title,x,y,width,height);
 		
@@ -114,21 +129,36 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 	protected void update() {
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#disable()
+	 */
 	public void disable( ){
 		getView().disable();
 		getController().disable();
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#enable()
+	 */
 	public void enable( ){
 		getView().enable();
 		getController().enable();
 	}
 
 
+	/**
+	 * The Class View.
+	 */
 	public class View extends ViewComponent.Subview implements ViewComponent, PositionedComponent {
 
+		/**
+		 * Instantiates a new view.
+		 */
 		public View( ){  }
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.ViewComponent.Subview#setup()
+		 */
 		public void setup() {
 			
 			registerSubView( sfv,   		 10 );
@@ -147,6 +177,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		}
 		
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.PositionedComponent.Default#setPosition(int, int, int, int)
+		 */
 		@Override
 		public void setPosition( int u0, int v0, int w, int h ){
 			super.setPosition(u0, v0, w, h);
@@ -171,6 +204,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		}
 
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.ViewComponent.Subview#update()
+		 */
 		public void update() {
 			dataM.update();
 			
@@ -184,9 +220,17 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 	}
 
 
+	/**
+	 * The Class Controller.
+	 */
 	public class Controller  extends ControllerComponent.Subcontroller implements ControllerComponent {
 
 
+		/**
+		 * Instantiates a new controller.
+		 *
+		 * @param verbose the verbose
+		 */
 		public Controller( boolean verbose ) {
 			super(verbose);
 		}
@@ -194,6 +238,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		boolean needUpdate = false;
 		boolean needPDDUpdate = false;
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.ControllerComponent.Subcontroller#setup()
+		 */
 		public void setup( ){
 			
 			registerSubController( pdd,   5 );
@@ -232,35 +279,62 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 
 		}
 		
+		/**
+		 * Single line update.
+		 *
+		 * @param _p the p
+		 */
 		public void single_line_update( int [] _p ){
 			float [] p = dataM.csCont.getWindowPosition( _p[0], _p[1] );
 			lineD.setData( new Extract1Dfrom3D( view_sf3d.get(), (int)p[0], (int)p[1] ) );
 		}
 
 		
+		/**
+		 * Sets the view refresh.
+		 */
 		public void setViewRefresh( ){
 			needUpdate = true;
 		}
 		
+		/**
+		 * Simp sf 2 d update.
+		 */
 		public void simp_sf2d_update( ){
 			needUpdate = needUpdate || (viewmode == ViewMode.SCALARFIELD);
 		}
 		
+		/**
+		 * Simp sf 3 d update.
+		 */
 		public void simp_sf3d_update( ){
 			needUpdate = needUpdate || (viewmode == ViewMode.MOMENT0);
 			needUpdate = needUpdate || (viewmode == ViewMode.MOMENT1);
 			needUpdate = needUpdate || (viewmode == ViewMode.MOMENT2);
 		}
 
+		/**
+		 * Sets the view mode.
+		 *
+		 * @param vm the new view mode
+		 */
 		public void setViewMode( ViewMode vm ){
 			viewmode = vm;
 			needUpdate = true;
 		}
 		
+		/**
+		 * Need pdd update.
+		 */
 		public void need_pdd_update() {
 			needPDDUpdate = true;
 		}
 		
+		/**
+		 * Sets the mouse mode.
+		 *
+		 * @param mm the new mouse mode
+		 */
 		public void setMouseMode( MouseMode mm ){
 			unregisterSubController( dataM.csCont );
 			unregisterSubController( dataM.sel_box );
@@ -273,6 +347,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		}
 		
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.ControllerComponent.Subcontroller#update()
+		 */
 		public void update() {
 			if( !isEnabled() ) return;
 
@@ -308,6 +385,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		}
 
 
+		/**
+		 * Contour tree update.
+		 */
 		public void contourTreeUpdate( ){
 			ContourTreeThread ctt = dataM.cur_ctt.get();
 			if( ctt != null ){
@@ -358,6 +438,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		}
 
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.ControllerComponent.Subcontroller#keyPressed(char)
+		 */
 		@Override
 		public boolean keyPressed( char key ){
 			if( super.keyPressed(key) ) return true;

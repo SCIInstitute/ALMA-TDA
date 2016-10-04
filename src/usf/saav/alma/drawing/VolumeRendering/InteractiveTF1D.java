@@ -32,6 +32,10 @@ import usf.saav.common.types.Float2;
 import usf.saav.common.types.Float4;
 import usf.saav.common.types.Pair;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class InteractiveTF1D.
+ */
 public class InteractiveTF1D extends HistogramDrawing implements ControllerComponent, ViewComponent, TransferFunction1D { // extends ControllerComponent.Default implements ControllerComponent, ViewComponent, TransferFunction1D {
 
 	Float4 [] tf = new Float4[64];
@@ -61,6 +65,9 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 		}
 	};
 
+	/**
+	 * Instantiates a new interactive TF 1 D.
+	 */
 	public InteractiveTF1D( ){
 		super( 32 );
 		show_distribution = false;
@@ -76,11 +83,17 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 		buildTF( );
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.drawing.VolumeRendering.TransferFunction1D#size()
+	 */
 	@Override
 	public int size() {
 		return tf.length;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.drawing.VolumeRendering.TransferFunction1D#get(int)
+	 */
 	@Override
 	public Float4 get(int idx) {
 		return tf[idx];
@@ -97,16 +110,25 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.drawing.VolumeRendering.TransferFunction1D#getOffset()
+	 */
 	@Override
 	public float getOffset() {
 		return (float) -range.getMinimum();
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.drawing.VolumeRendering.TransferFunction1D#getScale()
+	 */
 	@Override
 	public float getScale() {
 		return (float)(1.0/range.getRange());
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.BasicComponent.Default#update()
+	 */
 	@Override
 	public void update( ) {
 		red.setPosition( this.getPosition() );
@@ -119,6 +141,9 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 		alp.update();
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.drawing.HistogramDrawing#draw(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override
 	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
@@ -135,11 +160,17 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	boolean haveControl = false;
 	Pair<Float2,Float> sel = new Pair<Float2,Float>(null,3.0f);
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#drawLegend(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override public void drawLegend(TGraphics g) { }
 	
 	
 	
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mouseDragged(int, int)
+	 */
 	@Override public boolean mouseDragged(int mouseX, int mouseY) {
 		if( !isEnabled() ) return false;
 		if( haveControl ){
@@ -152,6 +183,9 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mousePressed(int, int)
+	 */
 	@Override public boolean mousePressed(int mouseX, int mouseY) {
 		if( !isEnabled() ) return false;
 		haveControl = false;
@@ -171,11 +205,17 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 		return haveControl;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mouseDoubleClick(int, int)
+	 */
 	@Override public boolean mouseDoubleClick(int mouseX, int mouseY) {
 		if( !isEnabled() ) return false;
 		return inRange(mouseX,mouseY);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mouseReleased()
+	 */
 	@Override public boolean mouseReleased() {
 		if( !isEnabled() ) return false;
 		if( haveControl ){
@@ -186,16 +226,25 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#keyPressed(char)
+	 */
 	@Override
 	public boolean keyPressed(char key) {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mouseMoved(int, int)
+	 */
 	@Override
 	public boolean mouseMoved(int mouseX, int mouseY) {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ControllerComponent#mouseWheel(int, int, float)
+	 */
 	@Override
 	public boolean mouseWheel(int mouseX, int mouseY, float count) {
 		return false;

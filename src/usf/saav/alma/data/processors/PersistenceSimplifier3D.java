@@ -26,27 +26,78 @@ import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.Callback;
 import usf.saav.common.range.IntRange1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PersistenceSimplifier3D.
+ */
 public class PersistenceSimplifier3D extends PersistenceSimplifierND implements ScalarField3D {
 
 	private ScalarField3D sf;
 	
 
+	/**
+	 * Instantiates a new persistence simplifier 3 D.
+	 *
+	 * @param sf the sf
+	 * @param ct the ct
+	 * @param cl the cl
+	 * @param z the z
+	 * @param runImmediately the run immediately
+	 */
 	public PersistenceSimplifier3D(ScalarField3D sf, PersistenceSet ct, Mesh cl, IntRange1D z, boolean runImmediately ) {
 		this( sf, ct, cl, z, runImmediately, true );
 	}
 	
+	/**
+	 * Instantiates a new persistence simplifier 3 D.
+	 *
+	 * @param sf the sf
+	 * @param ct the ct
+	 * @param cl the cl
+	 * @param z the z
+	 * @param runImmediately the run immediately
+	 * @param verbose the verbose
+	 */
 	public PersistenceSimplifier3D(ScalarField3D sf, PersistenceSet ct, Mesh cl, IntRange1D z, boolean runImmediately, boolean verbose ) {
 		super(sf, ct, cl, z, runImmediately);
 		this.sf = sf;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getWidth()
+	 */
 	@Override public int getWidth() { return sf.getWidth(); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getHeight()
+	 */
 	@Override public int getHeight() { return sf.getHeight(); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getDepth()
+	 */
 	@Override public int getDepth() { return sf.getDepth(); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getValue(int, int, int)
+	 */
 	@Override public float getValue(int x, int y, int z) { return super.getValue( z*getWidth()*getHeight() + y*getWidth() + x ); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getCoordinate(int, int, int)
+	 */
 	@Override public double[] getCoordinate(int x, int y, int z) { return sf.getCoordinate(x, y, z); }
+	
+	/**
+	 * Gets the z.
+	 *
+	 * @return the z
+	 */
 	public IntRange1D getZ( ){ return z; }
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.processors.PersistenceSimplifierND#setCallback(java.lang.Object, java.lang.String)
+	 */
 	@Override
 	public void setCallback( Object obj, String func_name ) {
 		try {

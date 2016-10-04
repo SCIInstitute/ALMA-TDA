@@ -35,6 +35,10 @@ import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.range.IntRange1D;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RawFitsReader.
+ */
 public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 	File file;
@@ -48,6 +52,14 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 
 
+	/**
+	 * Instantiates a new raw fits reader.
+	 *
+	 * @param filename the filename
+	 * @param verbose the verbose
+	 * @throws FitsException the fits exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public RawFitsReader( String filename, boolean verbose ) throws FitsException, IOException {
 		super(verbose);
 
@@ -153,6 +165,9 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
 	public void finalize(){
 		try {
 			fits.close();
@@ -162,8 +177,14 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getAxesSize()
+	 */
 	public IntRange1D[] getAxesSize(){ return this.axesRange; } 
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getFile()
+	 */
 	public File getFile( ){ return file; }
 
 	/////////////////////////////////////////////////////////////////////
@@ -171,6 +192,9 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	/////////////////////////////////////////////////////////////////////
 
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getElement(int, int, int, int)
+	 */
 	public float getElement( int x, int y, int z, int w ){
 		try {
 			return ((float[])tiler.getTile(new int[]{w,z,y,x},new int[]{1,1,1,1}))[0];
@@ -182,6 +206,9 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A ROW FROM THE DATA                       //
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getRow(usf.saav.common.range.IntRange1D, int, int, int)
+	 */
 	/////////////////////////////////////////////////////////////////////
 	public ScalarField1D getRow( IntRange1D x_range, int y, int z, int w ) throws IOException{
 		return new FitsRow( x_range, y, z, w );
@@ -190,6 +217,9 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A COLUMN FROM THE DATA                    //
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getColumn(int, usf.saav.common.range.IntRange1D, int, int)
+	 */
 	/////////////////////////////////////////////////////////////////////
 	public ScalarField1D getColumn( int x, IntRange1D y_range, int z, int w ) throws IOException{
 		return new FitsColumn( x, y_range, z, w );
@@ -199,6 +229,9 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A LINE FROM THE DATA                      //
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getLine(int, int, usf.saav.common.range.IntRange1D, int)
+	 */
 	/////////////////////////////////////////////////////////////////////
 	public ScalarField1D getLine( int x, int y, IntRange1D z_range, int w ) throws IOException{
 		return new FitsLine( x,y,z_range, w );
@@ -207,6 +240,9 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A SLICE FROM THE DATA                     //
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getSlice(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int, int)
+	 */
 	/////////////////////////////////////////////////////////////////////
 	public ScalarField2D getSlice( IntRange1D x_range, IntRange1D y_range, int z, int w ) throws IOException{
 		print_info_message("getSlice( [" + x_range.start() + ", " + x_range.end() + "], [" + y_range.start() + ", " + y_range.end() + "], " + z + ", " + w + " )");
@@ -216,6 +252,9 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A CUBE/VOLUME FROM THE DATA               //
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.fits.FitsReader#getVolume(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int)
+	 */
 	/////////////////////////////////////////////////////////////////////
 	public ScalarField3D getVolume( IntRange1D x_range, IntRange1D y_range, IntRange1D z_range, int w ) throws IOException{
 		print_info_message("getVolume( [" + x_range.start() + ", " + x_range.end() + "], [" + y_range.start() + ", " + y_range.end() + "], [" + z_range.start() + ", " + z_range.end() + "], " + w + " )");
@@ -301,12 +340,24 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	}
 
 
+	/**
+	 * The Class FitsSlice.
+	 */
 	public class FitsSlice extends ScalarField2D.Default {
 
 		float [] data;
 		int x0=0, y0=0;
 		int width,height;
 
+		/**
+		 * Instantiates a new fits slice.
+		 *
+		 * @param x the x
+		 * @param y the y
+		 * @param z the z
+		 * @param w the w
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
 		public FitsSlice( IntRange1D x, IntRange1D y, int z, int w) throws IOException {
 			width  = x.length();
 			height = y.length();
@@ -316,6 +367,9 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 					);
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField2D.Default#getCoordinate(int, int)
+		 */
 		@Override
 		public double [] getCoordinate( int x, int y ){
 			return new double[]{
@@ -324,18 +378,41 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 			};
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.algorithm.Surface2D#getWidth()
+		 */
 		@Override public int getWidth()  { return width; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.common.algorithm.Surface2D#getHeight()
+		 */
 		@Override public int getHeight() { return height; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+		 */
 		@Override public float getValue(int x, int y) { return data[y*width+x]; }
 
 	}
 
+	/**
+	 * The Class FitsVolume.
+	 */
 	public class FitsVolume extends ScalarField3D.Default {
 
 		float [] data;
 		int width,height,depth;
 		int x0=0, y0=0, z0=0;
 
+		/**
+		 * Instantiates a new fits volume.
+		 *
+		 * @param x the x
+		 * @param y the y
+		 * @param z the z
+		 * @param w the w
+		 * @throws IOException Signals that an I/O exception has occurred.
+		 */
 		public FitsVolume( IntRange1D x, IntRange1D y, IntRange1D z, int w) throws IOException {
 			width  = x.length();
 			height = y.length();
@@ -346,6 +423,9 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 					);
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField3D.Default#getCoordinate(int, int, int)
+		 */
 		@Override
 		public double [] getCoordinate( int x, int y, int z ){
 			return new double[]{
@@ -355,14 +435,34 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 			};
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField3D#getWidth()
+		 */
 		@Override public int getWidth()  { return width; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField3D#getHeight()
+		 */
 		@Override public int getHeight() { return height; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField3D#getDepth()
+		 */
 		@Override public int getDepth()  { return depth; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField3D#getValue(int, int, int)
+		 */
 		@Override public float getValue(int x, int y, int z) { return data[z*width*height + y*width + x]; }
 
 	}
 
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main( String [] args ){
 		try {
 			new RawFitsReader("/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits", true);

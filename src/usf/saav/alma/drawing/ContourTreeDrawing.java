@@ -33,6 +33,10 @@ import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.IntRange1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ContourTreeDrawing.
+ */
 public class ContourTreeDrawing extends ViewComponent.Default implements ViewComponent {
 
 	private ScalarFieldND  sf;
@@ -47,6 +51,11 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 	private MonitoredInteger z;
 	private IntRange1D zr;
 
+	/**
+	 * Instantiates a new contour tree drawing.
+	 *
+	 * @param z the z
+	 */
 	public ContourTreeDrawing( MonitoredInteger z ){
 		this.z = z;
 	}
@@ -60,15 +69,34 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 	*/
 	
 
+	/**
+	 * Sets the region.
+	 *
+	 * @param rx the rx
+	 * @param ry the ry
+	 */
 	public void setRegion( IntRange1D rx, IntRange1D ry ){
 		this.rx = rx;
 		this.ry = ry;
 	}
 
+	/**
+	 * Sets the region.
+	 *
+	 * @param sel the new region
+	 */
 	public void setRegion(IntRange1D[] sel ) {
 		setRegion(sel[0], sel[1]);
 	}
 
+	/**
+	 * Sets the field.
+	 *
+	 * @param sf the sf
+	 * @param ct the ct
+	 * @param cl the cl
+	 * @param zr the zr
+	 */
 	public void setField( ScalarFieldND sf, PersistenceSet ct, Mesh cl, IntRange1D zr ){
 		this.ct = ct;
 		this.sf = sf;
@@ -83,20 +111,38 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 	}
 	*/
 	
+	/**
+	 * Sets the selected.
+	 *
+	 * @param sel the new selected
+	 */
 	public void setSelected( Set<Integer> sel ){
 		selected = sel;
 	}
 
+	/**
+	 * Gets the selected.
+	 *
+	 * @return the selected
+	 */
 	public Set<Integer> getSelected( ){
 		return selected;
 	}
 
+	/**
+	 * Sets the coordinate system.
+	 *
+	 * @param csc the new coordinate system
+	 */
 	public void setCoordinateSystem( CoordinateSystem csc ){
 		this.cs = csc;
 	}
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#draw(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	public void draw( TGraphics g ) {
 		if( !isEnabled() ) return;
 		if( rx == null && ry == null ) return;
@@ -162,6 +208,9 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 			}
 	}
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#drawLegend(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	public void drawLegend( TGraphics g  ){
 		if( !isEnabled() ) return;
 		if( sf == null || cl == null || ct == null ) return;

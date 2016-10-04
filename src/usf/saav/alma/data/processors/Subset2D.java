@@ -22,11 +22,22 @@ package usf.saav.alma.data.processors;
 
 import usf.saav.alma.data.ScalarField2D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Subset2D.
+ */
 public class Subset2D extends ScalarField2D.Default {
 	ScalarField2D src;
 	int x0, xN;
 	int y0, yN;
 
+	/**
+	 * Instantiates a new subset 2 D.
+	 *
+	 * @param src the src
+	 * @param x_range the x range
+	 * @param y_range the y range
+	 */
 	public Subset2D( ScalarField2D src, int [] x_range, int [] y_range ){
 		this.src = src;
 
@@ -57,8 +68,23 @@ public class Subset2D extends ScalarField2D.Default {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getWidth()
+	 */
 	@Override public int getWidth() { return xN; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getHeight()
+	 */
 	@Override public int getHeight() { return yN; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+	 */
 	@Override public float getValue(int x, int y) { return src.getValue(x+x0, y+y0); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField2D.Default#getCoordinate(int, int)
+	 */
 	@Override public double[] getCoordinate(int x, int y) { return src.getCoordinate(x+x0, y+y0); }
 }

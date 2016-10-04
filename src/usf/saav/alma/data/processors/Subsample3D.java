@@ -22,21 +22,57 @@ package usf.saav.alma.data.processors;
 
 import usf.saav.alma.data.ScalarField3D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Subsample3D.
+ */
 public class Subsample3D extends ScalarField3D.Default {
 	int sx,sy,sz;
 	ScalarField3D field;
+	
+	/**
+	 * Instantiates a new subsample 3 D.
+	 *
+	 * @param field the field
+	 * @param step the step
+	 */
 	public Subsample3D( ScalarField3D field, int step ){
 		this(field,step,step,step);
 	}		
+	
+	/**
+	 * Instantiates a new subsample 3 D.
+	 *
+	 * @param field the field
+	 * @param step_x the step x
+	 * @param step_y the step y
+	 * @param step_z the step z
+	 */
 	public Subsample3D( ScalarField3D field, int step_x, int step_y, int step_z ){
 		this.field = field;
 		this.sx = Math.max( 1, step_x );
 		this.sy = Math.max( 1, step_y );
 		this.sz = Math.max( 1, step_z );
 	}
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getWidth()
+	 */
 	@Override public int getWidth()  {	return field.getWidth()/sx; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getHeight()
+	 */
 	@Override public int getHeight() {	return field.getHeight()/sy; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getDepth()
+	 */
 	@Override public int getDepth()  {	return field.getDepth()/sz; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getValue(int, int, int)
+	 */
 	@Override public float getValue(int x, int y, int z) { 
 		return field.getValue(x*sx, y*sy, z*sz); 
 	}		

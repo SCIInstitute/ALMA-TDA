@@ -34,6 +34,7 @@ import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.range.IntRange1D;
 
 
+// TODO: Auto-generated Javadoc
 /** Class for automatically saving settings via monitored variables.
  * 
  * @author Paul Rosen
@@ -44,6 +45,13 @@ public class Settings extends BasicObject {
 	private JSONObject json;
 	private String filename;
 	
+	/**
+	 * Instantiates a new settings.
+	 *
+	 * @param filename the filename
+	 * @throws JSONException the JSON exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public Settings( String filename ) throws JSONException, IOException {
 		this.filename = filename;
 		try{
@@ -83,10 +91,19 @@ public class Settings extends BasicObject {
 		}
 	}
 	
+	/**
+	 * The Class SettingsInt.
+	 */
 	public class SettingsInt extends MonitoredInteger {
 		IntRange1D range = null;
 		String name;
 		
+		/**
+		 * Instantiates a new settings int.
+		 *
+		 * @param name the name
+		 * @param default_value the default value
+		 */
 		public SettingsInt(String name, int default_value) {
 			super(0);
 			this.name = name;
@@ -97,10 +114,18 @@ public class Settings extends BasicObject {
 			}
 		}
 		
+		/**
+		 * Sets the valid range.
+		 *
+		 * @param rng the new valid range
+		 */
 		public void setValidRange( IntRange1D rng ){
 			this.range = rng;
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.monitor.MonitoredInteger#set(int)
+		 */
 		@Override
 		public void set(int newVal){
 			if( range != null ){
@@ -114,10 +139,19 @@ public class Settings extends BasicObject {
 		}
 	}
 	
+	/**
+	 * The Class SettingsDouble.
+	 */
 	public class SettingsDouble extends MonitoredDouble  {
 		private FloatRange1D range;
 		private String name;
 
+		/**
+		 * Instantiates a new settings double.
+		 *
+		 * @param name the name
+		 * @param default_value the default value
+		 */
 		public SettingsDouble(String name, double default_value) {
 			this.name = name;
 			try {
@@ -127,10 +161,18 @@ public class Settings extends BasicObject {
 			}
 		}
 				
+		/**
+		 * Sets the valid range.
+		 *
+		 * @param rng the new valid range
+		 */
 		public void setValidRange( FloatRange1D rng ){
 			this.range = rng;
 		}
 		
+		/* (non-Javadoc)
+		 * @see usf.saav.common.monitor.MonitoredDouble#set(double)
+		 */
 		public void set(double newVal){
 			if( range != null ){
 				newVal = range.clamp((float) newVal);

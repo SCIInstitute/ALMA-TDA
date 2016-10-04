@@ -22,6 +22,10 @@ package usf.saav.alma.drawing.VolumeRendering;
 
 import usf.saav.common.types.Float4;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface TransferFunction1D.
+ */
 public interface TransferFunction1D  {
 
 	int size();
@@ -29,6 +33,9 @@ public interface TransferFunction1D  {
 	float getOffset( );
 	float getScale( );
 
+	/**
+	 * The Class Default.
+	 */
 	public class Default implements TransferFunction1D {
 
 		private static final Float4 transferFunc[] = {
@@ -43,21 +50,33 @@ public interface TransferFunction1D  {
 									new Float4 ( 0.0f, 0.0f, 0.0f, 0.0f )
 							};
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.drawing.VolumeRendering.TransferFunction1D#size()
+		 */
 		@Override
 		public int size() {
 			return transferFunc.length;
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.drawing.VolumeRendering.TransferFunction1D#get(int)
+		 */
 		@Override
 		public Float4 get(int idx) {
 			return transferFunc[idx];
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.drawing.VolumeRendering.TransferFunction1D#getOffset()
+		 */
 		@Override
 		public float getOffset() {
 			return 0;
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.drawing.VolumeRendering.TransferFunction1D#getScale()
+		 */
 		@Override
 		public float getScale() {
 			return 1;

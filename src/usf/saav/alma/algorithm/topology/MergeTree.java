@@ -22,6 +22,10 @@ package usf.saav.alma.algorithm.topology;
 
 import usf.saav.alma.algorithm.mesh.Mesh;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MergeTree.
+ */
 public class MergeTree extends AugmentedJoinTree  {
  
 
