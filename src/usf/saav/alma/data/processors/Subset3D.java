@@ -22,12 +22,24 @@ package usf.saav.alma.data.processors;
 
 import usf.saav.alma.data.ScalarField3D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Subset3D.
+ */
 public class Subset3D extends ScalarField3D.Default {
 	ScalarField3D src;
 	int x0, xN;
 	int y0, yN;
 	int z0, zN;
 
+	/**
+	 * Instantiates a new subset 3 D.
+	 *
+	 * @param src the src
+	 * @param x_range the x range
+	 * @param y_range the y range
+	 * @param z_range the z range
+	 */
 	public Subset3D( ScalarField3D src, int [] x_range, int [] y_range, int [] z_range ){
 		this.src = src;
 
@@ -71,9 +83,28 @@ public class Subset3D extends ScalarField3D.Default {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getWidth()
+	 */
 	@Override public int getWidth() { return xN; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getHeight()
+	 */
 	@Override public int getHeight() { return yN; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getDepth()
+	 */
 	@Override public int getDepth() { return zN; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getValue(int, int, int)
+	 */
 	@Override public float getValue(int x, int y, int z) { return src.getValue(x+x0, y+y0, z+zN); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D.Default#getCoordinate(int, int, int)
+	 */
 	@Override public double[] getCoordinate(int x, int y, int z) { return src.getCoordinate(x+x0, y+y0, z+z0); }
 }

@@ -22,11 +22,21 @@ package usf.saav.alma.data.processors;
 
 import usf.saav.alma.data.ScalarField1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Subset1D.
+ */
 public class Subset1D extends ScalarField1D.Default {
 
 	ScalarField1D src;
 	int x0, xN;
 
+	/**
+	 * Instantiates a new subset 1 D.
+	 *
+	 * @param src the src
+	 * @param range the range
+	 */
 	public Subset1D( ScalarField1D src, int [] range ){
 		this.src = src;
 		if( range.length == 0 ){
@@ -44,8 +54,23 @@ public class Subset1D extends ScalarField1D.Default {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface1D#getWidth()
+	 */
 	@Override public int getWidth() { return xN; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarFieldND#getSize()
+	 */
 	@Override public int getSize() { return xN; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarFieldND#getValue(int)
+	 */
 	@Override public float getValue(int nodeID) { return src.getValue(nodeID+x0); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField1D.Default#getCoordinate(int)
+	 */
 	@Override public double getCoordinate(int nodeID) { return src.getCoordinate(nodeID+x0); }
 }

@@ -29,6 +29,10 @@ import usf.saav.common.jocl.joclController;
 import usf.saav.common.mvc.swing.TApp;
 import usf.saav.common.mvc.swing.TGLFrame;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AlmaTDADev.
+ */
 public class AlmaTDADev extends TApp {
 
 	private static final long serialVersionUID = 8573376435979745456L;
@@ -37,16 +41,38 @@ public class AlmaTDADev extends TApp {
 	private DataManager    dataM;
 
 	
+	/**
+	 * Instantiates a new alma TDA dev.
+	 *
+	 * @param title the title
+	 * @param x the x
+	 * @param y the y
+	 * @param w the w
+	 * @param h the h
+	 */
 	public AlmaTDADev( String title, int x, int y, int w, int h ){ 
 		this(title, x,y,w,h, true);
 	}
 	
+	/**
+	 * Instantiates a new alma TDA dev.
+	 *
+	 * @param title the title
+	 * @param x the x
+	 * @param y the y
+	 * @param w the w
+	 * @param h the h
+	 * @param verbose the verbose
+	 */
 	public AlmaTDADev( String title, int x, int y, int w, int h, boolean verbose ){ 
 		super(x,y,w,h); 
 		jocl = new joclController( );
 		init();
 	}
 	
+	/**
+	 * Inits the.
+	 */
 	//@Override
 	public void init( ){
 		String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
@@ -65,6 +91,11 @@ public class AlmaTDADev extends TApp {
 	}
 	
 	
+	/**
+	 * Load.
+	 *
+	 * @param filename the filename
+	 */
 	public void load( String filename ){
 		
 		dataM = new DataManager( filename );
@@ -82,6 +113,12 @@ public class AlmaTDADev extends TApp {
 
 	
 	 
+	/**
+	 * Creates the GL frame.
+	 *
+	 * @param gui the gui
+	 * @return the j internal frame
+	 */
 	public JInternalFrame createGLFrame(AlmaGui gui) {
 		TGLFrame frame = new SingleScalarFieldView( dataM, gui, "Slice Viewer", 0, 0, 1000, 700 );
 		//frame.putClientProperty("dragMode", "fixed");
@@ -89,6 +126,12 @@ public class AlmaTDADev extends TApp {
 	    return frame;
 	}
 	
+	/**
+	 * Creates the vol frame.
+	 *
+	 * @param gui the gui
+	 * @return the j internal frame
+	 */
 	public JInternalFrame createVolFrame(AlmaGui gui) {
 		TGLFrame frame = new VolumeRenderingView( dataM, gui, jocl, "Volume Rendering", 0, 0, 1000, 700 );
 		//frame.putClientProperty("dragMode", "fixed");
@@ -96,6 +139,11 @@ public class AlmaTDADev extends TApp {
 	    return frame;
 	}
 	
+	/**
+	 * Creates the GUI frame.
+	 *
+	 * @return the alma gui
+	 */
 	public AlmaGui createGUIFrame() {
 		AlmaGui frame = new AlmaGui( 1000, 0, dataM.curZ, dataM.z0, dataM.z1 );
 		//frame.putClientProperty("dragMode", "fixed");
@@ -104,6 +152,11 @@ public class AlmaTDADev extends TApp {
 	}
 	
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String args[]) {
 		//TestFrame frame = new TestFrame();
 		javax.swing.SwingUtilities.invokeLater( new Runnable() {

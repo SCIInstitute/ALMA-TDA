@@ -33,6 +33,10 @@ import usf.saav.common.BasicObject;
 import usf.saav.common.Callback;
 import usf.saav.common.range.IntRange1D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ContourTreeThread.
+ */
 public class ContourTreeThread extends BasicObject implements Runnable {
 
 	private IntRange1D rx = null, ry = null, rz = null;
@@ -43,10 +47,27 @@ public class ContourTreeThread extends BasicObject implements Runnable {
 	private Callback cb = null;
 	private boolean ready = false;
 
+	/**
+	 * Instantiates a new contour tree thread.
+	 *
+	 * @param fits the fits
+	 * @param rx the rx
+	 * @param ry the ry
+	 * @param z the z
+	 */
 	public ContourTreeThread( FitsReader fits, IntRange1D rx, IntRange1D ry, int z ){
 		this(fits,rx,ry,z,true);
 	}
 
+	/**
+	 * Instantiates a new contour tree thread.
+	 *
+	 * @param fits the fits
+	 * @param rx the rx
+	 * @param ry the ry
+	 * @param z the z
+	 * @param verbose the verbose
+	 */
 	public ContourTreeThread( FitsReader fits, IntRange1D rx, IntRange1D ry, int z, boolean verbose ){
 		super(verbose);
 
@@ -63,10 +84,27 @@ public class ContourTreeThread extends BasicObject implements Runnable {
 		}
 	}
 
+	/**
+	 * Instantiates a new contour tree thread.
+	 *
+	 * @param fits the fits
+	 * @param rx the rx
+	 * @param ry the ry
+	 * @param rz the rz
+	 */
 	public ContourTreeThread( FitsReader fits, IntRange1D rx, IntRange1D ry, IntRange1D rz ){
 		this(fits,rx,ry,rz,true);
 	}
 
+	/**
+	 * Instantiates a new contour tree thread.
+	 *
+	 * @param fits the fits
+	 * @param rx the rx
+	 * @param ry the ry
+	 * @param rz the rz
+	 * @param verbose the verbose
+	 */
 	public ContourTreeThread( FitsReader fits, IntRange1D rx, IntRange1D ry, IntRange1D rz, boolean verbose ){
 		super(verbose);
 
@@ -83,6 +121,9 @@ public class ContourTreeThread extends BasicObject implements Runnable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run() {
 		if( sf == null ) return;
@@ -97,14 +138,61 @@ public class ContourTreeThread extends BasicObject implements Runnable {
 		}
 	}
 
+	/**
+	 * Gets the tree.
+	 *
+	 * @return the tree
+	 */
 	public PersistenceSet getTree( ){		  return ct; }
+	
+	/**
+	 * Gets the component list.
+	 *
+	 * @return the component list
+	 */
 	public Mesh  getComponentList(){ return cl; }
+	
+	/**
+	 * Gets the x.
+	 *
+	 * @return the x
+	 */
 	public IntRange1D	  getX( ){			  return rx; }
+	
+	/**
+	 * Gets the y.
+	 *
+	 * @return the y
+	 */
 	public IntRange1D	  getY( ){			  return ry; }
+	
+	/**
+	 * Gets the z.
+	 *
+	 * @return the z
+	 */
 	public IntRange1D	  getZ( ){			  return rz; }
+	
+	/**
+	 * Gets the scalar field.
+	 *
+	 * @return the scalar field
+	 */
 	public ScalarFieldND  getScalarField( ){  return sf; }
+	
+	/**
+	 * Checks if is processing complete.
+	 *
+	 * @return true, if is processing complete
+	 */
 	public boolean isProcessingComplete( ){ return ready; }
 
+	/**
+	 * Sets the callback.
+	 *
+	 * @param obj the obj
+	 * @param func_name the func name
+	 */
 	public void setCallback( Object obj, String func_name ) {
 		try {
 			this.cb = new Callback( obj, func_name, ContourTreeThread.class );

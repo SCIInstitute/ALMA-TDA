@@ -24,46 +24,109 @@ import java.util.Arrays;
 
 import usf.saav.common.algorithm.Surface3D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface ScalarField3D.
+ */
 public interface ScalarField3D extends ScalarFieldND, Surface3D {
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface3D#getWidth()
+	 */
 	public int getWidth( );
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface3D#getHeight()
+	 */
 	public int getHeight( );
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface3D#getDepth()
+	 */
 	public int getDepth( );
 	
+	/**
+	 * Gets the value.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param z the z
+	 * @return the value
+	 */
 	public float getValue( int x, int y, int z );
 
 	double [] getCoordinate( int x, int y, int z );
 	
+	/**
+	 * The Class Empty.
+	 */
 	public class Empty extends ScalarField3D.Default {
 		int w,h,d;
 		float default_val;
+		
+		/**
+		 * Instantiates a new empty.
+		 *
+		 * @param w the w
+		 * @param h the h
+		 * @param d the d
+		 * @param default_val the default val
+		 */
 		public Empty( int w, int h, int d, float default_val ) {
 			this.w = w;
 			this.h = h;
 			this.d = d;
 			this.default_val = default_val;
 		}
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField3D#getWidth()
+		 */
 		@Override public int getWidth()  {	return w; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField3D#getHeight()
+		 */
 		@Override public int getHeight() {	return h; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField3D#getDepth()
+		 */
 		@Override public int getDepth()  {	return d; }
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField3D#getValue(int, int, int)
+		 */
 		@Override public float getValue(int x, int y, int z) { return default_val; }
 	}
 	
+	/**
+	 * The Class Default.
+	 */
 	public abstract class Default extends ScalarFieldND.Default implements ScalarField3D {
 
 		protected Default( ){ }
 		protected Default( boolean verbose ){ super(verbose); }
 		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField3D#getCoordinate(int, int, int)
+		 */
 		@Override
 		public double [] getCoordinate( int x, int y, int z ){
 			return new double[]{x,y,z};
 		}
 		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarFieldND#getSize()
+		 */
 		@Override
 		public int getSize() {
 			return getWidth()*getHeight()*getDepth();
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarFieldND#getValue(int)
+		 */
 		@Override
 		public float getValue(int nodeID) {
 			
@@ -77,6 +140,9 @@ public interface ScalarField3D extends ScalarFieldND, Surface3D {
 			return getValue( x, y, z );
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarFieldND#getNeighbors(int)
+		 */
 		@Override
 		public int[] getNeighbors(int nodeID) {
 			int width = getWidth();

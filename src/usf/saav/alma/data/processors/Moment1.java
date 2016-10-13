@@ -25,14 +25,23 @@ import java.util.Arrays;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 
+// TODO: Auto-generated Javadoc
 // http://www.alma.inaf.it/images/Moments.pdf
 
+/**
+ * The Class Moment1.
+ */
 public class Moment1 extends ScalarField2D.Default {
 
 	int w,h;
 	double [] data;
 	ScalarField3D src;
 
+	/**
+	 * Instantiates a new moment 1.
+	 *
+	 * @param src the src
+	 */
 	public Moment1( ScalarField3D src ){
 		this.src = src;
 		w = src.getWidth();
@@ -42,8 +51,19 @@ public class Moment1 extends ScalarField2D.Default {
 		Arrays.fill(data, Double.NaN);
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getWidth()
+	 */
 	@Override public int getWidth() { return w; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getHeight()
+	 */
 	@Override public int getHeight() { return h; }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+	 */
 	@Override public float getValue(int x, int y) {
 		if( Double.isNaN( data[y*w+x] ) ){
 			double denom = 0;
@@ -58,6 +78,9 @@ public class Moment1 extends ScalarField2D.Default {
 		return (float) data[y*w+x];
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField2D.Default#getCoordinate(int, int)
+	 */
 	@Override public double[] getCoordinate(int x, int y) {
 		return Arrays.copyOf(src.getCoordinate(x, y, 0),2);
 	}

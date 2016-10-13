@@ -25,17 +25,30 @@ import usf.saav.alma.algorithm.mesh.Mesh.Vertex;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ComponentListDrawing.
+ */
 public class ComponentListDrawing extends ViewComponent.Default implements ViewComponent  {
 
 	Mesh cL;
 	int field_width;
 	int pass = 0;
 
+	/**
+	 * Instantiates a new component list drawing.
+	 *
+	 * @param cl the cl
+	 * @param fieldwidth the fieldwidth
+	 */
 	public ComponentListDrawing( Mesh cl, int fieldwidth ){
 		this.cL = cl;
 		this.field_width = fieldwidth;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#draw(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	public void draw( TGraphics p ){
 		
 		if( cL == null )

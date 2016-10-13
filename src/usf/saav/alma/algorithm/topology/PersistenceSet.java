@@ -20,6 +20,9 @@
  */
 package usf.saav.alma.algorithm.topology;
 
+/**
+ * The Interface PersistenceSet.
+ */
 public interface PersistenceSet {
 	
 	void setPersistentSimplification( float threshold );

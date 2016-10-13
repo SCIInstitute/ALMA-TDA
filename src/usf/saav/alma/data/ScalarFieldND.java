@@ -22,18 +22,53 @@ package usf.saav.alma.data;
 
 import usf.saav.common.BasicObject;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface ScalarFieldND.
+ */
 public interface ScalarFieldND {
 
+	/**
+	 * Gets the size.
+	 *
+	 * @return the size
+	 */
 	public int getSize( );
+	
+	/**
+	 * Gets the value.
+	 *
+	 * @param nodeID the node ID
+	 * @return the value
+	 */
 	public float getValue( int nodeID );
+	
+	/**
+	 * Gets the neighbors.
+	 *
+	 * @param nodeID the node ID
+	 * @return the neighbors
+	 */
 	public int [] getNeighbors( int nodeID );
+	
+	/**
+	 * Gets the value range.
+	 *
+	 * @return the value range
+	 */
 	public double [] getValueRange(); 
 	
+	/**
+	 * The Class Default.
+	 */
 	public abstract class Default extends BasicObject implements ScalarFieldND {
 		
 		protected Default(){ }
 		protected Default( boolean verbose ){ super(verbose); }
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarFieldND#getValueRange()
+		 */
 		@Override
 		public double [] getValueRange(){
 			double min =  Double.MAX_VALUE;

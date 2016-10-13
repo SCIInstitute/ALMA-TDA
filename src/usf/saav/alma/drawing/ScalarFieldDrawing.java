@@ -28,21 +28,46 @@ import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.mvc.swing.TImage;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ScalarFieldDrawing.
+ */
 public class ScalarFieldDrawing extends ViewComponent.Default implements ViewComponent {
 
+	/**
+	 * Instantiates a new scalar field drawing.
+	 *
+	 * @param papplet the papplet
+	 */
 	public ScalarFieldDrawing( TGraphics papplet ){
 		this.papplet = papplet;
 	}
 
+	/**
+	 * Sets the colormap.
+	 *
+	 * @param cm the new colormap
+	 */
 	public void setColormap( DivergentColormap cm ){
 		colormap = cm;
 	}
 
+	/**
+	 * Sets the translation.
+	 *
+	 * @param tx the tx
+	 * @param ty the ty
+	 */
 	public void setTranslation( int tx, int ty ){
 		this.tx = tx;
 		this.ty = ty;
 	}
 
+	/**
+	 * Sets the scalar field.
+	 *
+	 * @param _sf the new scalar field
+	 */
 	public void setScalarField( ScalarField2D _sf ){
 		int stepX = MathX.nextLargerPowerOf2( 2*_sf.getWidth()/winX.length() );
 		int stepY = MathX.nextLargerPowerOf2( 2*_sf.getHeight()/winY.length() );
@@ -51,6 +76,9 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		img = null;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.BasicComponent.Default#update()
+	 */
 	@Override
 	public void update() {
 		if( !isEnabled() ) return;
@@ -61,6 +89,9 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		img = sf.toPImage( papplet, colormap );
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#draw(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override
 	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
@@ -72,6 +103,9 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 	}
 
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#drawLegend(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	public void drawLegend(TGraphics g) {
 		if( !isEnabled() ) return;
 		if( colormap == null ) return;

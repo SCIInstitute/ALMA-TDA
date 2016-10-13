@@ -8,13 +8,25 @@ import usf.saav.common.spline.LinearSpline;
 import usf.saav.common.spline.Spline;
 import usf.saav.common.types.Float2;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SpectralLineDrawing.
+ */
 public class SpectralLineDrawing  extends ViewComponent.Default implements ViewComponent { 
 
 	Spline line = null;
 	
+	/**
+	 * Instantiates a new spectral line drawing.
+	 */
 	public SpectralLineDrawing( ){
 	}
 	
+	/**
+	 * Sets the data.
+	 *
+	 * @param sf the new data
+	 */
 	public void setData( final ScalarField1D sf ){
 		if( sf == null ){
 			line = null;
@@ -29,6 +41,9 @@ public class SpectralLineDrawing  extends ViewComponent.Default implements ViewC
 	}
 		
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.BasicComponent.Default#update()
+	 */
 	@Override
 	public void update( ) {
 		if( !isEnabled() ) return;
@@ -39,6 +54,9 @@ public class SpectralLineDrawing  extends ViewComponent.Default implements ViewC
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#draw(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override
 	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
@@ -61,6 +79,9 @@ public class SpectralLineDrawing  extends ViewComponent.Default implements ViewC
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#drawLegend(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override public void drawLegend(TGraphics g) { }
 	
 	

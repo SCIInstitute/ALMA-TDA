@@ -23,17 +23,34 @@ package usf.saav.alma.drawing;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LabelDrawing.
+ */
 public abstract class LabelDrawing extends ViewComponent.Default implements ViewComponent {
 
 	protected int textSize = 30;
 	protected String label = "";
 
+	/**
+	 * Sets the label size.
+	 *
+	 * @param size the new label size
+	 */
 	public void setLabelSize( int size ){
 		textSize = size;
 	}
 
+	/**
+	 * Gets the label size.
+	 *
+	 * @return the label size
+	 */
 	public int getLabelSize(){ return textSize; }
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.mvc.ViewComponent.Default#draw(usf.saav.common.mvc.swing.TGraphics)
+	 */
 	@Override public void draw( TGraphics g ){
 		if( !isEnabled() ) return;
 		
@@ -53,16 +70,35 @@ public abstract class LabelDrawing extends ViewComponent.Default implements View
 
 	}
 
+	/**
+	 * The Class BasicLabel.
+	 */
 	public static class BasicLabel extends LabelDrawing {
+		
+		/**
+		 * Instantiates a new basic label.
+		 */
 		public BasicLabel( ){ }
+		
+		/**
+		 * Instantiates a new basic label.
+		 *
+		 * @param label the label
+		 */
 		public BasicLabel( String label ){
 			this.label = label;
 		}
 	}
 
+	/**
+	 * The Class ComputingLabel.
+	 */
 	public static class ComputingLabel extends LabelDrawing {
 		int frameCount = 0;
 
+		/* (non-Javadoc)
+		 * @see usf.saav.common.mvc.BasicComponent.Default#update()
+		 */
 		public void update( ){
 			label = getComputeString();
 		}
@@ -81,6 +117,9 @@ public abstract class LabelDrawing extends ViewComponent.Default implements View
 			return "";
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.drawing.LabelDrawing#draw(usf.saav.common.mvc.swing.TGraphics)
+		 */
 		@Override
 		public void draw( TGraphics g ){
 			frameCount++;

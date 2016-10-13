@@ -24,12 +24,25 @@ import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.ScalarFieldND;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Composite3D.
+ */
 public class Composite3D extends ScalarField3D.Default implements ScalarField3D {
 
 	private ScalarField3D base;
 	private ScalarFieldND composite;
 	private int offX, offY, offZ;
 
+	/**
+	 * Instantiates a new composite 3 D.
+	 *
+	 * @param base the base
+	 * @param composite the composite
+	 * @param offX the off X
+	 * @param offY the off Y
+	 * @param offZ the off Z
+	 */
 	public Composite3D( ScalarField3D base, ScalarField3D composite, int offX, int offY, int offZ ){
 		this.base = base;
 		this.composite = composite;
@@ -38,11 +51,25 @@ public class Composite3D extends ScalarField3D.Default implements ScalarField3D 
 		this.offZ = offZ;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getWidth()
+	 */
 	@Override public int getWidth() { return base.getWidth(); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getHeight()
+	 */
 	@Override public int getHeight() { return base.getHeight(); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getDepth()
+	 */
 	@Override public int getDepth() { return base.getDepth(); }
 
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField3D#getValue(int, int, int)
+	 */
 	@Override
 	public float getValue(int x, int y, int z) {
 		if( composite instanceof ScalarField2D ){

@@ -22,31 +22,59 @@ package usf.saav.alma.data;
 
 import usf.saav.alma.data.ScalarField2D.Default;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Synthetic2D.
+ */
 public abstract class Synthetic2D extends Default {
 
 	int width, height;
 	
+	/**
+	 * Instantiates a new synthetic 2 D.
+	 *
+	 * @param width the width
+	 * @param height the height
+	 */
 	public Synthetic2D( int width, int height ){
 		this.width = width;
 		this.height = height;
 	}
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getWidth()
+	 */
 	@Override
 	public int getWidth() {
 		return width;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getHeight()
+	 */
 	@Override
 	public int getHeight() {
 		return height;
 	}
 	
+	/**
+	 * The Class MonkeySaddle.
+	 */
 	public static class MonkeySaddle extends Synthetic2D {
 
+		/**
+		 * Instantiates a new monkey saddle.
+		 *
+		 * @param width the width
+		 * @param height the height
+		 */
 		public MonkeySaddle(int width, int height) {
 			super(width, height);
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+		 */
 		@Override
 		public float getValue(int x, int y) {
 			double dx = ((double)x - width/2)/100;
@@ -56,12 +84,21 @@ public abstract class Synthetic2D extends Default {
 	}
 	
 	
+	/**
+	 * The Class GaussianMixing.
+	 */
 	public static class GaussianMixing extends Synthetic2D {
 		
 		int [] px;
 		int [] py;
 		double [] A;
 	
+		/**
+		 * Instantiates a new gaussian mixing.
+		 *
+		 * @param width the width
+		 * @param height the height
+		 */
 		public GaussianMixing(int width, int height) {
 			super(width, height);
 			px = new int[]{width/3+10, width*2/3-10, width/3-10, width*2/3+10};
@@ -69,6 +106,9 @@ public abstract class Synthetic2D extends Default {
 			A  = new double[]{ 70, 50, -40, -20 };
 		}
 
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+		 */
 		@Override
 		public float getValue(int x, int y) {
 			double val = 0;

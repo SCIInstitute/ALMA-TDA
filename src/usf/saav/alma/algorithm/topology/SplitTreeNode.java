@@ -20,26 +20,58 @@
  */
 package usf.saav.alma.algorithm.topology;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SplitTreeNode.
+ */
 public class SplitTreeNode extends AugmentedJoinTreeNode {
 
+	/**
+	 * Instantiates a new split tree node.
+	 *
+	 * @param loc the loc
+	 * @param val the val
+	 */
 	public SplitTreeNode( int loc, float val ){
 		super(loc,val);
 	}
 	
+	/**
+	 * Instantiates a new split tree node.
+	 *
+	 * @param loc the loc
+	 * @param val the val
+	 * @param c0 the c 0
+	 * @param c1 the c 1
+	 */
 	public SplitTreeNode( int loc, float val, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
 		super(loc,val,c0,c1);
 	}
 	
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode#getType()
+	 */
 	public NodeType getType() {
 		if( child0 == null && child1 == null ) return NodeType.LEAF_MAX;
 		if( child0 != null && child1 != null ) return NodeType.SPLIT;
 		return NodeType.UNKNOWN;
 	}
 	
+	/**
+	 * The Class Factory.
+	 */
 	public static class Factory implements AugmentedJoinTreeNode.Factory {
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode.Factory#createNode(int, float)
+		 */
 		public AugmentedJoinTreeNode createNode( int loc, float val ){
 			return new SplitTreeNode(loc,val);
 		}
+		
+		/* (non-Javadoc)
+		 * @see usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode.Factory#createNode(int, float, usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode, usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode)
+		 */
 		public AugmentedJoinTreeNode createNode( int loc, float val, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1  ){
 			return new SplitTreeNode(loc,val,c0,c1);
 		}

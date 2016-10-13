@@ -22,12 +22,24 @@ package usf.saav.alma.data.processors;
 
 import usf.saav.alma.data.ScalarField2D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Composite2D.
+ */
 public class Composite2D extends ScalarField2D.Default implements ScalarField2D {
 
 	private ScalarField2D base;
 	private ScalarField2D composite;
 	private int offX, offY;
 
+	/**
+	 * Instantiates a new composite 2 D.
+	 *
+	 * @param base the base
+	 * @param composite the composite
+	 * @param offX the off X
+	 * @param offY the off Y
+	 */
 	public Composite2D( ScalarField2D base, ScalarField2D composite, int offX, int offY ){
 		this.base = base;
 		this.composite = composite;
@@ -35,9 +47,19 @@ public class Composite2D extends ScalarField2D.Default implements ScalarField2D 
 		this.offY = offY;
 	}
 
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getWidth()
+	 */
 	@Override public int getWidth() { return base.getWidth(); }
+	
+	/* (non-Javadoc)
+	 * @see usf.saav.common.algorithm.Surface2D#getHeight()
+	 */
 	@Override public int getHeight() { return base.getHeight(); }
 
+	/* (non-Javadoc)
+	 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+	 */
 	@Override
 	public float getValue(int x, int y) {
 		if( x >= offX && x < (offX+composite.getWidth()) &&

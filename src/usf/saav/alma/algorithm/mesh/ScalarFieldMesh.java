@@ -26,6 +26,10 @@ import java.util.Map;
 
 import usf.saav.alma.data.ScalarFieldND;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ScalarFieldMesh.
+ */
 public class ScalarFieldMesh extends Mesh {
 
 	private static final long serialVersionUID = -4945822547977179117L;
@@ -33,6 +37,11 @@ public class ScalarFieldMesh extends Mesh {
 	private Map<Integer,Integer> elemID = new HashMap<Integer,Integer>();
 	private ScalarFieldND sf;
 
+	/**
+	 * Instantiates a new scalar field mesh.
+	 *
+	 * @param sf the sf
+	 */
 	public ScalarFieldMesh( ScalarFieldND sf ){
 		this.sf = sf;
 		for(int i = 0; i < sf.getSize(); i++ ){
