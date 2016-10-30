@@ -137,6 +137,10 @@ public class MathXv1 {
 		return v+1;
 	}
 
+	public static double nextLargerPowerOf2( double v ){
+		return nextLargerPowerOf2( (int)Math.ceil(v) );
+	}
+
 	public static int nextLargerPowerOf2( int v ){
 		v--;
 		v |= v >> 1;

@@ -65,16 +65,26 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 		return new float[]{wx,wy};
 	}
 
-	Vector<Callback> translationCallbacks = new Vector<Callback>( );
+	Vector<Callback> dragCallbacks = new Vector<Callback>( );
+	Vector<Callback> releaseCallbacks = new Vector<Callback>( );
 
-	public void addTranslationCallback( Object obj, String func_name ){
+	public void addDragCallback( Object obj, String func_name ){
 		try {
-			translationCallbacks.add( new Callback(obj, func_name, int.class, int.class ) );
+			dragCallbacks.add( new Callback(obj, func_name, int.class, int.class ) );
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void addReleaseCallback( Object obj, String func_name ){
+		try {
+			releaseCallbacks.add( new Callback(obj, func_name, int.class, int.class ) );
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
 	@Override
 	public boolean mousePressed( int mouseX, int mouseY ) {
 		if( !isEnabled() ) return false;
@@ -102,7 +112,7 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 		this.tx += dX;
 		this.ty += dY;
 
-		for( Callback c : translationCallbacks ){
+		for( Callback c : dragCallbacks ){
 			c.call( tx, ty );
 		}
 
@@ -121,8 +131,8 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 
 		this.tx = 0;
 		this.ty = 0;
-
-		for( Callback c : translationCallbacks ){
+		
+		for( Callback c : releaseCallbacks ){
 			c.call( tx, ty );
 		}
 

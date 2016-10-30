@@ -46,12 +46,12 @@ public class AlmaTDADev extends TApp {
                 frame.setVisible(true);
                 
            		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+           		//String filename = "/Users/prosen/Code/ALMA-TDA/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
            		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
            		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_briggs.pbcor.fits";
            		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_uniform.pbcor.fits";
            		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
-           		String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
+           		String filename = "/Users/prosen/Code/ALMA-TDA/data/betsy/CH3OH_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";

@@ -164,17 +164,21 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		public void setPosition( int u0, int v0, int w, int h ){
 			super.setPosition(u0, v0, w, h);
 			
+			System.out.println(w + " " + h);
+			
+			int panelSize = Math.min( 200,  h/6 );
+			
 			sfv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			ctv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
+			
 			dataM.sel_box.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			dataM.sel_pnt.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 
-			pdd.setPosition( winX.start()+10, winY.start()+10, 200,   200 );
-
-			hist2d.setPosition( winX.start()+10, winY.start()+220, 400,   200 );
-			hist3d.setPosition( winX.start()+10, winY.start()+440, 400,   200 );
+			pdd.setPosition(    winX.start()+10, winY.start()+10, 			  panelSize,   panelSize );
+			hist2d.setPosition( winX.start()+10, winY.start()+panelSize+20,   panelSize*2, panelSize );
+			hist3d.setPosition( winX.start()+10, winY.start()+panelSize*2+40, panelSize*2, panelSize );
 			
-			lineD.setPosition( winX.end()-220, winY.start()+220, 200, 100 );
+			lineD.setPosition( winX.end()-220,   winY.start()+panelSize+20, panelSize, panelSize/2 );
 
 			sliceLabel.setPosition( winX.start()+10, winY.end()-40, 20, 20 );
 			rangeLabel.setPosition( winX.start()+10, winY.end()-40, 20, 20 );
@@ -228,14 +232,14 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		public void setData( DataViewManager dataM ){
 			
 			unregisterAll( );
-			registerSubController( pdd,   5 );
-			registerSubController( dataM.csCont,		   15 );
+			registerSubController( pdd, 		  5 );
+			registerSubController( dataM.csCont, 15 );
 
 			dataM.sel_box.setCoordinateSystem( dataM.csCont );
 			dataM.sel_pnt.setCoordinateSystem( dataM.csCont );
 			ctv.setCoordinateSystem( dataM.csCont );
 
-			dataM.csCont.addTranslationCallback( sfv, "setTranslation" );
+			dataM.csCont.addDragCallback( sfv, "setTranslation" );
 			//dataM.csCont.addTranslationCallback( ctv, "setTranslation" );
 
 			dataM.simp_sf2d.addMonitor( this, "simp_sf2d_update" );
@@ -340,7 +344,6 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		}
 
 
-		@SuppressWarnings("incomplete-switch")
 		private void refreshViewSF( ){ 
 			//boolean showSimplified = model.gui.monShowSimp.get();
 			boolean showSimplified = true;

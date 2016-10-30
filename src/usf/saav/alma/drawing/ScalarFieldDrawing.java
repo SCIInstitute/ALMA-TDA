@@ -44,11 +44,16 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 	}
 
 	public void setScalarField( ScalarField2D _sf ){
-		int stepX = MathX.nextLargerPowerOf2( 2*_sf.getWidth()/winX.length() );
-		int stepY = MathX.nextLargerPowerOf2( 2*_sf.getHeight()/winY.length() );
-		this.sf = new Subsample2D( _sf, stepX, stepY );
+		
+		int stepX = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf.getWidth()  / (double)winX.length() );
+		int stepY = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf.getHeight() / (double)winY.length() );
 
-		img = null;
+		this.sf  = new Subsample2D( _sf, stepX, stepY );
+		this.img = null;
+		
+		this.tx = 0;
+		this.ty = 0;
+		
 	}
 
 	@Override
@@ -95,7 +100,7 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 	private DivergentColormap colormap = null;
 
 	// Input scalar field
-	ScalarField2D sf;
+	private ScalarField2D sf;
 
 	// Temporary translation
 	private int tx = 0, ty = 0;
