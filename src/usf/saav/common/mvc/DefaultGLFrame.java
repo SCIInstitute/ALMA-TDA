@@ -70,6 +70,8 @@ public abstract class DefaultGLFrame extends TGLFrame {
 			}			
 
 			if( controller != null ) controller.setup();
+			if( controller != null ) controller.setPosition(0, 0, width, height);
+			
 			if( view != null ) view.setup();		
 			if( view != null ) view.setPosition(0, 0, width, height);
 			
@@ -115,6 +117,7 @@ public abstract class DefaultGLFrame extends TGLFrame {
 		@Override
 		public void reshape(int u, int v, int width, int height) {
 			if( view != null ) view.setPosition(0, 0, width, height);			
+			if( controller != null ) controller.setPosition(0, 0, width, height);			
 		}
 	
 	

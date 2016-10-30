@@ -44,11 +44,14 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 	}
 
 	public void setScalarField( ScalarField2D _sf ){
-		
+
+		/*
 		int stepX = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf.getWidth()  / (double)winX.length() );
 		int stepY = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf.getHeight() / (double)winY.length() );
 
 		this.sf  = new Subsample2D( _sf, stepX, stepY );
+		*/
+		this.sf  = _sf;
 		this.img = null;
 		
 		this.tx = 0;
