@@ -1,0 +1,98 @@
+<Project>
+  <Name>ALMA-TDA</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>usf.saav.common.data.cache</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>BaseCache&lt;PageType&gt;</Name>
+        <Access>Public</Access>
+        <Location left="270" top="137" />
+        <Size width="231" height="247" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public abstract void writeBackAll()</Member>
+        <Member type="Method">public abstract void PrintPageInfo()</Member>
+        <Member type="Method">public abstract int GetCurrentPageCount()</Member>
+        <Member type="Method">protected abstract PageType getPage(long page_id)</Member>
+        <Member type="Method">public void close(boolean delete)</Member>
+        <Member type="Method">public void PrintCacheInfo()</Member>
+        <Member type="Method">public long GetCurrentDataSize()</Member>
+        <Member type="Method">public long GetDataSize()</Member>
+        <Member type="Method">public long GetFileSize()</Member>
+        <Member type="Method">public int GetPageCount()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DirectMappedCache&lt;PageType&gt;</Name>
+        <Access>Public</Access>
+        <Location left="70" top="507" />
+        <Size width="257" height="164" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">protected abstract BasePage createPage()</Member>
+        <Member type="Method">protected PageType getPage(long pg)</Member>
+        <Member type="Method">public override void writeBackAll()</Member>
+        <Member type="Method">public override void PrintPageInfo()</Member>
+        <Member type="Method">public override int GetCurrentPageCount()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>FullyAssociativeCache&lt;PageType&gt;</Name>
+        <Access>Public</Access>
+        <Location left="421" top="507" />
+        <Size width="253" height="183" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">protected abstract BasePage createPage()</Member>
+        <Member type="Method">protected PageType getPage(long page_id)</Member>
+        <Member type="Method">public override void writeBackAll()</Member>
+        <Member type="Method">public override void PrintPageInfo()</Member>
+        <Member type="Method">public override int GetCurrentPageCount()</Member>
+        <Member type="Method">public void evict(long[] pages)</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>FloatFACache</Name>
+        <Access>Public</Access>
+        <Location left="437" top="860" />
+        <Size width="382" height="167" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public float get(long element)</Member>
+        <Member type="Method">public void set(long element, float val)</Member>
+        <Member type="Method">public void setBlock(long startElement, float[] val)</Member>
+        <Member type="Method">public void setScattered(long startElement, int strideElement, float[] val)</Member>
+        <Member type="Method">protected override BasePage createPage()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>FloatDMCache</Name>
+        <Access>Public</Access>
+        <Location left="10" top="860" />
+        <Size width="387" height="167" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">protected override BasePage createPage()</Member>
+        <Member type="Method">public float get(long element)</Member>
+        <Member type="Method">public void set(long element, float val)</Member>
+        <Member type="Method">public void setBlock(long startElement, float[] val)</Member>
+        <Member type="Method">public void setScattered(long startElement, int strideElement, float[] val)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="1" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="2" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="3" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="4" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>
