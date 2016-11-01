@@ -21,8 +21,6 @@
 package usf.saav.alma.drawing;
 
 import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.processors.Subsample2D;
-import usf.saav.common.MathX;
 import usf.saav.common.colormap.DivergentColormap;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
@@ -42,20 +40,19 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		this.tx = tx;
 		this.ty = ty;
 	}
+	
+	public void adjustZoom( float zoom_adj ){
+		this.zoom *= zoom_adj;
+	}
 
 	public void setScalarField( ScalarField2D _sf ){
 
-		/*
-		int stepX = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf.getWidth()  / (double)winX.length() );
-		int stepY = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf.getHeight() / (double)winY.length() );
-
-		this.sf  = new Subsample2D( _sf, stepX, stepY );
-		*/
 		this.sf  = _sf;
 		this.img = null;
 		
 		this.tx = 0;
 		this.ty = 0;
+		this.zoom = 1;
 		
 	}
 
@@ -75,7 +72,7 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		if( img == null ) return;
 
 		g.imageMode(TGraphics.CENTER);
-		g.image( img, winX.length()/2+tx, winY.length()/2+ty, (int)(winX.length()), (int)(winY.length()) ); 
+		g.image( img, (int)(winX.length()/2+tx), (int)(winY.length()/2+ty), (int)(zoom*winX.length()), (int)(zoom*winY.length()) ); 
 
 	}
 
@@ -107,4 +104,7 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 
 	// Temporary translation
 	private int tx = 0, ty = 0;
+	
+	// Temporary zoom
+	private float zoom = 1;
 }

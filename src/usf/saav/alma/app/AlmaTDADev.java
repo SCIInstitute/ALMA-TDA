@@ -29,6 +29,8 @@ import javax.swing.JInternalFrame;
 import javax.swing.filechooser.FileFilter;
 
 import nom.tam.fits.common.FitsException;
+import usf.saav.alma.app.views.AlmaGui;
+import usf.saav.alma.app.views.HistoryView;
 import usf.saav.alma.app.views.SingleScalarFieldView;
 import usf.saav.alma.app.views.VolumeRenderingView;
 import usf.saav.common.jocl.joclController;
@@ -46,12 +48,12 @@ public class AlmaTDADev extends TApp {
                 frame.setVisible(true);
                 
            		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-           		//String filename = "/Users/prosen/Code/ALMA-TDA/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+           		String filename = "/Users/prosen/Code/ALMA-TDA/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
            		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
            		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_briggs.pbcor.fits";
            		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_uniform.pbcor.fits";
            		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
-           		String filename = "/Users/prosen/Code/ALMA-TDA/data/betsy/CH3OH_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/ALMA-TDA/data/betsy/CH3OH_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";
@@ -80,6 +82,8 @@ public class AlmaTDADev extends TApp {
 	private JInternalFrame guiFrame;
 	private TGLFrame	   slcFrame;
 	private TGLFrame	   volFrame;
+
+	private JInternalFrame histFrame;
 
 	
 	public AlmaTDADev( int x, int y, int w, int h ){ 
@@ -159,6 +163,7 @@ public class AlmaTDADev extends TApp {
 		if( guiFrame == null ) addFrame( guiFrame = new AlmaGui( 1000, 0, dataVM.curZ, dataVM.z0, dataVM.z1 ) );
     	if( slcFrame == null ) addFrame( slcFrame = new SingleScalarFieldView( (AlmaGui) guiFrame, "Slice Viewer", 0, 0, 1000, 700 ) );
     	if( volFrame == null ) addFrame( volFrame = new VolumeRenderingView(   (AlmaGui) guiFrame, jocl, "Volume Rendering", 100, 100, 1000, 700 ) );
+    	if( histFrame == null ) addFrame( histFrame = new HistoryView( dataSM.reader.getHistory() ) );
 
     	((SingleScalarFieldView)slcFrame).setData( dataVM );
     	(  (VolumeRenderingView)volFrame).setData( dataVM );
@@ -166,6 +171,7 @@ public class AlmaTDADev extends TApp {
     	guiFrame.setVisible(true);
     	slcFrame.setVisible(true);
 		volFrame.setVisible(true);
+		histFrame.setVisible(true);
 		
 		this.setTitle( "ALMA TDA -- " + filename );
 		this.setJMenuBar( menuStandard );

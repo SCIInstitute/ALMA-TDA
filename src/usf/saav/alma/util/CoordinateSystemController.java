@@ -66,6 +66,7 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 	}
 
 	Vector<Callback> dragCallbacks = new Vector<Callback>( );
+	Vector<Callback> zoomCallbacks = new Vector<Callback>( );
 	Vector<Callback> releaseCallbacks = new Vector<Callback>( );
 
 	public void addDragCallback( Object obj, String func_name ){
@@ -79,6 +80,15 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 	public void addReleaseCallback( Object obj, String func_name ){
 		try {
 			releaseCallbacks.add( new Callback(obj, func_name, int.class, int.class ) );
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void addZoomCallback( Object obj, String func_name ){
+		try {
+			zoomCallbacks.add( new Callback(obj, func_name, float.class ) );
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
@@ -145,6 +155,11 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 		if( !winX.inRange(mouseX) || !winY.inRange(mouseY) ) return false;
 
 		zoom.set( zoom.get()*Math.pow(0.9, count) );
+
+		for( Callback c : zoomCallbacks ){
+			c.call( (float)Math.pow(0.9, count) );
+		}
+
 		return true;
 	}
 }

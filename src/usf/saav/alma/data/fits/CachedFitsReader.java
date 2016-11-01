@@ -38,9 +38,9 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	long sliceOffset;
 	int sx,sy,sz;
 	
-	private static final int	 page_size_bytes = 8096;
-	private static final int	 page_size_elems = 2048;
-	private static final int	 page_count      = 2048;
+	private static final int	 page_size_elems = 4096;
+	private static final int	 page_size_bytes = page_size_elems*4;
+	private static final int	 page_count      = 8096;
 	private static final boolean use_zorder 	 = true; 
 	
 	public CachedFitsReader( FitsReader reader, boolean verbose ){

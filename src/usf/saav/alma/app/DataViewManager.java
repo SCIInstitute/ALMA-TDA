@@ -1,27 +1,16 @@
 package usf.saav.alma.app;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.json.JSONException;
-
-import nom.tam.fits.common.FitsException;
 import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.app.AlmaGui.ViewMode;
 import usf.saav.alma.app.views.SingleScalarFieldView;
+import usf.saav.alma.app.views.AlmaGui.ViewMode;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
-import usf.saav.alma.data.Settings;
-import usf.saav.alma.data.Settings.SettingsDouble;
-import usf.saav.alma.data.Settings.SettingsInt;
-import usf.saav.alma.data.fits.CachedFitsReader;
-import usf.saav.alma.data.fits.FitsReader;
-import usf.saav.alma.data.fits.RawFitsReader;
-import usf.saav.alma.data.fits.SafeFitsReader;
 import usf.saav.alma.data.processors.Composite2D;
 import usf.saav.alma.data.processors.Extract2DFrom3D;
 import usf.saav.alma.data.processors.LayeredVolume;

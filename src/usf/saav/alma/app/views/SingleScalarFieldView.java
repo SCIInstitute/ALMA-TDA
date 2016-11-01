@@ -3,10 +3,9 @@ package usf.saav.alma.app.views;
 import java.util.Map.Entry;
 
 import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.app.AlmaGui;
-import usf.saav.alma.app.AlmaGui.MouseMode;
-import usf.saav.alma.app.AlmaGui.ViewMode;
 import usf.saav.alma.app.DataViewManager;
+import usf.saav.alma.app.views.AlmaGui.MouseMode;
+import usf.saav.alma.app.views.AlmaGui.ViewMode;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.processors.Extract1Dfrom3D;
@@ -241,6 +240,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			ctv.setCoordinateSystem( dataM.csCont );
 
 			dataM.csCont.addDragCallback( sfv, "setTranslation" );
+			dataM.csCont.addZoomCallback( sfv, "adjustZoom" );
 			//dataM.csCont.addTranslationCallback( ctv, "setTranslation" );
 
 			dataM.simp_sf2d.addMonitor( this, "simp_sf2d_update" );

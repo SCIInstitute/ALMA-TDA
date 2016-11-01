@@ -18,7 +18,7 @@
  *     
  *     You may contact the Paul Rosen at <prosen@usf.edu>. 
  */
-package usf.saav.alma.app;
+package usf.saav.alma.app.views;
 
 import java.awt.Color;
 import java.awt.GridLayout;
