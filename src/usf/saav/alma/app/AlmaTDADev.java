@@ -28,7 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.filechooser.FileFilter;
 
-import nom.tam.fits.common.FitsException;
+import nom.tam.fits.FitsException;
 import usf.saav.alma.app.views.SingleScalarFieldView;
 import usf.saav.alma.app.views.VolumeRenderingView;
 import usf.saav.common.jocl.joclController;
@@ -52,6 +52,7 @@ public class AlmaTDADev extends TApp {
            		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_uniform.pbcor.fits";
            		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
            		String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA.zip";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";
@@ -96,6 +97,7 @@ public class AlmaTDADev extends TApp {
 		
 		menuStandard = new AlmaStandardMenu( );
 		menuStandard.monFileOpen.addMonitor(  this, "fileOpen" );
+		menuStandard.monFileAppend.addMonitor(  this, "fileAppend" );
 		menuStandard.monFileClose.addMonitor( this, "fileClose" );
 		menuStandard.monPropGen.addMonitor(   this, "showGeneralProperties" );
 		menuStandard.monPropHist.addMonitor(  this, "showHistory" );
@@ -134,6 +136,32 @@ public class AlmaTDADev extends TApp {
 		
 	}
 
+
+	public void fileAppend( ){
+		
+		final JFileChooser fc = new JFileChooser();
+		fc.setFileFilter( new FitsFileFilter() );
+
+		switch( fc.showOpenDialog(this) ){
+			case JFileChooser.APPROVE_OPTION: 
+				
+				try {
+					dataSM.appendFile( fc.getSelectedFile().getAbsolutePath() );
+				} catch ( IOException | FitsException e) {
+					System.err.println("Unable to read file");
+					return;
+				}
+				break;
+			case JFileChooser.CANCEL_OPTION:  
+				return;
+			case JFileChooser.ERROR_OPTION:   
+				System.err.println( "JFileChooser error" );
+				return;
+		};
+		
+	}
+	
+	
 	public void fileClose( ){
 		if( guiFrame != null ) guiFrame.hide();
 		if( slcFrame != null ) slcFrame.hide();
@@ -150,7 +178,7 @@ public class AlmaTDADev extends TApp {
 		
 		try {
 			dataSM = new DataSetManager( filename );
-		} catch (FitsException | IOException e) {
+		} catch ( IOException | FitsException e) {
 			System.err.println("Unable to read file");
 			return;
 		}

@@ -1,10 +1,11 @@
 package usf.saav.alma.app;
 
 import java.io.IOException;
+import java.util.Vector;
 
 import org.json.JSONException;
 
-import nom.tam.fits.common.FitsException;
+import nom.tam.fits.FitsException;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.Settings;
 import usf.saav.alma.data.Settings.SettingsDouble;
@@ -25,11 +26,11 @@ public class DataSetManager {
 	public SettingsInt z1; 
 	public SettingsDouble zoom;
 	
-	FitsReader reader; 
+	Vector<FitsReader> reader = new Vector<FitsReader>( ); 
 	
-	public DataSetManager( String filename ) throws FitsException, IOException {
+	public DataSetManager( String filename ) throws IOException, FitsException {
 
-		reader = new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true );
+		reader.add( new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true ) );
 	
 		try {
 			settings = new Settings( filename + ".snapshot" );
@@ -40,11 +41,11 @@ public class DataSetManager {
 			curZ = settings.initInteger( "curZ", 0 );
 			zoom = settings.initDouble( "zoom", 1 );
 			
-			x0.setValidRange( reader.getAxesSize()[0] );
-			y0.setValidRange( reader.getAxesSize()[1] );
-			z0.setValidRange( reader.getAxesSize()[2] );
-			z1.setValidRange( reader.getAxesSize()[2] );
-			curZ.setValidRange( reader.getAxesSize()[2] );
+			x0.setValidRange( reader.firstElement().getAxesSize()[0] );
+			y0.setValidRange( reader.firstElement().getAxesSize()[1] );
+			z0.setValidRange( reader.firstElement().getAxesSize()[2] );
+			z1.setValidRange( reader.firstElement().getAxesSize()[2] );
+			curZ.setValidRange( reader.firstElement().getAxesSize()[2] );
 			
 		} catch (JSONException | IOException e) {
 			e.printStackTrace();
@@ -53,11 +54,22 @@ public class DataSetManager {
 
 	public ScalarField2D getSlice(IntRange1D xr, IntRange1D yr, int z, int w) {
 		try {
-			return reader.getSlice( xr, yr, z, w);
+			for( int vol = 0; vol < reader.size(); vol++){
+				System.out.println(reader.get(vol).getAxesSize()[2].toString());
+				if( z < reader.get(vol).getAxesSize()[2].end() ){
+					return reader.get(vol).getSlice( xr, yr, z, w);
+				}
+				z -= reader.get(vol).getAxesSize()[2].length();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
+	public void appendFile(String filename) throws IOException, FitsException {
+		reader.add( new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true ) );
+	}
+
+	
 }

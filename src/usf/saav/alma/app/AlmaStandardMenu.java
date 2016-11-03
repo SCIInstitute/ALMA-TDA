@@ -17,13 +17,15 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 
 	private JMenu menuFile;
 	private JMenuItem menuOpen;
+	private JMenuItem menuAppend;
 	private JMenuItem menuClose;
 	private JMenuItem menuExit;
 
 	private JMenu menuProperties;
 
-	public  MonitoredTrigger monFileOpen  = new MonitoredTrigger("File Open");
-	public  MonitoredTrigger monFileClose = new MonitoredTrigger("File Close");
+	public  MonitoredTrigger monFileOpen   = new MonitoredTrigger("File Open");
+	public  MonitoredTrigger monFileAppend = new MonitoredTrigger("Append File");
+	public  MonitoredTrigger monFileClose  = new MonitoredTrigger("File Close");
 
 	public  MonitoredTrigger monPropGen  = new MonitoredTrigger("General Properties");
 	public  MonitoredTrigger monPropHist = new MonitoredTrigger("History");
@@ -39,6 +41,10 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 		menuOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
 		menuOpen.addActionListener( this );
 
+		menuAppend = new JMenuItem("Append Volume", KeyEvent.VK_A );
+		menuAppend.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+		menuAppend.addActionListener( this );
+
 		menuClose = new JMenuItem("Close", KeyEvent.VK_C );
 		menuClose.addActionListener( this );
 		
@@ -48,6 +54,8 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 
 		menuFile = new JMenu("File");
 		menuFile.add(menuOpen);
+		menuFile.addSeparator();
+		menuFile.add(menuAppend);
 		menuFile.addSeparator();
 		menuFile.add(menuClose);
 		menuFile.addSeparator();
@@ -77,11 +85,12 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if( e.getSource() == menuExit  ){ System.exit(0);		  }
-		if( e.getSource() == menuOpen  ){ monFileOpen.trigger();  }
-		if( e.getSource() == menuClose ){ monFileClose.trigger(); }
-		if( e.getSource() == menuProps ){ monPropGen.trigger();   }
-		if( e.getSource() == menuHist  ){ monPropHist.trigger();  }
+		if( e.getSource() == menuExit   ){ System.exit(0);		    }
+		if( e.getSource() == menuOpen   ){ monFileOpen.trigger();   }
+		if( e.getSource() == menuAppend ){ monFileAppend.trigger(); }
+		if( e.getSource() == menuClose  ){ monFileClose.trigger();  }
+		if( e.getSource() == menuProps  ){ monPropGen.trigger();    }
+		if( e.getSource() == menuHist   ){ monPropHist.trigger();   }
 		
 	}
 	

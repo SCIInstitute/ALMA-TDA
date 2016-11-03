@@ -26,9 +26,9 @@ import java.io.IOException;
 import nom.tam.fits.BasicHDU;
 import nom.tam.fits.BinaryTableHDU;
 import nom.tam.fits.Fits;
+import nom.tam.fits.FitsException;
 import nom.tam.fits.HeaderCard;
 import nom.tam.fits.ImageHDU;
-import nom.tam.fits.common.FitsException;
 import nom.tam.image.ImageTiler;
 import nom.tam.util.Cursor;
 import usf.saav.alma.data.ScalarField1D;
@@ -54,13 +54,12 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	FitsTable      table      = null;
 
 
-	public RawFitsReader( String filename, boolean verbose ) throws FitsException, IOException {
+	public RawFitsReader( String filename, boolean verbose ) throws IOException, FitsException {
 		super(verbose);
 
 		file = new File(filename);
-		fits = new Fits( file );
+		fits = new Fits( file, true );
 
-		
 		for(BasicHDU<?> header : fits.read() ){
 
 			if( header instanceof ImageHDU ){
@@ -133,6 +132,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 			}
 
 		}
+
 
 	}
 
