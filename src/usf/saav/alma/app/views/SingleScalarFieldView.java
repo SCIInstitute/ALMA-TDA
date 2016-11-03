@@ -3,16 +3,17 @@ package usf.saav.alma.app.views;
 import java.util.Map.Entry;
 
 import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.app.AlmaGui;
-import usf.saav.alma.app.AlmaGui.MouseMode;
-import usf.saav.alma.app.AlmaGui.ViewMode;
 import usf.saav.alma.app.DataViewManager;
+import usf.saav.alma.app.views.AlmaGui.MouseMode;
+import usf.saav.alma.app.views.AlmaGui.ViewMode;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.processors.Extract1Dfrom3D;
 import usf.saav.alma.data.processors.Moment0;
 import usf.saav.alma.data.processors.Moment1;
 import usf.saav.alma.data.processors.Moment2;
+import usf.saav.alma.data.processors.Subsample2D;
+import usf.saav.alma.data.processors.Subsample3D;
 import usf.saav.alma.drawing.ContourTreeDrawing;
 import usf.saav.alma.drawing.HistogramDrawing;
 import usf.saav.alma.drawing.LabelDrawing;
@@ -20,6 +21,7 @@ import usf.saav.alma.drawing.PersistenceDiagramDrawing;
 import usf.saav.alma.drawing.ScalarFieldDrawing;
 import usf.saav.alma.drawing.SpectralLineDrawing;
 import usf.saav.alma.util.ContourTreeThread;
+import usf.saav.common.MathX;
 import usf.saav.common.colormap.DivergentColormap;
 import usf.saav.common.monitor.MonitoredObject;
 import usf.saav.common.mvc.ControllerComponent;
@@ -164,17 +166,19 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		public void setPosition( int u0, int v0, int w, int h ){
 			super.setPosition(u0, v0, w, h);
 			
+			int panelSize = Math.min( 200,  h/6 );
+			
 			sfv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			ctv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
+			
 			dataM.sel_box.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			dataM.sel_pnt.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 
-			pdd.setPosition( winX.start()+10, winY.start()+10, 200,   200 );
-
-			hist2d.setPosition( winX.start()+10, winY.start()+220, 400,   200 );
-			hist3d.setPosition( winX.start()+10, winY.start()+440, 400,   200 );
+			pdd.setPosition(    winX.start()+10, winY.start()+10, 			  panelSize,   panelSize );
+			hist2d.setPosition( winX.start()+10, winY.start()+panelSize+20,   panelSize*2, panelSize );
+			hist3d.setPosition( winX.start()+10, winY.start()+panelSize*2+40, panelSize*2, panelSize );
 			
-			lineD.setPosition( winX.end()-220, winY.start()+220, 200, 100 );
+			lineD.setPosition( winX.end()-panelSize*3/2-20,   winY.start()+panelSize+20, panelSize*3/2, panelSize );
 
 			sliceLabel.setPosition( winX.start()+10, winY.end()-40, 20, 20 );
 			rangeLabel.setPosition( winX.start()+10, winY.end()-40, 20, 20 );
@@ -228,14 +232,15 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		public void setData( DataViewManager dataM ){
 			
 			unregisterAll( );
-			registerSubController( pdd,   5 );
-			registerSubController( dataM.csCont,		   15 );
+			registerSubController( pdd, 		  5 );
+			registerSubController( dataM.csCont, 15 );
 
 			dataM.sel_box.setCoordinateSystem( dataM.csCont );
 			dataM.sel_pnt.setCoordinateSystem( dataM.csCont );
 			ctv.setCoordinateSystem( dataM.csCont );
 
-			dataM.csCont.addTranslationCallback( sfv, "setTranslation" );
+			dataM.csCont.addDragCallback( sfv, "setTranslation" );
+			dataM.csCont.addZoomCallback( sfv, "adjustZoom" );
 			//dataM.csCont.addTranslationCallback( ctv, "setTranslation" );
 
 			dataM.simp_sf2d.addMonitor( this, "simp_sf2d_update" );
@@ -340,22 +345,28 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		}
 
 
-		@SuppressWarnings("incomplete-switch")
 		private void refreshViewSF( ){ 
 			//boolean showSimplified = model.gui.monShowSimp.get();
 			boolean showSimplified = true;
 
-			ScalarField2D sf2D = ((showSimplified)?(dataM.simp_sf2d):(dataM.src_sf2d)).get();
-			ScalarField3D sf3D = ((showSimplified)?(dataM.simp_sf3d):(dataM.src_sf3d)).get();
+			ScalarField2D _sf2D = ((showSimplified)?(dataM.simp_sf2d):(dataM.src_sf2d)).get();
+			ScalarField3D _sf3D = ((showSimplified)?(dataM.simp_sf3d):(dataM.src_sf3d)).get();
+
+			int stepX = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf2D.getWidth()  / (double)winX.length() );
+			int stepY = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf2D.getHeight() / (double)winY.length() );
+			int stepZ = (int)Math.ceil( (float)_sf3D.getDepth()/128.0 );
+
+			ScalarField2D red2D = new Subsample2D( _sf2D, stepX, stepY );
+			ScalarField3D red3D = new Subsample3D( _sf3D, stepX, stepY, stepZ );
 
 			switch(viewmode){
-			case SCALARFIELD: view_sf2d.set( sf2D );			    break;
-			case MOMENT0: 	  view_sf2d.set( new Moment0( sf3D ) ); break;
-			case MOMENT1: 	  view_sf2d.set( new Moment1( sf3D ) ); break;
-			case MOMENT2: 	  view_sf2d.set( new Moment2( sf3D ) ); break;
+			case SCALARFIELD: view_sf2d.set( red2D );			    break;
+			case MOMENT0: 	  view_sf2d.set( new Moment0( red3D ) ); break;
+			case MOMENT1: 	  view_sf2d.set( new Moment1( red3D ) ); break;
+			case MOMENT2: 	  view_sf2d.set( new Moment2( red3D ) ); break;
 			default: break;
 			}
-			view_sf3d.set( sf3D );
+			view_sf3d.set( red3D );
 
 			// update the color maps
 			if( COLORMAP_GLOBAL ){

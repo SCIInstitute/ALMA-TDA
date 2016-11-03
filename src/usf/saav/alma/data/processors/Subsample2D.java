@@ -33,7 +33,7 @@ public class Subsample2D extends ScalarField2D.Default {
 		this.field = field;
 		this.sx = Math.max( 1, step_x );
 		this.sy = Math.max( 1, step_y );
-		print_info_message( step_x + " " + step_y );
+		print_info_message( step_x + " " + step_y + " " + field.getWidth() + " " + field.getHeight() );
 	}
 	@Override public int getWidth()  {	return field.getWidth()/sx; }
 	@Override public int getHeight() {	return field.getHeight()/sy; }

@@ -7,8 +7,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.app.AlmaGui.ViewMode;
 import usf.saav.alma.app.views.SingleScalarFieldView;
+import usf.saav.alma.app.views.AlmaGui.ViewMode;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.processors.Composite2D;

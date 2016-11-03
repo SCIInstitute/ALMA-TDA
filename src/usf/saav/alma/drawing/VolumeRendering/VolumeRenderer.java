@@ -89,7 +89,7 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		this.platform = jocl.getPlatform(0);
 		this.res = res;
 
-		init( new File("/Users/prosen/Code/alma/src/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl") );
+		init( new File("/Users/prosen/Code/ALMA-TDA/src/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl") );
 
 		matrixView.translate(0, 0, -4);
 	}

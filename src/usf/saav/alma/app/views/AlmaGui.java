@@ -18,7 +18,7 @@
  *     
  *     You may contact the Paul Rosen at <prosen@usf.edu>. 
  */
-package usf.saav.alma.app;
+package usf.saav.alma.app.views;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -48,7 +48,7 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 
 
 	public enum ViewMode {
-		SCALARFIELD, MOMENT0, MOMENT1, MOMENT2, VOLUME
+		SCALARFIELD, MOMENT0, MOMENT1, MOMENT2
 	}
 	
 	public enum MouseMode {
@@ -65,14 +65,14 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 
 
 
-	private MonitoredInteger 		 monZ,monZ0,monZ1;
-	public  MonitoredEnum<MouseMode> monMM	  	  = new MonitoredEnum<MouseMode>( MouseMode.NAVIGATE );
-	public  MonitoredEnum<ViewMode>  monView	  = new MonitoredEnum<ViewMode>( ViewMode.SCALARFIELD );
-	public  MonitoredTrigger		 monBuildTree = new MonitoredTrigger("Contour Tree");
+	private MonitoredInteger 			 monZ,monZ0,monZ1;
+	public  MonitoredEnum<MouseMode>	 monMM	  	  = new MonitoredEnum<MouseMode>( MouseMode.NAVIGATE );
+	public  MonitoredEnum<ViewMode> 	 monView	  = new MonitoredEnum<ViewMode>( ViewMode.SCALARFIELD );
+	public  MonitoredTrigger			 monBuildTree = new MonitoredTrigger("Contour Tree");
 	public  MonitoredEnum<TreeDimension> monDim		  = new MonitoredEnum<TreeDimension>( TreeDimension.DIM_2D_STACK );
-	public  MonitoredBoolean		 monShowTree  = new MonitoredBoolean( true );
-	public  MonitoredBoolean		 monShowSimp  = new MonitoredBoolean( true );
-	public  MonitoredEnum<TreeType>  monTree	  = new MonitoredEnum<TreeType>( TreeType.CONTOUR );
+	public  MonitoredBoolean			 monShowTree  = new MonitoredBoolean( true );
+	public  MonitoredBoolean			 monShowSimp  = new MonitoredBoolean( true );
+	public  MonitoredEnum<TreeType> 	 monTree	  = new MonitoredEnum<TreeType>( TreeType.CONTOUR );
 
 	
 	private ButtonGroup rcView;
@@ -81,7 +81,7 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 	private ButtonGroup rcTree;
 
 	private JRadioButton 	guiMMNav, guiMMSelReg, guiMMSelLine;
-	private JRadioButton 	guiViewSF, guiViewM0, guiViewM1, guiViewM2, guiViewVol;
+	private JRadioButton 	guiViewSF, guiViewM0, guiViewM1, guiViewM2;
 	private JRadioButton	guiTreeSpl, guiTreeMer, guiTreeCon;
 	private JRadioButton	guiDim2D, guiDim2DStack, guiDim3D;
 	private JCheckBox		guiShowTree, guiShowSimp;
@@ -97,7 +97,7 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 		          false, //resizable
 		          false, //closable
 		          false, //maximizable
-		          true);//iconifiable
+		          true); //iconifiable
 
 	    setLocation( x, y );
 	    setSize( 150, 800 );
@@ -110,7 +110,6 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 		this.monZ0.addMonitor( this, "refreshVariables" );
 		this.monZ1.addMonitor( this, "refreshVariables" );
 		
-
 		initControls( );
 
 	}
@@ -174,7 +173,6 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
         viewPanel.add( guiViewM0  = createRadioButton("Moment0", false, rcView) );
         viewPanel.add( guiViewM1  = createRadioButton("Moment1", false, rcView) );
         viewPanel.add( guiViewM2  = createRadioButton("Moment2", false, rcView) );
-        viewPanel.add( guiViewVol = createRadioButton("Volume",  false, rcView) );
 
         viewPanel.add( guiShowTree = createCheckbox("Show Tree",  true ) );
 		viewPanel.add( guiShowSimp = createCheckbox("Show Simp.", true ) );
@@ -235,12 +233,10 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-
 		if( e.getSource() == guiViewSF  ){		monView.set( ViewMode.SCALARFIELD );	}
 		if( e.getSource() == guiViewM0  ){		monView.set( ViewMode.MOMENT0 );		}
 		if( e.getSource() == guiViewM1  ){		monView.set( ViewMode.MOMENT1 );		} 
 		if( e.getSource() == guiViewM2  ){		monView.set( ViewMode.MOMENT2 ); 		}
-		if( e.getSource() == guiViewVol ){		monView.set( ViewMode.VOLUME ); 		}
 		
 		if( e.getSource() == guiMMNav ){		monMM.set( MouseMode.NAVIGATE ); 		}
 		if( e.getSource() == guiMMSelReg ){		monMM.set( MouseMode.SELECT_REGION ); 	}

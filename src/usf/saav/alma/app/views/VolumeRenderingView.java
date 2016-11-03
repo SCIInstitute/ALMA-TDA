@@ -1,6 +1,5 @@
 package usf.saav.alma.app.views;
 
-import usf.saav.alma.app.AlmaGui;
 import usf.saav.alma.app.DataViewManager;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.drawing.LabelDrawing;
