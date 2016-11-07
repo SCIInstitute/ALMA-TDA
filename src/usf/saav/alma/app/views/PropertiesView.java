@@ -9,14 +9,17 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+
+import usf.saav.alma.data.fits.FitsProperties;
+import usf.saav.alma.data.fits.FitsProperty;
 import usf.saav.alma.data.fits.FitsReader;
 
-public class HistoryView extends JInternalFrame {
+public class PropertiesView extends JInternalFrame {
 	private static final long serialVersionUID = 6188756035699890222L;
 
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	public HistoryView( Vector<FitsReader> readers ) {
+	public PropertiesView( Vector<FitsReader> readers ) {
 		
 		super("History",
 	          true,  //resizable
@@ -34,7 +37,7 @@ public class HistoryView extends JInternalFrame {
 		
 	}
 	
-	public HistoryView(FitsReader reader) {
+	public PropertiesView(FitsReader reader) {
 		
 		super("History",
 	          true,  //resizable
@@ -52,7 +55,13 @@ public class HistoryView extends JInternalFrame {
 	
 	public void addReader( FitsReader reader ) {
 
-		String [] data = reader.getHistory().getHistoryArray();
+		FitsProperties props = reader.getProperties();
+		
+		String [] data = new String[props.size()];
+		int curr = 0;
+		for( FitsProperty p : props ){
+			data[curr++] = p.toString();
+		}
 		
 		JList<String> list = new JList<String>(data);
 		list.setLayoutOrientation(JList.VERTICAL);
@@ -68,4 +77,3 @@ public class HistoryView extends JInternalFrame {
 	}
 	
 }
-

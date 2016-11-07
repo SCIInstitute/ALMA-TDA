@@ -58,7 +58,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		super(verbose);
 
 		file = new File(filename);
-		fits = new Fits( file, true );
+		fits = new Fits( file );
 
 		for(BasicHDU<?> header : fits.read() ){
 

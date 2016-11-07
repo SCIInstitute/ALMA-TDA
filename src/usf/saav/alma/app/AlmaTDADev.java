@@ -20,6 +20,7 @@
  */
 package usf.saav.alma.app;
 
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 
@@ -29,6 +30,9 @@ import javax.swing.JInternalFrame;
 import javax.swing.filechooser.FileFilter;
 
 import nom.tam.fits.FitsException;
+import usf.saav.alma.app.views.AlmaGui;
+import usf.saav.alma.app.views.HistoryView;
+import usf.saav.alma.app.views.PropertiesView;
 import usf.saav.alma.app.views.SingleScalarFieldView;
 import usf.saav.alma.app.views.VolumeRenderingView;
 import usf.saav.common.jocl.joclController;
@@ -45,8 +49,12 @@ public class AlmaTDADev extends TApp {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
                 
+                String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65.fits";
+                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_cont.fits";
+                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_uniform_smooth.fits";
+                
            		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-           		String filename = "/Users/prosen/Code/ALMA-TDA/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+           		//String filename = "/Users/prosen/Code/ALMA-TDA/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
            		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
            		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_briggs.pbcor.fits";
            		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_uniform.pbcor.fits";
@@ -84,6 +92,7 @@ public class AlmaTDADev extends TApp {
 	private TGLFrame	   volFrame;
 
 	private JInternalFrame histFrame;
+	private JInternalFrame propFrame;
 
 	
 	public AlmaTDADev( int x, int y, int w, int h ){ 
@@ -112,11 +121,23 @@ public class AlmaTDADev extends TApp {
 	}
 	
 	public void showGeneralProperties( ){
-		// TODO: Display window
+    	if( propFrame == null ) addFrame( propFrame = new PropertiesView( dataSM.reader ) );
+    	propFrame.setVisible(true);
+		try {
+			propFrame.setIcon(false);
+		} catch (PropertyVetoException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void showHistory( ){
-		// TODO: Display window
+    	if( histFrame == null ) addFrame( histFrame = new HistoryView( dataSM.reader ) );
+		histFrame.setVisible(true);
+		try {
+			histFrame.setIcon(false);
+		} catch (PropertyVetoException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -190,7 +211,6 @@ public class AlmaTDADev extends TApp {
 		if( guiFrame == null ) addFrame( guiFrame = new AlmaGui( 1000, 0, dataVM.curZ, dataVM.z0, dataVM.z1 ) );
     	if( slcFrame == null ) addFrame( slcFrame = new SingleScalarFieldView( (AlmaGui) guiFrame, "Slice Viewer", 0, 0, 1000, 700 ) );
     	if( volFrame == null ) addFrame( volFrame = new VolumeRenderingView(   (AlmaGui) guiFrame, jocl, "Volume Rendering", 100, 100, 1000, 700 ) );
-    	if( histFrame == null ) addFrame( histFrame = new HistoryView( dataSM.reader.getHistory() ) );
 
     	((SingleScalarFieldView)slcFrame).setData( dataVM );
     	(  (VolumeRenderingView)volFrame).setData( dataVM );
@@ -198,7 +218,6 @@ public class AlmaTDADev extends TApp {
     	guiFrame.setVisible(true);
     	slcFrame.setVisible(true);
 		volFrame.setVisible(true);
-		histFrame.setVisible(true);
 		
 		this.setTitle( "ALMA TDA -- " + filename );
 		this.setJMenuBar( menuStandard );
