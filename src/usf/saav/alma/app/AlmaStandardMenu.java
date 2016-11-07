@@ -27,12 +27,13 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 	public  MonitoredTrigger monFileAppend = new MonitoredTrigger("Append File");
 	public  MonitoredTrigger monFileClose  = new MonitoredTrigger("File Close");
 
-	public  MonitoredTrigger monPropGen  = new MonitoredTrigger("General Properties");
-	public  MonitoredTrigger monPropHist = new MonitoredTrigger("History");
+	public  MonitoredTrigger monWindowProp = new MonitoredTrigger("Properties");
+	public  MonitoredTrigger monWindowHist = new MonitoredTrigger("History");
+	public  MonitoredTrigger monWindowVol  = new MonitoredTrigger("Volume");
 
 	private JMenuItem menuProps;
-
 	private JMenuItem menuHist;
+	private JMenuItem menuVol;
 
 	
 	public AlmaStandardMenu( ){
@@ -72,9 +73,14 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 		menuHist.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
 		menuHist.addActionListener( this );
 
-		menuProperties = new JMenu("Properties");
+		menuVol = new JMenuItem("Show Volume Rendering", KeyEvent.VK_V );
+		menuVol.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+		menuVol.addActionListener( this );
+
+		menuProperties = new JMenu("Windows");
 		menuProperties.add(menuProps);
 		menuProperties.add(menuHist);
+		menuProperties.add(menuVol);
 
 		this.add(menuProperties);
 
@@ -89,8 +95,9 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 		if( e.getSource() == menuOpen   ){ monFileOpen.trigger();   }
 		if( e.getSource() == menuAppend ){ monFileAppend.trigger(); }
 		if( e.getSource() == menuClose  ){ monFileClose.trigger();  }
-		if( e.getSource() == menuProps  ){ monPropGen.trigger();    }
-		if( e.getSource() == menuHist   ){ monPropHist.trigger();   }
+		if( e.getSource() == menuProps  ){ monWindowProp.trigger(); }
+		if( e.getSource() == menuHist   ){ monWindowHist.trigger(); }
+		if( e.getSource() == menuVol    ){ monWindowVol.trigger();  }
 		
 	}
 	

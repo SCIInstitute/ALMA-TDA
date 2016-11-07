@@ -45,7 +45,15 @@ public class SystemX {
 	
 
 	public static String [] readFileContents(File file) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader( file ));
+		return readFileContents( new BufferedReader(new FileReader( file )) );
+	}	
+	
+	public static String [] readFileContents(InputStream input) throws IOException {
+		return SystemX.readFileContents( new BufferedReader(new InputStreamReader(input) ) );
+	}
+	
+	
+	public static String [] readFileContents(BufferedReader reader) throws IOException {
 		Vector<String> ret = new Vector<String>();
 		 String line;
 		 while( ( line = reader.readLine() ) != null ) {

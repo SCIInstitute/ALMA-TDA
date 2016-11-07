@@ -108,11 +108,12 @@ public class AlmaTDADev extends TApp {
 		menuStartup.monFileOpen.addMonitor(  this, "fileOpen" );
 		
 		menuStandard = new AlmaStandardMenu( );
-		menuStandard.monFileOpen.addMonitor(  this, "fileOpen" );
-		menuStandard.monFileAppend.addMonitor(  this, "fileAppend" );
-		menuStandard.monFileClose.addMonitor( this, "fileClose" );
-		menuStandard.monPropGen.addMonitor(   this, "showGeneralProperties" );
-		menuStandard.monPropHist.addMonitor(  this, "showHistory" );
+		menuStandard.monFileOpen.addMonitor(   this, "fileOpen" );
+		menuStandard.monFileAppend.addMonitor( this, "fileAppend" );
+		menuStandard.monFileClose.addMonitor(  this, "fileClose" );
+		menuStandard.monWindowProp.addMonitor( this, "showGeneralProperties" );
+		menuStandard.monWindowHist.addMonitor( this, "showHistory" );
+		menuStandard.monWindowVol.addMonitor(  this, "showVolume" );
 		
 		this.setJMenuBar( menuStartup );
 		
@@ -139,7 +140,19 @@ public class AlmaTDADev extends TApp {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void showVolume( ){
+    	if( volFrame == null ){
+    		addFrame( volFrame = new VolumeRenderingView(   (AlmaGui) guiFrame, jocl, "Volume Rendering", 100, 100, 1000, 700 ) );
+        	(  (VolumeRenderingView)volFrame).setData( dataVM );
+    	}
+		volFrame.setVisible(true);
+		try {
+			volFrame.setIcon(false);
+		} catch (PropertyVetoException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public void fileOpen( ){
 		
@@ -210,14 +223,11 @@ public class AlmaTDADev extends TApp {
 		
 		if( guiFrame == null ) addFrame( guiFrame = new AlmaGui( 1000, 0, dataVM.curZ, dataVM.z0, dataVM.z1 ) );
     	if( slcFrame == null ) addFrame( slcFrame = new SingleScalarFieldView( (AlmaGui) guiFrame, "Slice Viewer", 0, 0, 1000, 700 ) );
-    	if( volFrame == null ) addFrame( volFrame = new VolumeRenderingView(   (AlmaGui) guiFrame, jocl, "Volume Rendering", 100, 100, 1000, 700 ) );
 
     	((SingleScalarFieldView)slcFrame).setData( dataVM );
-    	(  (VolumeRenderingView)volFrame).setData( dataVM );
     			
     	guiFrame.setVisible(true);
     	slcFrame.setVisible(true);
-		volFrame.setVisible(true);
 		
 		this.setTitle( "ALMA TDA -- " + filename );
 		this.setJMenuBar( menuStandard );

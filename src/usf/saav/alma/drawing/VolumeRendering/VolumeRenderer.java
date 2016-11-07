@@ -31,14 +31,13 @@ import static org.jocl.CL.CL_MEM_READ_ONLY;
 import static org.jocl.CL.CL_MEM_WRITE_ONLY;
 import static org.jocl.CL.CL_RGBA;
 
-import java.io.File;
 import java.io.IOException;
-
 import org.jocl.cl_image_format;
 import org.jocl.cl_sampler;
 
 import processing.core.PMatrix3D;
 import usf.saav.alma.data.ScalarField3D;
+import usf.saav.common.SystemX;
 import usf.saav.common.jocl.joclController;
 import usf.saav.common.jocl.joclDevice;
 import usf.saav.common.jocl.joclException;
@@ -89,27 +88,27 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		this.platform = jocl.getPlatform(0);
 		this.res = res;
 
-		init( new File("/Users/prosen/Code/ALMA-TDA/src/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl") );
-
-		matrixView.translate(0, 0, -4);
-	}
-
-	private void init( File program ){
-
 		try {
-			for(int d = 0; d < platform.getDeviceCount(); d++){
-				joclDevice _device = platform.getDevice(d);
-				if( device == null ) device = _device;
-				else if( _device.isAccelerator() ) device = _device;
-				else if( _device.isGPU() && device.isCPU() ) device = _device;
-			}
-			kernel   = device.buildProgram(program, "d_render");
-
-			print_info_message(device.toString());
-
+			//init(SystemX.readFileContents(new File("/Users/prosen/Code/ALMA-TDA/src/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl")) );
+			init( SystemX.readFileContents( getClass().getResourceAsStream("/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl") ) );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		matrixView.translate(0, 0, -4);
+	}
+
+	private void init( String [] program ){
+
+		for(int d = 0; d < platform.getDeviceCount(); d++){
+			joclDevice _device = platform.getDevice(d);
+			if( device == null ) device = _device;
+			else if( _device.isAccelerator() ) device = _device;
+			else if( _device.isGPU() && device.isCPU() ) device = _device;
+		}
+		kernel   = device.buildProgram(program, "d_render");
+
+		print_info_message(device.toString());
 
 		// Create samplers for transfer function, linear interpolation and nearest interpolation
 		try {
