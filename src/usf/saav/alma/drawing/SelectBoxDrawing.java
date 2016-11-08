@@ -20,6 +20,8 @@
  */
 package usf.saav.alma.drawing;
 
+import java.util.Arrays;
+
 import usf.saav.alma.util.CoordinateSystem;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
@@ -60,6 +62,9 @@ public class SelectBoxDrawing extends ControllerComponent.Default implements Vie
 			float x1 = Math.max(xy0[0],xy1[0]);
 			float y0 = Math.min(xy0[1],xy1[1]);
 			float y1 = Math.max(xy0[1],xy1[1]);
+			
+			//System.out.println( Arrays.toString(this.getPosition()) );
+			//System.out.println( "(" + x0 + "," + y0 + ") " + "(" + x1 + "," + y1 + ")");
 
 			g.hint( TGraphics.DISABLE_DEPTH_TEST );
 			g.strokeWeight(5);

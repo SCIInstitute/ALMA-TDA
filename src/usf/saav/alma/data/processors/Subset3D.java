@@ -21,6 +21,7 @@
 package usf.saav.alma.data.processors;
 
 import usf.saav.alma.data.ScalarField3D;
+import usf.saav.common.range.IntRange1D;
 
 public class Subset3D extends ScalarField3D.Default {
 	ScalarField3D src;
@@ -28,6 +29,20 @@ public class Subset3D extends ScalarField3D.Default {
 	int y0, yN;
 	int z0, zN;
 
+	public Subset3D( ScalarField3D src, IntRange1D x_range, IntRange1D y_range, IntRange1D z_range ){
+		this.src = src;
+		this.x0 = x_range.start();
+		this.xN = x_range.length();
+		
+		this.y0 = y_range.start();
+		this.yN = y_range.length();
+
+		this.z0 = z_range.start();
+		this.zN = z_range.length();
+
+	}
+
+	@Deprecated
 	public Subset3D( ScalarField3D src, int [] x_range, int [] y_range, int [] z_range ){
 		this.src = src;
 

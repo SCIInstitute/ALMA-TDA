@@ -7,6 +7,7 @@ import org.json.JSONException;
 
 import nom.tam.fits.FitsException;
 import usf.saav.alma.data.ScalarField2D;
+import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.Settings;
 import usf.saav.alma.data.Settings.SettingsDouble;
 import usf.saav.alma.data.Settings.SettingsInt;
@@ -14,6 +15,9 @@ import usf.saav.alma.data.fits.CachedFitsReader;
 import usf.saav.alma.data.fits.FitsReader;
 import usf.saav.alma.data.fits.RawFitsReader;
 import usf.saav.alma.data.fits.SafeFitsReader;
+import usf.saav.alma.data.processors.Extended3D;
+import usf.saav.alma.data.processors.Extract2DFrom3D;
+import usf.saav.alma.data.processors.Subset2D;
 import usf.saav.common.range.IntRange1D;
 
 public class DataSetManager {
@@ -26,11 +30,14 @@ public class DataSetManager {
 	public SettingsInt z1; 
 	public SettingsDouble zoom;
 	
-	Vector<FitsReader> reader = new Vector<FitsReader>( ); 
+	public Vector<FitsReader> reader = new Vector<FitsReader>( );
+	public ScalarField3D data;
+
 	
 	public DataSetManager( String filename ) throws IOException, FitsException {
 
 		reader.add( new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true ) );
+		data = reader.firstElement().getVolume(0);
 	
 		try {
 			settings = new Settings( filename + ".snapshot" );
@@ -52,23 +59,13 @@ public class DataSetManager {
 		}
 	}
 
-	public ScalarField2D getSlice(IntRange1D xr, IntRange1D yr, int z, int w) {
-		try {
-			for( int vol = 0; vol < reader.size(); vol++){
-				System.out.println(reader.get(vol).getAxesSize()[2].toString());
-				if( z < reader.get(vol).getAxesSize()[2].end() ){
-					return reader.get(vol).getSlice( xr, yr, z, w);
-				}
-				z -= reader.get(vol).getAxesSize()[2].length();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	public void appendFile(String filename) throws IOException, FitsException {
 		reader.add( new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true ) );
+		data = new Extended3D( data, reader.lastElement().getVolume(0) );
+	}
+	
+	public ScalarField2D getSlice( IntRange1D xr, IntRange1D yr, int z ){
+		return new Subset2D( new Extract2DFrom3D( data, z), xr, yr );
 	}
 
 	

@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 
 import usf.saav.alma.algorithm.topology.PersistenceSet;
 import usf.saav.alma.app.views.SingleScalarFieldView;
+import usf.saav.alma.app.views.AlmaGui;
 import usf.saav.alma.app.views.AlmaGui.ViewMode;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
@@ -31,9 +32,6 @@ public class DataViewManager {
 
 
 	
-	public Map< Integer, PersistenceSimplifierND > psf_map = new HashMap< Integer, PersistenceSimplifierND >( );
-	public Map< Integer, ContourTreeThread >       ctt_map = new HashMap< Integer, ContourTreeThread >( );
-
 	
 	public MonitoredScalarField2D src_sf2d  = new MonitoredScalarField2D( );
 	public MonitoredScalarField2D simp_sf2d  = new MonitoredScalarField2D( );
@@ -41,16 +39,9 @@ public class DataViewManager {
 	public MonitoredLayeredVolume src_sf3d  = new MonitoredLayeredVolume( );
 	public MonitoredScalarField3D simp_sf3d  = new MonitoredScalarField3D( );
 	
-	public MonitoredContourTreeThread cur_ctt = new MonitoredContourTreeThread( );
-
-	public MonitoredObject< Set<PersistenceSet> > pss = new MonitoredObject< Set<PersistenceSet> >( ){
-		@Override protected Class<?> getClassType() { return Set.class; } 
-	};
 	
 	
 
-	ExecutorService threadPool = Executors.newFixedThreadPool(4);
-	
 	ViewMode viewmode = ViewMode.SCALARFIELD;
 
 	
@@ -71,9 +62,11 @@ public class DataViewManager {
 	public MonitoredInteger z1; 
 	public MonitoredDouble zoom;
 	
-	private DataSetManager dsm;
+	public DataSetManager dsm;
 	
 	
+	public ContourTreeManager ctm;
+	public PersistenceSimplificationManager psm;
 
 	public DataViewManager( DataSetManager dsm ){
 
@@ -116,9 +109,13 @@ public class DataViewManager {
 		zoom.addMonitor( this, "set3DSrcRefresh" );
 		zoom.addMonitor( this, "set3DSimplificationRefresh");
 		
-		//gui.monBuildTree.addMonitor( this, "buildContourTree" );
-
 	}
+	
+	public void setGUI( AlmaGui gui ){
+		this.ctm = new ContourTreeManager( this, gui );
+		this.psm = new PersistenceSimplificationManager( this, ctm );
+	}
+
 	
 	public void setData( ){
 		
@@ -129,7 +126,7 @@ public class DataViewManager {
 		
 		if( need2DSrcRefresh  )   this.refresh2DSourceSF();
 		if( need3DSrcRefresh  )   this.refresh3DSourceSF();
-		if( needSimpRefresh )     this.refreshSimplification();
+		if( needSimpRefresh )     psm.refreshSimplification();
 		if( need2DSimpSFRefresh ) this.refreshSimplifiedSF2D();
 		if( need3DSimpSFRefresh ) this.refreshSimplifiedSF3D();
 		
@@ -149,61 +146,10 @@ public class DataViewManager {
 	public void set3DSimplificationRefresh( ){ need3DSimpSFRefresh = true; }
 	
 	public void setSimplifyScalarField( ){
-		psf_map.clear();
+		psm.psf_map.clear();
 		needSimpRefresh = true;
 	}
 
-	/*
-	public void buildContourTree( ){
-		
-		IntRange1D [] r = sel_box.getSelection();
-		if( r == null ) return;
-		
-		sel_box.clearSelection();
-		
-		if( gui.monDim.get() == Dimension.DIM_2D ) {
-			ContourTreeThread ctt = new ContourTreeThread( reader, r[0], r[1], curZ.get() );
-			ctt.setCallback( this, "completedContourTree");
-			ctt_map.put( curZ.get(), ctt );
-			threadPool.submit( ctt );
-		}
-		if( gui.monDim.get() == Dimension.DIM_2D_STACK ) {
-			for( int z = z0.get(); z <= z1.get(); z++ ){
-				ContourTreeThread ctt = new ContourTreeThread( reader, r[0], r[1], z );
-				ctt.setCallback( this, "completedContourTree");
-				ctt_map.put( z, ctt );
-				threadPool.submit( ctt );
-			}
-		}
-		if( gui.monDim.get() == Dimension.DIM_3D ) {
-			ContourTreeThread ctt = new ContourTreeThread( reader, r[0], r[1], new IntRange1D( z0.get(), z1.get() ) );
-			ctt.setCallback( this, "completedContourTree");
-			for( int z = z0.get(); z <= z1.get(); z++ ){
-				ctt_map.put( z, ctt );
-			}
-			threadPool.submit( ctt );
-		}
-
-	}
-	
-	
-	public void completedContourTree( ContourTreeThread ctt ){
-		boolean stillProcessing = false;
-		for( Entry<Integer,ContourTreeThread> e_ctt : ctt_map.entrySet() ){
-			stillProcessing = stillProcessing || !e_ctt.getValue().isProcessingComplete();
-		}
-		
-		if( !stillProcessing ){
-			cur_ctt.set( ctt_map.containsKey( curZ.get() ) ? ctt_map.get( curZ.get() ) : null );;
-			Set<PersistenceSet> pss = new HashSet<PersistenceSet>( );
-			for( int z = z0.get(); z <= z1.get(); z++ ){
-				if( ctt_map.containsKey(z) && ctt_map.get(z).getTree() != null ) 
-					pss.add( ctt_map.get(z).getTree() );
-			}
-			pss.set( pss );
-		}
-	}
-	 */
 
 	public SingleScalarFieldView ssfv;
 	
@@ -218,7 +164,7 @@ public class DataViewManager {
 		IntRange1D yr = new IntRange1D( (int)xy0[1], (int)xy1[1] );
 		
 		// Update 2D scalar field
-		src_sf2d.set( dsm.getSlice( xr, yr, curZ.get(), 0) );
+		src_sf2d.set( dsm.getSlice( xr, yr, curZ.get() ) );
 	}
 
 
@@ -234,57 +180,23 @@ public class DataViewManager {
 		// Update 3D scalar field
 		LayeredVolume stack = new LayeredVolume( );
 		for(int z = z0.get(); z<= z1.get(); z++){
-			stack.addLayers( dsm.getSlice( xr, yr, z, 0) );
+			stack.addLayers( dsm.getSlice( xr, yr, z ) );
 		}
 		src_sf3d.set(stack);
 		
 	}
 
 	
-	private void refreshSimplification( ) {
-		
-		if( !ctt_map.containsKey( curZ.get() ) ) return;
-		if( psf_map.containsKey( curZ.get() ) ) return;
-		
-		ContourTreeThread ctt = ctt_map.get( curZ.get() );
-		if( ctt.getScalarField() == null || ctt.getTree() == null ) return;
-		
-		if( ctt.getScalarField() instanceof ScalarField2D ){
-			PersistenceSimplifier2D psf = new PersistenceSimplifier2D( (ScalarField2D)ctt.getScalarField(), ctt.getTree(), ctt.getComponentList(), curZ.get(), false );
-			psf.setCallback(this, "completedSimplification" );
-			threadPool.execute( psf );
-		}
-		
-		if( ctt.getScalarField() instanceof ScalarField3D ){
-			PersistenceSimplifier3D psf = new PersistenceSimplifier3D( (ScalarField3D)ctt.getScalarField(), ctt.getTree(), ctt.getComponentList(), ctt.getZ(), false );
-			psf.setCallback(this, "completedSimplification" );
-			threadPool.execute( psf );
-		}
-		
-		for( int z = z0.get(); z <= z1.get(); z++ ){
-			if(  psf_map.containsKey(z) ) continue;
-			if( !ctt_map.containsKey(z) ) continue;
-			if( curZ.get() == z ) continue;
-			ctt = ctt_map.get( z );
-			if( ctt.getScalarField() == null || ctt.getTree() == null ) continue;
-			if( ctt.getScalarField() instanceof ScalarField2D ){
-				PersistenceSimplifier2D psf = new PersistenceSimplifier2D( (ScalarField2D)ctt.getScalarField(), ctt.getTree(), ctt.getComponentList(), z, false );
-				psf.setCallback(this, "completedSimplification" );
-				threadPool.execute( psf );
-			}
-		}
-		
-	}
 	
 	public void completedSimplification( PersistenceSimplifier2D pst ){
-		psf_map.put( pst.getZ(), pst );
+		psm.psf_map.put( pst.getZ(), pst );
 		need2DSimpSFRefresh = true;
 		need3DSimpSFRefresh = true;
 	}
 	
 	public void completedSimplification( PersistenceSimplifier3D pst ){
 		for( int i = pst.getZ().start(); i <= pst.getZ().end(); i++ ){
-			psf_map.put( i,  pst ); 
+			psm.psf_map.put( i,  pst ); 
 		}
 		need2DSimpSFRefresh = true;
 		need3DSimpSFRefresh = true;
@@ -294,10 +206,10 @@ public class DataViewManager {
 
 	private void refreshSimplifiedSF2D( ){ 
 		
-		cur_ctt.set( ctt_map.containsKey( curZ.get() ) ? ctt_map.get( curZ.get() ) : null );
+		ctm.cur_ctt.set( ctm.ctt_map.containsKey( curZ.get() ) ? ctm.ctt_map.get( curZ.get() ) : null );
 
-		PersistenceSimplifierND psf = psf_map.containsKey( curZ.get() ) ? psf_map.get( curZ.get() ) : null;
-		ContourTreeThread 		ctt = ctt_map.containsKey( curZ.get() ) ? ctt_map.get( curZ.get() ) : null;
+		PersistenceSimplifierND psf = psm.psf_map.containsKey( curZ.get() ) ? psm.psf_map.get( curZ.get() ) : null;
+		ContourTreeThread 		ctt = ctm.ctt_map.containsKey( curZ.get() ) ? ctm.ctt_map.get( curZ.get() ) : null;
 
 		// Update 2D scalar field
 		if( psf != null ){
@@ -323,8 +235,8 @@ public class DataViewManager {
 		// Update 3D scalar field
 		LayeredVolume stack = new LayeredVolume( );
 		for(int z = z0.get(); z<= z1.get(); z++){
-			PersistenceSimplifierND psf = psf_map.containsKey( z ) ? psf_map.get( z ) : null;
-			ContourTreeThread 		ctt = ctt_map.containsKey( z ) ? ctt_map.get( z ) : null;
+			PersistenceSimplifierND psf = psm.psf_map.containsKey( z ) ? psm.psf_map.get( z ) : null;
+			ContourTreeThread 		ctt = ctm.ctt_map.containsKey( z ) ? ctm.ctt_map.get( z ) : null;
 
 			ScalarField2D slice = src_sf3d.get().getLayer( z-z0.get() );
 			if( psf == null || ctt == null ){// || !gui.monShowSimp.get() ){
@@ -359,10 +271,6 @@ public class DataViewManager {
 	public class MonitoredScalarField3D extends MonitoredObject<ScalarField3D>{
 		@Override protected Class<?> getClassType() { return ScalarField3D.class; } 
 	};	
-
-	public class MonitoredContourTreeThread extends MonitoredObject< ContourTreeThread >{
-		@Override protected Class<?> getClassType() { return ContourTreeThread.class; } 
-	};
 
 
 	

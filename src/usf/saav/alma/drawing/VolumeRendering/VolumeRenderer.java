@@ -89,7 +89,6 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		this.res = res;
 
 		try {
-			//init(SystemX.readFileContents(new File("/Users/prosen/Code/ALMA-TDA/src/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl")) );
 			init( SystemX.readFileContents( getClass().getResourceAsStream("/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl") ) );
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -11,6 +11,7 @@ import usf.saav.common.mvc.swing.TGraphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.util.Arrays;
 
 
 public abstract class DefaultGLFrame extends TGLFrame {
@@ -121,19 +122,19 @@ public abstract class DefaultGLFrame extends TGLFrame {
 		}
 	
 	
-		@Override public void mouseMoved(MouseEvent e) {   if( controller == null ) return; controller.mouseMoved(e.getX(),e.getY()); }
+		@Override public void mouseMoved(MouseEvent e) {   if( controller == null ) return; controller.mouseMoved(e.getX()*2,e.getY()*2); }
 		@Override public void keyPressed(KeyEvent e) {     if( controller == null ) return; controller.keyPressed( e.getKeyChar() ); }
-		@Override public void mouseDragged(MouseEvent e) { if( controller == null ) return; controller.mouseDragged(e.getX(),e.getY()); }
-		@Override public void mousePressed(MouseEvent e) {  
+		@Override public void mouseDragged(MouseEvent e) { if( controller == null ) return; controller.mouseDragged(e.getX()*2,e.getY()*2); }
+		@Override public void mousePressed(MouseEvent e) {
 			if( controller == null ) return;  
 			if(e.getClickCount() == 2) 
-				controller.mouseDoubleClick(e.getX(),e.getY());
+				controller.mouseDoubleClick(e.getX()*2,e.getY()*2);
 			else 
-				controller.mousePressed(e.getX(),e.getY()); 
+				controller.mousePressed(e.getX()*2,e.getY()*2); 
 		}
 		@Override public void mouseReleased(MouseEvent e) {			if( controller == null ) return; controller.mouseReleased(); }
 		@Override public void mouseWheelMoved(MouseWheelEvent e) {
-			if( controller == null ) return; controller.mouseWheel( e.getX(), e.getY(), (float)e.getPreciseWheelRotation() ); 
+			if( controller == null ) return; controller.mouseWheel( e.getX()*2, e.getY()*2, (float)e.getPreciseWheelRotation() ); 
 		}
 
 	}

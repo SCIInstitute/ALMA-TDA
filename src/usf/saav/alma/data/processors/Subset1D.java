@@ -21,12 +21,20 @@
 package usf.saav.alma.data.processors;
 
 import usf.saav.alma.data.ScalarField1D;
+import usf.saav.common.range.IntRange1D;
 
 public class Subset1D extends ScalarField1D.Default {
 
 	ScalarField1D src;
 	int x0, xN;
 
+	public Subset1D( ScalarField1D src, IntRange1D x_range ){
+		this.src = src;
+		this.x0 = x_range.start();
+		this.xN = x_range.length();
+	}
+	
+	@Deprecated
 	public Subset1D( ScalarField1D src, int [] range ){
 		this.src = src;
 		if( range.length == 0 ){

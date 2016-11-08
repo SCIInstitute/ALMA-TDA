@@ -10,7 +10,7 @@ import com.jogamp.opengl.awt.GLJPanel;
 public class TGLFrame extends JInternalFrame implements GLEventListener {
 	private static final long serialVersionUID = -184570753250336350L;
 
-	private GLJPanel gljpanel;
+	protected GLJPanel gljpanel;
 	protected final GLProfile profile;
 	
 	public TGLFrame( String title, int x0, int y0, int width, int height ){

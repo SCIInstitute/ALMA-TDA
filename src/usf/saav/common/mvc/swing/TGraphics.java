@@ -437,16 +437,15 @@ public abstract class TGraphics implements GLEventListener, MouseListener, Mouse
 		
 	}
 
-	public void ellipse(float px, float py, float sizeX, float sizeY) {
-		
-		int steps = (int) Math.pow(2,this.sphereDetail);
+	public void ellipse(float px, float py, float sizeX, float sizeY, int detail ) {
+		int steps = detail;
 		
 		if( fillEnable ){
 			gl.glColor4f( fillColor.x, fillColor.y, fillColor.z, fillColor.w );
 			gl.glBegin( GL2ES3.GL_TRIANGLE_FAN );
 			gl.glVertex3d( px,  py, 0 );
 			for(int i = 0; i < steps; i++){
-				float a = (float)i/(float)(steps-1);
+				float a = 2.0f*(float)Math.PI*(float)i/(float)(steps-1);
 				gl.glVertex3d( px+sizeX*Math.cos(a),  py+sizeY*Math.sin(a), 0 );
 			}
 			gl.glEnd();
@@ -457,12 +456,15 @@ public abstract class TGraphics implements GLEventListener, MouseListener, Mouse
 			gl.glLineWidth( strokeWeight );
 			gl.glBegin( GL2ES3.GL_LINE_STRIP );
 			for(int i = 0; i < steps; i++){
-				float a = (float)i/(float)(steps-1);
+				float a = 2.0f*(float)Math.PI*(float)i/(float)(steps-1);
 				gl.glVertex3d( px+sizeX*Math.cos(a),  py+sizeY*Math.sin(a), 0 );
 			}
 			gl.glEnd();
 		}	
-		
+	}
+	
+	public void ellipse(float px, float py, float sizeX, float sizeY) {
+		ellipse( px,py,sizeX,sizeY, (int) Math.pow(2,this.sphereDetail));
 	}
 
 	public TImage createImage(int img_w, int img_h, int img_type ) {

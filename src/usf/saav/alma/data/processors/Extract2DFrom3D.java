@@ -35,6 +35,7 @@ public class Extract2DFrom3D extends ScalarField2D.Default implements ScalarFiel
 	
 	@Override public int getWidth() { return sf.getWidth(); }
 	@Override public int getHeight() { return sf.getHeight(); }
-	@Override public float getValue(int x, int y) { return sf.getValue(x, y, layer); }
+	@Override public float getValue(int x, int y) {
+		return sf.getValue(x, y, layer); }
 
 }

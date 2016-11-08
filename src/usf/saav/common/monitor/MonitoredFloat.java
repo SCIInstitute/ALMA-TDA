@@ -55,7 +55,7 @@ public class MonitoredFloat extends BasicObject {
 			callbacksModified.add( new Callback( obj, func_name ) );
 			return;
 		} catch (NoSuchMethodException e) {	/*e.printStackTrace();*/ }
-		print_error_message( "Function not found" );
+		print_error_message( "Function ``" + func_name + "'' not found" );
 	}
 	
 	public void removeMonitor( Object obj, String func_name ){

@@ -21,12 +21,24 @@
 package usf.saav.alma.data.processors;
 
 import usf.saav.alma.data.ScalarField2D;
+import usf.saav.common.range.IntRange1D;
 
 public class Subset2D extends ScalarField2D.Default {
 	ScalarField2D src;
 	int x0, xN;
 	int y0, yN;
 
+	public Subset2D( ScalarField2D src, IntRange1D x_range, IntRange1D y_range ){
+		this.src = src;
+		this.x0 = x_range.start();
+		this.xN = x_range.length();
+		
+		this.y0 = y_range.start();
+		this.yN = y_range.length();
+
+	}
+	
+	@Deprecated
 	public Subset2D( ScalarField2D src, int [] x_range, int [] y_range ){
 		this.src = src;
 

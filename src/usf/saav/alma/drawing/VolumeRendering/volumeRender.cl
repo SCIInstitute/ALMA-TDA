@@ -112,14 +112,17 @@ d_render(__global uint *d_output,
         // read from 3D texture
         float4 sample = read_imagef(volume, volumeSampler, pos);
         
-        // lookup in transfer function texture
-        float2 transfer_pos = (float2)((sample.x+transferOffset)*transferScale, 0.5f);
-        float4 col = read_imagef(transferFunc, transferFuncSampler, transfer_pos);
+        if( !isnan(sample.x) ){
+			// lookup in transfer function texture
+			float2 transfer_pos = (float2)((sample.x+transferOffset)*transferScale, 0.5f);
 
-        // accumulate result
-        //float a = col.w*density;
-        float a = col.w;
-        temp = mix(temp, col, (float4)(a, a, a, a));
+			float4 col = read_imagef(transferFunc, transferFuncSampler, transfer_pos);
+
+			// accumulate result
+			//float a = col.w*density;
+			float a = col.w;
+			temp = mix(temp, col, (float4)(a, a, a, a));
+        }
         
         t -= tstep;
         if (t < tnear) break;

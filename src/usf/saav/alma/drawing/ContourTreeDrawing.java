@@ -109,12 +109,17 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 		float y0 = p0[1];
 		float y1 = p1[1];
 
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 		g.strokeWeight(3);
 		g.stroke(0);
 		g.noFill();
 		g.rect( x0, y0, (x1-x0), (y1-y0) );
+		g.hint( TGraphics.ENABLE_DEPTH_TEST );
+
 
 		if( sf == null || cl == null || ct == null ) return;
+		
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 
 		g.strokeWeight(1);
 		g.stroke(0);
@@ -132,9 +137,9 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 				float [] pos = Mesh.getComponentMidpoint( cl.get(n.getLocation()), sf );
 
 				if( selected.contains(i) ) g.strokeWeight(3);
-				float size = MathX.lerp(2,15,per/maxPersistence);
-				if( Float.isNaN(size) ) size = 2;
-				if( size > 15 ) size = 20;
+				float size = MathX.lerp(4,10,per/maxPersistence);
+				if( Float.isNaN(size) ) size = 4;
+				if( size > 10 ) size = 10;
 
 
 				switch( n.getType() ){
@@ -143,7 +148,7 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 				case MERGE:  g.fill(255,255,  0); break;
 				case SPLIT:  g.fill(255,  0,255); break;
 				default:     g.fill(255,  0,  0);
-							 size = 20;
+							 size = 10;
 							 break;
 				}
 
@@ -155,11 +160,14 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 				float py = pp[1];
 
 				if( winX.inRange( (float)px ) && winY.inRange( (float)py ) )
-					g.ellipse( (float)px, (float)py, size, size);
+					g.ellipse( (float)px, (float)py, size, size, (int)(size*1.5) );
 
 				if( selected.contains(i) ) g.strokeWeight(1);
 
 			}
+			
+			g.hint( TGraphics.ENABLE_DEPTH_TEST );
+
 	}
 	
 	public void drawLegend( TGraphics g  ){

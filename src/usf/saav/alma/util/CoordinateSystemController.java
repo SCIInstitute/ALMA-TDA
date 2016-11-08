@@ -20,6 +20,7 @@
  */
 package usf.saav.alma.util;
 
+import java.util.Arrays;
 import java.util.Vector;
 
 import usf.saav.common.Callback;
@@ -54,14 +55,17 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 	}
 
 	public float [] getCoordinateSystemPosition( float wx, float wy ){
+		//System.out.println( Arrays.toString(this.getPosition()) );
 		float csx = x.get() + (wx - (float)tx - (float)winX.start() - (float)winX.length()/2) / (float)zoom.get();
 		float csy = y.get() + (wy - (float)ty - (float)winY.start() - (float)winY.length()/2) / (float)zoom.get();
 		return new float[]{csx,csy};
 	}
 
 	public float [] getWindowPosition( float csx, float csy ){
-		float wx = winX.start() + winX.length()/2 + (float) ((csx-x.get())*zoom.get()) + tx;
-		float wy = winY.start() + winY.length()/2 + (float) ((csy-y.get())*zoom.get()) + ty;
+		//System.out.println( csx + " " + csy );
+		//System.out.println( Arrays.toString(this.getPosition()) );
+		float wx = winX.middle() + (float) ((csx-x.get())*zoom.get()) + tx;
+		float wy = winY.middle() + (float) ((csy-y.get())*zoom.get()) + ty;
 		return new float[]{wx,wy};
 	}
 

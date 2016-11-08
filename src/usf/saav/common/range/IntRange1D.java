@@ -91,6 +91,10 @@ public class IntRange1D {
 	@Deprecated public int getMax(){ return max; }
 	@Deprecated public int getMaximum(){ return max; }
 	
+	public int middle() {
+		return (min+max)/2;
+	}
+
 	
 	/**
 	 * TODO: Short description.
@@ -145,5 +149,6 @@ public class IntRange1D {
 	public boolean inRange(float value) {
 		return ( min <= value && value <= max );
 	}
+
 	
 }

@@ -157,7 +157,7 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 		haveControl = false;
 		if( inRange(mouseX,mouseY) ){
 			haveControl = true;
-			sel = new Pair<Float2,Float>(null,5.0f);
+			sel = new Pair<Float2,Float>(null,10.0f);
 			Pair<Float2,Float> s;
 			s = red.selectPoint( mouseX, mouseY );
 			if( s.getSecond() < sel.getSecond() ) sel = s;

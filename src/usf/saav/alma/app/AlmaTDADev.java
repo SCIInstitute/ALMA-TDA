@@ -224,6 +224,8 @@ public class AlmaTDADev extends TApp {
 		if( guiFrame == null ) addFrame( guiFrame = new AlmaGui( 1000, 0, dataVM.curZ, dataVM.z0, dataVM.z1 ) );
     	if( slcFrame == null ) addFrame( slcFrame = new SingleScalarFieldView( (AlmaGui) guiFrame, "Slice Viewer", 0, 0, 1000, 700 ) );
 
+    	dataVM.setGUI( (AlmaGui) guiFrame );
+    	
     	((SingleScalarFieldView)slcFrame).setData( dataVM );
     			
     	guiFrame.setVisible(true);

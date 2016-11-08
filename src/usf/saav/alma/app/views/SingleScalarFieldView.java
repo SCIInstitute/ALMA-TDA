@@ -166,7 +166,8 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		public void setPosition( int u0, int v0, int w, int h ){
 			super.setPosition(u0, v0, w, h);
 			
-			int panelSize = Math.min( 200,  h/6 );
+			//int panelSize = Math.min( 400,  h/4 );
+			int panelSize = h/3;
 			
 			sfv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			ctv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
@@ -174,9 +175,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			dataM.sel_box.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			dataM.sel_pnt.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 
-			pdd.setPosition(    winX.start()+10, winY.start()+10, 			  panelSize,   panelSize );
-			hist2d.setPosition( winX.start()+10, winY.start()+panelSize+20,   panelSize*2, panelSize );
-			hist3d.setPosition( winX.start()+10, winY.start()+panelSize*2+40, panelSize*2, panelSize );
+			pdd.setPosition(    winX.start()+10, winY.start()+10, 			  panelSize, panelSize );
+			hist2d.setPosition( winX.start()+10, winY.start()+panelSize+20,   panelSize, panelSize/2 );
+			hist3d.setPosition( winX.start()+10, winY.start()+panelSize*3/2+40, panelSize, panelSize/2 );
 			
 			lineD.setPosition( winX.end()-panelSize*3/2-20,   winY.start()+panelSize+20, panelSize*3/2, panelSize );
 
@@ -223,7 +224,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			
 			view_sf3d.addMonitor( hist3d, "setData" );
 
-			//pdd.addPersistentSimplificationCallback( mvc.controller, "setSimplifyScalarField" );
+			pdd.addPersistentSimplificationCallback( dataM.psm, "refreshSimplification" );
 
 			super.setup();
 
@@ -247,9 +248,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			dataM.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
 
 
-			dataM.pss.addMonitor( this,  "need_pdd_update" );
+			dataM.ctm.pss.addMonitor( this,  "need_pdd_update" );
 			
-			dataM.cur_ctt.addMonitor( this, "contourTreeUpdate" );
+			dataM.ctm.cur_ctt.addMonitor( this, "contourTreeUpdate" );
 
 
 			dataM.sel_pnt.addMonitor( this, "single_line_update" );
@@ -311,7 +312,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			
 			
 			boolean showCTLabel = false;
-			for( Entry<Integer,ContourTreeThread> ctt : dataM.ctt_map.entrySet() ){
+			for( Entry<Integer,ContourTreeThread> ctt : dataM.ctm.ctt_map.entrySet() ){
 				showCTLabel = showCTLabel || !ctt.getValue().isProcessingComplete();
 			}
 			ctLabel.setEnabled( showCTLabel );
@@ -322,7 +323,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			//setMouseMode( model.gui.monMM.get() );
 			
 			if( needUpdate ) refreshViewSF( );
-			if( needPDDUpdate) pdd.setParameterizations( dataM.cur_ctt.get().getTree(), dataM.pss.get().toArray( new PersistenceSet[dataM.pss.get().size()] ) );
+			if( needPDDUpdate){
+				pdd.setParameterizations( dataM.ctm.cur_ctt.get().getTree(), dataM.ctm.pss.get().toArray( new PersistenceSet[dataM.ctm.pss.get().size()] ) );
+			}
 
 			needUpdate = false;
 			needPDDUpdate = false;
@@ -331,9 +334,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			super.update();
 		}
 
-
+		
 		public void contourTreeUpdate( ){
-			ContourTreeThread ctt = dataM.cur_ctt.get();
+			ContourTreeThread ctt = dataM.ctm.cur_ctt.get();
 			if( ctt != null ){
 				ctv.setRegion( ctt.getX(), ctt.getY() );
 				ctv.setField( ctt.getScalarField(), ctt.getTree(), ctt.getComponentList(), ctt.getZ() );
@@ -343,6 +346,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 				ctv.setField( null, null, null, null );
 			}
 		}
+		
 
 
 		private void refreshViewSF( ){ 
@@ -391,6 +395,8 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		@Override
 		public boolean keyPressed( char key ){
 			if( super.keyPressed(key) ) return true;
+			if( key == '-' ){ dataM.curZ.decr(); return true; }
+			if( key == '+' ){ dataM.curZ.incr(); return true; }
 			return false;
 		}
 	}
