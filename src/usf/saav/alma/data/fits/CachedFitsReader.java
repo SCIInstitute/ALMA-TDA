@@ -36,11 +36,11 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	FloatDMCache cache = null;
 	Partition2D partition =null;
 	long sliceOffset;
-	int sx,sy,sz;
+	long sx,sy,sz;
 	
-	private static final int	 page_size_elems = 4096;
-	private static final int	 page_size_bytes = page_size_elems*4;
-	private static final int	 page_count      = 8096;
+	private static final long	 page_size_elems = 4096;
+	private static final long	 page_size_bytes = page_size_elems*4;
+	private static final long	 page_count      = 8096;
 	private static final boolean use_zorder 	 = true; 
 	
 	public CachedFitsReader( FitsReader reader, boolean verbose ){
@@ -54,7 +54,7 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		boolean cache_exists = cache_file.exists();
 		
 		try {
-			cache = new FloatDMCache( cache_file.getAbsolutePath(), page_size_bytes, page_count, false, false );
+			cache = new FloatDMCache( cache_file.getAbsolutePath(), (int)page_size_bytes, (int)page_count, false, false );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -123,8 +123,8 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		for(int y = 0; y < sy; y+=1024){
 			for(int x = 0; x < sx; x+=1024 ){
 
-				ScalarField2D sf = reader.getSlice( new IntRange1D( x, Math.min( sx, x+1024 )-1 ), 
-													new IntRange1D( y, Math.min( sy, y+1024 )-1 ),
+				ScalarField2D sf = reader.getSlice( new IntRange1D( x, (int) (Math.min( sx, x+1024 )-1) ), 
+													new IntRange1D( y, (int) (Math.min( sy, y+1024 )-1) ),
 													z, 0 );
 				
 				for(int iy = 0; iy < sf.getHeight(); iy++ ){

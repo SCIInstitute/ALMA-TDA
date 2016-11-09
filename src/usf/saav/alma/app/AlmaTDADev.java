@@ -29,7 +29,7 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.filechooser.FileFilter;
 
-import nom.tam.fits.FitsException;
+import nom.tam.fits.common.FitsException;
 import usf.saav.alma.app.views.AlmaGui;
 import usf.saav.alma.app.views.HistoryView;
 import usf.saav.alma.app.views.PropertiesView;
@@ -49,18 +49,20 @@ public class AlmaTDADev extends TApp {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
                 
-                String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65.fits";
-                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_cont.fits";
+                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65.fits";
+                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub.fits";
                 //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_uniform_smooth.fits";
+                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_cont.fits";
+                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom0.fits";
+                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom1.fits";
+                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom2.fits";
                 
-           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-           		//String filename = "/Users/prosen/Code/ALMA-TDA/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+           		String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
            		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
-           		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_briggs.pbcor.fits";
-           		//String filename = "\\\\saav.cspaul.com\\projects\\ALMA\\data\\anil_seth\\NGC404_CO21_uniform.pbcor.fits";
+           		
            		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
+           		
            		//String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA.zip";
            		//String filename = "/Users/prosen/Code/ALMA-TDA/data/betsy/CH3OH_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";

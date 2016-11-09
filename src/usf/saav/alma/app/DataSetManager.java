@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import org.json.JSONException;
 
-import nom.tam.fits.FitsException;
+import nom.tam.fits.common.FitsException;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.Settings;

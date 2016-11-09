@@ -1,15 +1,8 @@
 package usf.saav.alma.app;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.app.views.SingleScalarFieldView;
 import usf.saav.alma.app.views.AlmaGui;
 import usf.saav.alma.app.views.AlmaGui.ViewMode;
+import usf.saav.alma.app.views.SingleScalarFieldView;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.processors.Composite2D;
@@ -30,20 +23,13 @@ import usf.saav.common.range.IntRange1D;
 public class DataViewManager {
 
 
-
-	
-	
 	public MonitoredScalarField2D src_sf2d  = new MonitoredScalarField2D( );
 	public MonitoredScalarField2D simp_sf2d  = new MonitoredScalarField2D( );
 
 	public MonitoredLayeredVolume src_sf3d  = new MonitoredLayeredVolume( );
 	public MonitoredScalarField3D simp_sf3d  = new MonitoredScalarField3D( );
 	
-	
-	
-
 	ViewMode viewmode = ViewMode.SCALARFIELD;
-
 	
 	boolean need2DSrcRefresh = true;
 	boolean need3DSrcRefresh = true;
@@ -53,7 +39,6 @@ public class DataViewManager {
 	public CoordinateSystemController csCont;
 	public SelectBoxDrawing   sel_box;
 	public SelectPointDrawing sel_pnt;
-
 
 	public MonitoredInteger curZ;
 	public MonitoredInteger x0;

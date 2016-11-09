@@ -384,6 +384,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 					case SCALARFIELD: selRange = sf_range; break;
 				}
 				selRange.expand( r );
+				selRange.expand( 0 );
 				colormap.setRange( selRange );
 			}
 			else{

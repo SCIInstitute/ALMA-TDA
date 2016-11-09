@@ -1,5 +1,9 @@
 package usf.saav.common.mvc;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLProfile;
@@ -7,11 +11,6 @@ import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 
 import usf.saav.common.mvc.swing.TGLFrame;
 import usf.saav.common.mvc.swing.TGraphics;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.util.Arrays;
 
 
 public abstract class DefaultGLFrame extends TGLFrame {

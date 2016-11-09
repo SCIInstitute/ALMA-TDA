@@ -20,8 +20,6 @@
  */
 package usf.saav.alma.drawing;
 
-import java.util.Arrays;
-
 import usf.saav.alma.util.CoordinateSystem;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;

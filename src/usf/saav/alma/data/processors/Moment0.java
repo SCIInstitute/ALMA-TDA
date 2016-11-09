@@ -35,14 +35,14 @@ public class Moment0 extends ScalarField2D.Default {
 	int w,h;
 	double [] data;
 	ScalarField3D src;
-	double dV;
+	//double dV;
 
 	public Moment0( ScalarField3D src ){
 		this.src = src;
 		w = src.getWidth();
 		h = src.getHeight();
 		data = new double[w*h];
-		dV = src.getCoordinate(0, 0, 1)[2] - src.getCoordinate(0, 0, 0)[2];
+		//dV = src.getCoordinate(0, 0, 1)[2] - src.getCoordinate(0, 0, 0)[2];
 
 		Arrays.fill(data, Double.NaN);
 	}
@@ -53,7 +53,7 @@ public class Moment0 extends ScalarField2D.Default {
 		if( Double.isNaN(data[y*w+x]) ){
 			data[y*w+x] = 0;
 			for( int z = 0; z < src.getDepth(); z++){
-				data[y*w+x] += Math.abs(dV*src.getValue(x, y, z));
+				data[y*w+x] += Math.abs(src.getValue(x, y, z));
 			}
 		}
 		return (float) data[y*w+x];

@@ -30,20 +30,22 @@ public class Moment2 extends ScalarField2D.Default {
 	int w,h;
 	double [] data;
 	ScalarField3D src;
+	Moment0 m0;
 	Moment1 m1;
 
 	public Moment2( ScalarField3D src ){
-		init( src, new Moment1(src) );
+		this( src, new Moment0(src) );
 	}
 
-	public Moment2( ScalarField3D src, Moment1 mom1 ){
-		init( src, mom1 );
+	public Moment2( ScalarField3D src, Moment0 mom0 ){
+		this( src,mom0,new Moment1(src,mom0));
 	}
 
-	private void init( ScalarField3D src, Moment1 mom1 ){
+	public Moment2( ScalarField3D src, Moment0 mom0, Moment1 mom1 ){
 
 		this.src = src;
-		this.m1  = mom1;
+		this.m0 = mom0;
+		this.m1 = mom1;
 		w = src.getWidth();
 		h = src.getHeight();
 		data = new double[w*h];
@@ -57,6 +59,9 @@ public class Moment2 extends ScalarField2D.Default {
 		if( Double.isNaN(data[y*w+x]) ){
 			double denom = 0;
 			data[y*w+x] = 0;
+			
+			//if( m0.getValue(x,y) < 2.5 ) return (float) data[y*w+x];
+
 
 			for( int z = 0; z < src.getDepth(); z++){
 						double m = m1.getValue(x, y);
