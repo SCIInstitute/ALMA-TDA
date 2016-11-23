@@ -42,71 +42,45 @@ public class FloatDMCacheTest {
 		long numFloats = cache.GetFileSize() / 4;
 		assertEquals(68816, numFloats);
 		
-//		for (int i = 0; i < numFloats; i++)
-//		{
-//			System.out.print(cache.get(i) + " ");
-//		}
-		
 		long indexOfFirstNanInFile = -1;
 		for (long i = 0; i < cache.GetDataSize(); i++)
 		{
 			indexOfFirstNanInFile++;
-			//System.out.print(i + " ");
 			if (Float.isNaN(cache.get(i)))
 				break;
-			//System.out.print(cache.get(i) + " ");
-//			if (i % 100 == 0)
-//				System.out.println();
 		}
 		assertEquals(67584, indexOfFirstNanInFile);
 		
 		long indexOfLastNumberInFile;
 		for (indexOfLastNumberInFile = cache.GetDataSize() - 1; indexOfLastNumberInFile > 0; indexOfLastNumberInFile--)
 		{
-			
-			
 			if (!Float.isNaN(cache.get(indexOfLastNumberInFile)))
 				break;
 		}
 		assertEquals(16579375, indexOfLastNumberInFile);
 		
-//		for (int i = 0; i < 10; ++i)
-//		{
-//			System.out.println("Page " + i);
-//			for (int j = 0; j < page_size_bytes; ++j)
-//			{
-//				//float x = cache.get(j);
-//				System.out.print(cache.get(i * page_size_elems + j) + " ");
-//			}
-//			System.out.println();
-//		}
-		
 		assertTrue(Float.isNaN(cache.get(indexOfFirstNanInFile + 1)));
 
-		for (long i = indexOfFirstNanInFile + 1; i < 68816+100 ; i++)
+		float total = 0;
+		int numNans = 0;
+		int numNegativeOnes = 0;
+		
+		for (long i = 0; i < cache.GetDataSize(); i++)
 		{
-			float x = cache.get(i);
-			System.out.println(i + ": " + x);
-			//assertTrue(Float.isNaN(x) || x == -1);
-			//if (!(Float.isNaN(x) || x == -1))
-				
+			float f = cache.get(i);
+			if (Float.isNaN(f))
+				numNans++;
+			else if (f == -1)
+				numNegativeOnes++;
+			else
+				total += f;
 		}
-		
-		
-		for (long i = 0; i < cache.GetPageCount(); i++)
-		{
-			System.out.print("Page: " + i);
-			int numNans = 0;
-			for (long j = 0; j < page_size_elems; ++j)
-			{
-				if (Float.isNaN(cache.get(j + i * page_size_elems)))
-					numNans++;
-				
-			}
-			System.out.println(" has " + numNans + " nans");
-		}
-		
-		//fail("Not yet implemented"); // TODO
+		System.out.println("num nans = " + numNans + " out of " + cache.GetDataSize());
+		System.out.println("num -1 = " + numNegativeOnes);
+		System.out.println("total = " + total);
+		assertEquals(16307104, numNans);
+		assertEquals(8188, numNegativeOnes);
+		assertEquals(1174.0561523, total, 1e-6);
 	}
 
 	@Test
