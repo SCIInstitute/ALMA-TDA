@@ -42,8 +42,8 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	long sliceOffset;
 	int sx,sy,sz;
 	
-	private static final int	 page_size_bytes = 8096;
 	private static final int	 page_size_elems = 2048;
+	private static final int	 page_size_bytes = 4 * page_size_elems; // sizeof(float) = 4
 	private static final int	 page_count      = 2048;
 	private static final boolean use_zorder 	 = true; 
 	
@@ -71,13 +71,12 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		
 		if( !cache_exists ){
 			print_info_message("Initializing Cache");
-			for(int i = 0; i < page_size_elems; i++){
-				try {
-					cache.set(i, -1);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			try {
+				cache.initializeFirstPage();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+			
 		}
 		
 		sx = reader.getAxesSize()[0].length();
@@ -109,7 +108,7 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	}
 	
 	private void loadSlice( int z ) throws IOException {
-		if( cache.get(z) == z ){
+		if( cache.getValue(z) == z ){
 			return;
 		}
 		print_info_message("Loading slice " + (z) );
@@ -122,14 +121,14 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 				
 				for(int iy = 0; iy < sf.getHeight(); iy++ ){
 					for(int ix = 0; ix < sf.getWidth(); ix++ ){
-						cache.set(  getOffset( x+ix,  y+iy, z ), 
+						cache.setValue(  getOffset( x+ix,  y+iy, z ), 
 									sf.getValue(ix, iy) );
 					}
 				}
 				
 			}
 		}
-		cache.set(z,z);
+		cache.setValue(z,z);
 		cache.writeBackAll();
 	}
 	
@@ -218,7 +217,7 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		public float getValue(int ix, int iy) {
 			long el = getOffset( x.start()+ix,  y.start()+iy, z );
 			try {
-				return cache.get( el );
+				return cache.getValue( el );
 			} catch (Exception e) {
 				e.printStackTrace();
 				print_warning_message( (x.start()+ix) + "," + (y.start()+iy) + "," +  z + " -> " + el );
@@ -253,7 +252,7 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		public float getValue(int ix, int iy, int iz) {
 			long el = getOffset( x.start()+ix,  y.start()+iy, z.start()+iz );
 			try {
-				return cache.get( el );
+				return cache.getValue( el );
 			} catch (Exception e) {
 				e.printStackTrace();
 				print_warning_message( (x.start()+ix) + "," + (y.start()+iy) + "," +  (z.start()+iz) + " -> " + el );

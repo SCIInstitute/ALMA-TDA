@@ -62,7 +62,7 @@ public abstract class BaseCache<PageType extends BasePage> {
 
 	public final void PrintCacheInfo( ){
 		System.out.printf("Cache Info\n");
-		System.out.printf("  Estimated data size: %dM\n", GetDataSize()/1024/1024);
+		System.out.printf("  Estimated data size: %dM\n", GetDataCacheSize()/1024/1024);
 		System.out.printf("  Current pages:       %d of %d\n",GetCurrentPageCount(),page_count);
 		System.out.printf("  Bytes per page:      %d\n",page_size);
 	}
@@ -77,7 +77,7 @@ public abstract class BaseCache<PageType extends BasePage> {
 		return GetCurrentPageCount()*page_size;
 	}
 	
-	public final long GetDataSize(){
+	public final long GetDataCacheSize(){
 		return page_count*page_size;
 	}
 	
@@ -88,6 +88,13 @@ public abstract class BaseCache<PageType extends BasePage> {
 	public final int GetPageCount( ){
 		return page_count;
 	}
+	
+	public final long maxElementForFile() throws IOException
+	{
+		return GetFileSize() / sizeofElement();
+	}
+	
+	public abstract int sizeofElement();
 	
 	
 }

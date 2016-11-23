@@ -66,4 +66,9 @@ public class FloatFACache extends FullyAssociativeCache<FloatPage> {
 		return new FloatPage(file_chan, page_size );
 	}
 	
+	@Override
+	public int sizeofElement()
+	{
+		return 4;
+	}
 }

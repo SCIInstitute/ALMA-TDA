@@ -11,9 +11,7 @@ import org.junit.Test;
 public class FloatDMCacheTest {
 
 	private static final int	 page_size_bytes = 8096;
-	private static final int	 page_size_elems = 2048;
 	private static final int	 page_count      = 2048;
-	private static final boolean use_zorder 	 = true; 
 	
 	private static File cache_file;
 	private static FloatDMCache cache;
@@ -30,44 +28,22 @@ public class FloatDMCacheTest {
 		assertTrue(cache != null);
 		
 		assertEquals(16580608, cache.GetCurrentDataSize());
-		assertEquals(16580608, cache.GetDataSize());
+		assertEquals(16580608, cache.GetDataCacheSize());
 		assertEquals(275264, cache.GetFileSize());
 		assertEquals(2048, cache.GetPageCount());
 		assertEquals(2048, cache.GetCurrentPageCount());
 	}
 
 	@Test
-	public void testGet() throws IOException {
+	public void testFullCacheGet() throws IOException {
 		
-		long numFloats = cache.GetFileSize() / 4;
-		assertEquals(68816, numFloats);
-		
-		long indexOfFirstNanInFile = -1;
-		for (long i = 0; i < cache.GetDataSize(); i++)
-		{
-			indexOfFirstNanInFile++;
-			if (Float.isNaN(cache.get(i)))
-				break;
-		}
-		assertEquals(67584, indexOfFirstNanInFile);
-		
-		long indexOfLastNumberInFile;
-		for (indexOfLastNumberInFile = cache.GetDataSize() - 1; indexOfLastNumberInFile > 0; indexOfLastNumberInFile--)
-		{
-			if (!Float.isNaN(cache.get(indexOfLastNumberInFile)))
-				break;
-		}
-		assertEquals(16579375, indexOfLastNumberInFile);
-		
-		assertTrue(Float.isNaN(cache.get(indexOfFirstNanInFile + 1)));
-
 		float total = 0;
 		int numNans = 0;
 		int numNegativeOnes = 0;
 		
-		for (long i = 0; i < cache.GetDataSize(); i++)
+		for (long i = 0; i < cache.GetDataCacheSize() / 4; i++)
 		{
-			float f = cache.get(i);
+			float f = cache.getValue(i);
 			if (Float.isNaN(f))
 				numNans++;
 			else if (f == -1)
@@ -75,12 +51,34 @@ public class FloatDMCacheTest {
 			else
 				total += f;
 		}
-		System.out.println("num nans = " + numNans + " out of " + cache.GetDataSize());
-		System.out.println("num -1 = " + numNegativeOnes);
-		System.out.println("total = " + total);
-		assertEquals(16307104, numNans);
-		assertEquals(8188, numNegativeOnes);
-		assertEquals(1174.0561523, total, 1e-6);
+		assertEquals(16307104 / 4, numNans);
+		assertEquals(8188 / 4, numNegativeOnes);
+		assertEquals(293.510376, total, 1e-6);
+	}
+	
+	@Test
+	public void testFileGet() throws IOException {
+		
+		long numFloats = cache.maxElementForFile();
+		assertEquals(68816, numFloats);
+		
+		float total = 0;
+		int numNans = 0;
+		int numNegativeOnes = 0;
+		
+		for (long i = 0; i < numFloats; i++)
+		{
+			float f = cache.getValue(i);
+			if (Float.isNaN(f))
+				numNans++;
+			else if (f == -1)
+				numNegativeOnes++;
+			else
+				total += f;
+		}
+		assertEquals(1232, numNans);
+		assertEquals(2047, numNegativeOnes);
+		assertEquals(293.173645, total, 1e-6);
 	}
 
 	@Test
@@ -110,7 +108,7 @@ public class FloatDMCacheTest {
 
 	@Test
 	public void testGetDataSize() {
-		assertEquals(16580608, cache.GetDataSize());
+		assertEquals(16580608, cache.GetDataCacheSize());
 	}
 
 	@Test
@@ -123,4 +121,31 @@ public class FloatDMCacheTest {
 		assertEquals(2048, cache.GetPageCount());
 	}
 
+	@Test
+	public void testInitializeFirstPage() throws IOException
+	{
+		String dummyFile = "C:\\alma_data\\test\\dummy.fits.cache";
+		File dummy = new File(dummyFile);
+		dummy.delete();
+		int dummyPageSize = 1000, dummyPageCount = 2;
+		FloatDMCache dummyCache = new FloatDMCache( dummy.getAbsolutePath(), dummyPageSize, dummyPageCount, false, false );
+		
+		assertEquals(dummyPageSize * dummyPageCount, dummyCache.GetDataCacheSize());
+		
+		for (long i = 0; i < dummyCache.GetDataCacheSize() / 4; i++)
+		{
+			assertTrue(Float.isNaN(dummyCache.getValue(i)));
+		}
+		
+		dummyCache.initializeFirstPage();
+		
+		for (long i = 0; i < dummyPageSize / 4; i++)
+		{
+			assertEquals(-1, dummyCache.getValue(i), 1e-6);
+		}
+		for (long i = dummyPageSize / 4; i < dummyCache.GetDataCacheSize() / 4; i++)
+		{
+			assertTrue(Float.isNaN(dummyCache.getValue(i)));
+		}
+	}
 }
