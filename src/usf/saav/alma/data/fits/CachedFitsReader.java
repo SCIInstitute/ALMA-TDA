@@ -107,29 +107,38 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		return page_size_elems + sliceOffset*z + y*sy + x;
 	}
 	
+	private static final int sliceSize = 1024;
+	
 	private void loadSlice( int z ) throws IOException {
-		if( cache.getValue(z) == z ){
+		
+		if( cache.isSliceLoaded(z))
 			return;
-		}
+		
 		print_info_message("Loading slice " + (z) );
-		for(int y = 0; y < sy; y+=1024){
-			for(int x = 0; x < sx; x+=1024 ){
-
-				ScalarField2D sf = reader.getSlice( new IntRange1D( x, Math.min( sx, x+1024 )-1 ), 
-													new IntRange1D( y, Math.min( sy, y+1024 )-1 ),
-													z, 0 );
-				
-				for(int iy = 0; iy < sf.getHeight(); iy++ ){
-					for(int ix = 0; ix < sf.getWidth(); ix++ ){
-						cache.setValue(  getOffset( x+ix,  y+iy, z ), 
-									sf.getValue(ix, iy) );
-					}
-				}
-				
+		
+		for(int y = 0; y < sy; y += sliceSize) {
+			for(int x = 0; x < sx; x += sliceSize) {
+				cacheSlice(x, y, z);
 			}
 		}
-		cache.setValue(z,z);
+		cache.setSliceLoaded(z);
 		cache.writeBackAll();
+	}
+
+	private void cacheSlice(int x, int y, int z) throws IOException {
+		
+		ScalarField2D sf = reader.getSlice( new IntRange1D( x, Math.min( sx, x + sliceSize )-1 ), 
+											new IntRange1D( y, Math.min( sy, y + sliceSize )-1 ),
+											z, 0 );
+		
+		for(int iy = 0; iy < sf.getHeight(); iy++ )
+		{
+			for(int ix = 0; ix < sf.getWidth(); ix++ )
+			{
+				cache.setValue(  getOffset( x+ix,  y+iy, z ), 
+							sf.getValue(ix, iy) );
+			}
+		}
 	}
 	
 	/* (non-Javadoc)

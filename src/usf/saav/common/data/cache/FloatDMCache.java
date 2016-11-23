@@ -78,6 +78,14 @@ public class FloatDMCache extends DirectMappedCache<FloatPage> {
 	{
 		return sizeofFloat;
 	}
+
+	public boolean isSliceLoaded(int z) throws IOException {
+		return getValue(z) == z;
+	}
+
+	public void setSliceLoaded(int z) throws IOException {
+		setValue(z,z);
+	}
 	
 }
 
