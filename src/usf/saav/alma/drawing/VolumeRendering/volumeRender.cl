@@ -45,10 +45,10 @@ uint argbFloatToInt(float4 rgba)
     return ((uint)(rgba.w*255.0f)<<24) | ((uint)(rgba.z*255.0f)<<0) | ((uint)(rgba.y*255.0f)<<8) | ((uint)(rgba.x*255.0f)<<16);
     */
 
-    return    (clamp((uint)(rgba.x*255.0f),0,255) << 16)
-    		| (clamp((uint)(rgba.y*255.0f),0,255) << 8 )
-			| (clamp((uint)(rgba.z*255.0f),0,255) << 0 )
-			| (clamp((uint)(rgba.w*255.0f),0,255) << 24);
+    return    (clamp((uint)(rgba.x*255.0f),0u,255u) << 16)
+    		| (clamp((uint)(rgba.y*255.0f),0u,255u) << 8 )
+			| (clamp((uint)(rgba.z*255.0f),0u,255u) << 0 )
+			| (clamp((uint)(rgba.w*255.0f),0u,255u) << 24);
 
 }
 
