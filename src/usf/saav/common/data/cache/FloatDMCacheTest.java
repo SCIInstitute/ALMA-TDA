@@ -19,7 +19,7 @@ public class FloatDMCacheTest {
 	@BeforeClass
 	public static void setupBeforeClass() throws IOException
 	{
-		cache_file = new File("C:\\alma_data\\fits1\\Continuum_33GHz.fits.cache");
+		cache_file = new File("/Users/dwhite/Dropbox/alma/fits1/Continuum_33GHz.fits.cache");
 		cache = new FloatDMCache( cache_file.getAbsolutePath(), page_size_bytes, page_count, false, false );
 	}
 	
@@ -54,6 +54,49 @@ public class FloatDMCacheTest {
 		assertEquals(16307104 / 4, numNans);
 		assertEquals(8188 / 4, numNegativeOnes);
 		assertEquals(293.510376, total, 1e-6);
+	}
+	
+	private static boolean cacheFilesSame(String filename1, String filename2) throws IOException
+	{
+		File file1 = new File(filename1);
+		FloatDMCache file1Cache = new FloatDMCache( file1.getAbsolutePath(), page_size_bytes, page_count, false, false );
+		
+		File file2 = new File(filename2);
+		FloatDMCache file2Cache = new FloatDMCache( file2.getAbsolutePath(), page_size_bytes, page_count, false, false );
+		
+		if (file1Cache.GetDataCacheSize() != file2Cache.GetDataCacheSize())
+		{
+			System.out.println("Data cache sizes are different.");
+			return false;
+		}
+		
+		for (long i = 0; i < file1Cache.GetDataCacheSize() / 4; i++)
+		{
+			float f1 = file1Cache.getValue(i);
+			float f2 = file2Cache.getValue(i);
+			if (Float.isNaN(f1) != Float.isNaN(f2))
+			{
+				System.out.println("NaN values differ at i=" + i);
+				return false;
+			}
+
+			else if (Math.abs(f1 - f2) > 1e-12)
+			{
+				System.out.println("Floats differ at i=" + i);
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	@Test
+	public void testCompareCacheFiles() throws IOException
+	{
+		assertTrue(cacheFilesSame("/Users/dwhite/Dropbox/alma/fits1/Continuum_33GHz.fits.cache",
+				"/Users/dwhite/Dropbox/alma/fits1/Continuum_33GHz.fits.cache"));
+		assertTrue(cacheFilesSame("/Users/dwhite/Dropbox/alma/fits1/Continuum_33GHz.fits.cache",
+				"/Users/dwhite/Dropbox/alma/fits1same/Continuum_33GHz.fits.cache"));
 	}
 	
 	@Test
@@ -124,7 +167,7 @@ public class FloatDMCacheTest {
 	@Test
 	public void testInitializeFirstPage() throws IOException
 	{
-		String dummyFile = "C:\\alma_data\\test\\dummy.fits.cache";
+		String dummyFile = "/Users/dwhite/Dropbox/alma/test/dummy.fits.cache";
 		File dummy = new File(dummyFile);
 		dummy.delete();
 		int dummyPageSize = 1000, dummyPageCount = 2;
