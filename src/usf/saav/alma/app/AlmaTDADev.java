@@ -57,12 +57,12 @@ public class AlmaTDADev extends TApp {
                 //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom1.fits";
                 //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom2.fits";
                 
-           		String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
            		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
            		
            		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
            		
-           		//String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
+           		String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/ALMA-TDA/data/betsy/CH3OH_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
@@ -113,6 +113,7 @@ public class AlmaTDADev extends TApp {
 		menuStandard.monFileOpen.addMonitor(   this, "fileOpen" );
 		menuStandard.monFileAppend.addMonitor( this, "fileAppend" );
 		menuStandard.monFileClose.addMonitor(  this, "fileClose" );
+		menuStandard.monFileRefreshCache.addMonitor( this, "rebuildCache" );
 		menuStandard.monWindowProp.addMonitor( this, "showGeneralProperties" );
 		menuStandard.monWindowHist.addMonitor( this, "showHistory" );
 		menuStandard.monWindowVol.addMonitor(  this, "showVolume" );
@@ -175,7 +176,14 @@ public class AlmaTDADev extends TApp {
 		
 	}
 
-
+	public void rebuildCache( ){
+		dataSM.rebuildCache();
+		dataVM.set2DSrcRefresh( );
+		dataVM.set3DSrcRefresh( );
+		dataVM.set2DSimplificationRefresh( );
+		dataVM.set3DSimplificationRefresh( );
+	}
+	
 	public void fileAppend( ){
 		
 		final JFileChooser fc = new JFileChooser();

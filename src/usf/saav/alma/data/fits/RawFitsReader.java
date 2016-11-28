@@ -136,6 +136,18 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 	}
 
+	
+
+	@Override
+	public void close() {
+		try {
+			fits.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
 	public void finalize(){
 		try {
 			fits.close();

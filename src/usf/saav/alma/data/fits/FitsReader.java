@@ -32,6 +32,8 @@ import usf.saav.common.range.IntRange1D;
 public interface FitsReader {
 
 	public File getFile();
+	
+	public void close();
 
 	public IntRange1D[] getAxesSize();
 	

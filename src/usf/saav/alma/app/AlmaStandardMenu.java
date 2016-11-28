@@ -18,14 +18,16 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 	private JMenu menuFile;
 	private JMenuItem menuOpen;
 	private JMenuItem menuAppend;
+	private JMenuItem menuRefreshCache;
 	private JMenuItem menuClose;
 	private JMenuItem menuExit;
 
 	private JMenu menuProperties;
 
-	public  MonitoredTrigger monFileOpen   = new MonitoredTrigger("File Open");
-	public  MonitoredTrigger monFileAppend = new MonitoredTrigger("Append File");
-	public  MonitoredTrigger monFileClose  = new MonitoredTrigger("File Close");
+	public  MonitoredTrigger monFileOpen		 = new MonitoredTrigger("File Open");
+	public  MonitoredTrigger monFileAppend		 = new MonitoredTrigger("Append File");
+	public  MonitoredTrigger monFileRefreshCache = new MonitoredTrigger("Refresh Cache");
+	public  MonitoredTrigger monFileClose		 = new MonitoredTrigger("File Close");
 
 	public  MonitoredTrigger monWindowProp = new MonitoredTrigger("Properties");
 	public  MonitoredTrigger monWindowHist = new MonitoredTrigger("History");
@@ -46,6 +48,9 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 		menuAppend.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
 		menuAppend.addActionListener( this );
 
+		menuRefreshCache = new JMenuItem( "Refresh Cache" );
+		menuRefreshCache.addActionListener( this );
+
 		menuClose = new JMenuItem("Close", KeyEvent.VK_C );
 		menuClose.addActionListener( this );
 		
@@ -57,6 +62,7 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 		menuFile.add(menuOpen);
 		menuFile.addSeparator();
 		menuFile.add(menuAppend);
+		menuFile.add(menuRefreshCache);
 		menuFile.addSeparator();
 		menuFile.add(menuClose);
 		menuFile.addSeparator();
@@ -84,20 +90,19 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 
 		this.add(menuProperties);
 
-		
-
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if( e.getSource() == menuExit   ){ System.exit(0);		    }
-		if( e.getSource() == menuOpen   ){ monFileOpen.trigger();   }
-		if( e.getSource() == menuAppend ){ monFileAppend.trigger(); }
-		if( e.getSource() == menuClose  ){ monFileClose.trigger();  }
-		if( e.getSource() == menuProps  ){ monWindowProp.trigger(); }
-		if( e.getSource() == menuHist   ){ monWindowHist.trigger(); }
-		if( e.getSource() == menuVol    ){ monWindowVol.trigger();  }
+		if( e.getSource() == menuExit		 ){ System.exit(0);				   }
+		if( e.getSource() == menuOpen		 ){ monFileOpen.trigger();		   }
+		if( e.getSource() == menuAppend		 ){ monFileAppend.trigger();	   }
+		if( e.getSource() == menuRefreshCache){ monFileRefreshCache.trigger(); }
+		if( e.getSource() == menuClose		 ){ monFileClose.trigger();		   }
+		if( e.getSource() == menuProps		 ){ monWindowProp.trigger();	   }
+		if( e.getSource() == menuHist		 ){ monWindowHist.trigger();	   }
+		if( e.getSource() == menuVol		 ){ monWindowVol.trigger();		   }
 		
 	}
 	

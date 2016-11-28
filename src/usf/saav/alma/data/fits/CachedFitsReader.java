@@ -42,8 +42,12 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	private static final long	 page_size_bytes = page_size_elems*4;
 	private static final long	 page_count      = 8096;
 	private static final boolean use_zorder 	 = true; 
-	
+
 	public CachedFitsReader( FitsReader reader, boolean verbose ){
+		this(reader,false,verbose);
+	}
+	
+	public CachedFitsReader( FitsReader reader, boolean rebuild, boolean verbose ){
 		super(verbose);
 		
 		this.reader = reader;
@@ -59,7 +63,7 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 			e.printStackTrace();
 		}
 		
-		if( !cache_exists ){
+		if( rebuild || !cache_exists ){
 			print_info_message("Initializing Cache");
 			for(int i = 0; i < page_size_elems; i++){
 				try {
@@ -90,6 +94,17 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+
+	@Override
+	public void close() {
+		try {
+			cache.close(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		reader.close();
 	}
 	
 	
@@ -248,5 +263,6 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		@Override public int getHeight() { return y.length(); }
 		@Override public int getDepth() { return z.length(); }
 	}
+
 
 }

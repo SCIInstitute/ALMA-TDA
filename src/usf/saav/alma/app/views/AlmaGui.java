@@ -100,7 +100,7 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 		          true); //iconifiable
 
 	    setLocation( x, y );
-	    setSize( 150, 800 );
+	    setSize( 175, 800 );
 
 		this.monZ	 = curZ;
 		this.monZ0 	 = z0;
@@ -206,11 +206,11 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 		panelDim.add( guiDim3D      = createRadioButton("3D",         false, rcDim) );
 		panelDim.add( guiBuildTree  = createButton( "Calculate" ) );
 
-		slicePanel.setPreferredSize( new Dimension(125,65) );
-		viewPanel.setPreferredSize(  new Dimension(125,150) );
-		panelMM.setPreferredSize(    new Dimension(125,80) );
-		panelTree.setPreferredSize(  new Dimension(125,80) );
-		panelDim.setPreferredSize(   new Dimension(125,100) );
+		slicePanel.setPreferredSize( new Dimension(150,65) );
+		viewPanel.setPreferredSize(  new Dimension(150,150) );
+		panelMM.setPreferredSize(    new Dimension(150,80) );
+		panelTree.setPreferredSize(  new Dimension(150,80) );
+		panelDim.setPreferredSize(   new Dimension(150,100) );
 
 		
 		JPanel mainPanel = new JPanel(new FlowLayout());
@@ -223,8 +223,8 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 			
 
 		this.add( mainPanel );
-		this.setPreferredSize( new Dimension(125,700) );
-		this.setSize( new Dimension(150,550) );
+		this.setPreferredSize( new Dimension(150,700) );
+		this.setSize( new Dimension(175,550) );
 		
 	}
 

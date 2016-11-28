@@ -58,6 +58,27 @@ public class DataSetManager {
 			e.printStackTrace();
 		}
 	}
+	
+	public void rebuildCache( ){
+		
+		for( int i = 0; i < reader.size(); i++ ){
+			String filename = reader.get(i).getFile().getAbsolutePath();
+			reader.get(i).close();
+			try {
+				reader.set( i, new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true, true ), true ) );
+			} catch (IOException | FitsException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			data = reader.firstElement().getVolume(0);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+	}
 
 	public void appendFile(String filename) throws IOException, FitsException {
 		reader.add( new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true ) );

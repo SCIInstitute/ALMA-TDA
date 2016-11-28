@@ -21,7 +21,7 @@ public class PropertiesView extends JInternalFrame {
 
 	public PropertiesView( Vector<FitsReader> readers ) {
 		
-		super("History",
+		super("Properties",
 	          true,  //resizable
 	          false, //closable
 	          false, //maximizable
@@ -39,7 +39,7 @@ public class PropertiesView extends JInternalFrame {
 	
 	public PropertiesView(FitsReader reader) {
 		
-		super("History",
+		super("Properties",
 	          true,  //resizable
 	          false, //closable
 	          false, //maximizable

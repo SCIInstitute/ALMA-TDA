@@ -58,6 +58,12 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 	public FitsTable getTable( ){
 		return reader.getTable();
 	}
+	
+
+	@Override
+	public void close() {
+		reader.close();
+	}
 
 
 	@Override
@@ -200,4 +206,5 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 			return baseSlice.getValue(x-ox, y-oy);
 		}
 	}
+
 }
