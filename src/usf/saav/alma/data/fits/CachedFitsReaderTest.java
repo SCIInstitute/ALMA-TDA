@@ -8,6 +8,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import nom.tam.fits.common.FitsException;
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.common.range.IntRange1D;
 
@@ -25,8 +26,17 @@ public class CachedFitsReaderTest {
 	}
 
 	@Test
-	public void testCachedFitsReader() {
-		fail("Not yet implemented");
+	public void testCachedFitsReader() throws Exception {
+		new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/fits1/Continuum_33GHz.fits", true), true );
+		new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/fits2/Continuum_33GHz.fits", true), true );
+		try
+		{ 
+			new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/test/dummy.fits", true), true );
+			fail("Ctor should throw for non-existent file");
+		}
+		catch(FitsException e)
+		{
+		}
 	}
 
 	@Test
@@ -86,8 +96,12 @@ public class CachedFitsReaderTest {
 	}
 
 	@Test
-	public void testGetLine() {
-		fail("Not yet implemented");
+	public void testGetLine() throws IOException {
+		ScalarField1D line = reader.getLine(250, 30, 0);
+		assertEquals(1, line.getWidth());
+		assertEquals(1, line.getSize());
+		
+		assertEquals(line.getValue(0), 0.005653, 1e-6);
 	}
 
 	@Test
