@@ -1,9 +1,11 @@
 package usf.saav.common.data.cache;
 
 import static org.junit.Assert.*;
+import static java.nio.file.StandardCopyOption.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,7 +26,7 @@ public class FloatDMCacheTest {
 	}
 	
 	@Test
-	public void testFloatDMCacheStringIntIntBooleanBoolean() throws IOException {
+	public void testFloatDMCacheCtor() throws IOException {
 		assertTrue(cache != null);
 		
 		assertEquals(16580608, cache.GetCurrentDataSize());
@@ -56,13 +58,16 @@ public class FloatDMCacheTest {
 		assertEquals(293.510376, total, 1e-6);
 	}
 	
+	private static FloatDMCache makeCache(String filename) throws IOException
+	{
+		File file = new File(filename);
+		return new FloatDMCache( file.getAbsolutePath(), page_size_bytes, page_count, false, false );
+	}
+	
 	private static boolean cacheFilesSame(String filename1, String filename2) throws IOException
 	{
-		File file1 = new File(filename1);
-		FloatDMCache file1Cache = new FloatDMCache( file1.getAbsolutePath(), page_size_bytes, page_count, false, false );
-		
-		File file2 = new File(filename2);
-		FloatDMCache file2Cache = new FloatDMCache( file2.getAbsolutePath(), page_size_bytes, page_count, false, false );
+		FloatDMCache file1Cache = makeCache(filename1);
+		FloatDMCache file2Cache = makeCache(filename2);
 		
 		if (file1Cache.GetDataCacheSize() != file2Cache.GetDataCacheSize())
 		{
@@ -100,8 +105,8 @@ public class FloatDMCacheTest {
 	}
 	
 	@Test
-	public void testFileGet() throws IOException {
-		
+	public void testFileGet() throws IOException 
+	{	
 		long numFloats = cache.maxElementForFile();
 		assertEquals(68816, numFloats);
 		
@@ -124,9 +129,29 @@ public class FloatDMCacheTest {
 		assertEquals(293.173645, total, 1e-6);
 	}
 
+	private static void copyOverCacheFile(String fits1, String fits2) throws IOException
+	{		
+		Files.copy(new File(fits1).toPath(), new File(fits2).toPath(), REPLACE_EXISTING);
+	}
+	
 	@Test
-	public void testSet() {
-		fail("Not yet implemented"); // TODO
+	public void testSet() throws IOException 
+	{
+		String fits1 = "/Users/dwhite/Dropbox/alma/fits1/Continuum_33GHz.fits.cache";
+		String fits2 = "/Users/dwhite/Dropbox/alma/fits2/Continuum_33GHz.fits.cache";
+		
+		copyOverCacheFile(fits1, fits2);
+		
+		assertTrue(cacheFilesSame(fits1, fits2));
+		
+		FloatDMCache file2Cache = makeCache(fits2);
+		file2Cache.setValue(1000, -42);
+		
+		assertTrue(cacheFilesSame(fits1, fits2));
+		
+		file2Cache.writeBackAll();
+		
+		assertFalse(cacheFilesSame(fits1, fits2));
 	}
 
 	@Test
