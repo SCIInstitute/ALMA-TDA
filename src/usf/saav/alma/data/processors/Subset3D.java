@@ -90,5 +90,5 @@ public class Subset3D extends ScalarField3D.Default {
 	@Override public int getHeight() { return yN; }
 	@Override public int getDepth() { return zN; }
 	@Override public float getValue(int x, int y, int z) { return src.getValue(x+x0, y+y0, z+zN); }
-	@Override public double[] getCoordinate(int x, int y, int z) { return src.getCoordinate(x+x0, y+y0, z+z0); }
+	//@Override public double[] getCoordinate(int x, int y, int z) { return src.getCoordinate(x+x0, y+y0, z+z0); }
 }

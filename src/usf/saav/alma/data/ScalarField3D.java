@@ -32,7 +32,7 @@ public interface ScalarField3D extends ScalarFieldND, Surface3D {
 	
 	public float getValue( int x, int y, int z );
 
-	double [] getCoordinate( int x, int y, int z );
+	//double [] getCoordinate( int x, int y, int z );
 	
 	public class Empty extends ScalarField3D.Default {
 		int w,h,d;
@@ -54,10 +54,12 @@ public interface ScalarField3D extends ScalarFieldND, Surface3D {
 		protected Default( ){ }
 		protected Default( boolean verbose ){ super(verbose); }
 		
+		/*
 		@Override
 		public double [] getCoordinate( int x, int y, int z ){
 			return new double[]{x,y,z};
 		}
+		*/
 		
 		@Override
 		public int getSize() {

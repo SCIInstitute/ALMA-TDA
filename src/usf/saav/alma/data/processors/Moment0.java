@@ -59,7 +59,9 @@ public class Moment0 extends ScalarField2D.Default {
 		return (float) data[y*w+x];
 	}
 
+	/*
 	@Override public double[] getCoordinate(int x, int y) {
 		return Arrays.copyOf(src.getCoordinate(x, y, 0),2);
 	}
+	*/
 }

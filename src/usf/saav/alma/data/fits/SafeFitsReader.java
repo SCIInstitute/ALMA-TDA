@@ -151,7 +151,7 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 			baseVolume = reader.getVolume(subVolRX, subVolRY, subVolRZ, w);
 		}
 		
-		@Override public double [] getCoordinate( int x, int y, int z ){ return baseVolume.getCoordinate(x, y, z); }
+		//@Override public double [] getCoordinate( int x, int y, int z ){ return baseVolume.getCoordinate(x, y, z); }
 		@Override public int getWidth() {  return rx.length(); }
 		@Override public int getHeight() { return ry.length(); }
 		@Override public int getDepth() {  return rz.length(); }

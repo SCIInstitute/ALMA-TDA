@@ -357,6 +357,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 					);
 		}
 
+		/*
 		@Override
 		public double [] getCoordinate( int x, int y, int z ){
 			return new double[]{
@@ -365,6 +366,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 					coordOrigin[2] + (z0+z)*coordDelta[2]
 			};
 		}
+		*/
 
 		@Override public int getWidth()  { return width; }
 		@Override public int getHeight() { return height; }

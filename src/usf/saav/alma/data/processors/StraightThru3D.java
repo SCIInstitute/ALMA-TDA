@@ -37,6 +37,6 @@ public class StraightThru3D implements ScalarField3D {
 	@Override public int getHeight() { return src.getHeight(); }
 	@Override public int getDepth() { return src.getDepth(); }
 	@Override public float getValue(int x, int y, int z) { return src.getValue(x, y, z); }
-	@Override public double[] getCoordinate(int x, int y, int z) { return src.getCoordinate(x, y, z); }
+	//@Override public double[] getCoordinate(int x, int y, int z) { return src.getCoordinate(x, y, z); }
 	@Override public double[] getValueRange() { return src.getValueRange(); }
 }

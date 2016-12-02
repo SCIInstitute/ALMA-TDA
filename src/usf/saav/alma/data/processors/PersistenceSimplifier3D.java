@@ -44,7 +44,7 @@ public class PersistenceSimplifier3D extends PersistenceSimplifierND implements 
 	@Override public int getHeight() { return sf.getHeight(); }
 	@Override public int getDepth() { return sf.getDepth(); }
 	@Override public float getValue(int x, int y, int z) { return super.getValue( z*getWidth()*getHeight() + y*getWidth() + x ); }
-	@Override public double[] getCoordinate(int x, int y, int z) { return sf.getCoordinate(x, y, z); }
+	//@Override public double[] getCoordinate(int x, int y, int z) { return sf.getCoordinate(x, y, z); }
 	public IntRange1D getZ( ){ return z; }
 
 	@Override
