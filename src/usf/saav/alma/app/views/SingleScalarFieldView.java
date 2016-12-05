@@ -2,12 +2,9 @@ package usf.saav.alma.app.views;
 
 import java.util.Map.Entry;
 
-import usf.saav.alma.algorithm.topology.PersistenceSet;
 import usf.saav.alma.app.DataViewManager;
 import usf.saav.alma.app.views.AlmaGui.MouseMode;
 import usf.saav.alma.app.views.AlmaGui.ViewMode;
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.processors.Extract1Dfrom3D;
 import usf.saav.alma.data.processors.Moment0;
 import usf.saav.alma.data.processors.Moment1;
@@ -21,7 +18,7 @@ import usf.saav.alma.drawing.PersistenceDiagramDrawing;
 import usf.saav.alma.drawing.ScalarFieldDrawing;
 import usf.saav.alma.drawing.SpectralLineDrawing;
 import usf.saav.alma.util.ContourTreeThread;
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
 import usf.saav.common.colormap.DivergentColormap;
 import usf.saav.common.monitor.MonitoredObject;
 import usf.saav.common.mvc.ControllerComponent;
@@ -29,6 +26,10 @@ import usf.saav.common.mvc.DefaultGLFrame;
 import usf.saav.common.mvc.PositionedComponent;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.range.FloatRange1D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+import usf.saav.scalarfield.ScalarFieldND;
+import usf.saav.topology.TopoTree;
 
 public class SingleScalarFieldView extends DefaultGLFrame {
 	private static final long serialVersionUID = 7078442093905364332L;
@@ -324,7 +325,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			
 			if( needUpdate ) refreshViewSF( );
 			if( needPDDUpdate){
-				pdd.setParameterizations( dataM.ctm.cur_ctt.get().getTree(), dataM.ctm.pss.get().toArray( new PersistenceSet[dataM.ctm.pss.get().size()] ) );
+				pdd.setParameterizations( dataM.ctm.cur_ctt.get().getTree(), dataM.ctm.pss.get().toArray( new TopoTree[dataM.ctm.pss.get().size()] ) );
 			}
 
 			needUpdate = false;
@@ -356,8 +357,8 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			ScalarField2D _sf2D = ((showSimplified)?(dataM.simp_sf2d):(dataM.src_sf2d)).get();
 			ScalarField3D _sf3D = ((showSimplified)?(dataM.simp_sf3d):(dataM.src_sf3d)).get();
  
-			int stepX = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf2D.getWidth()  / (double)winX.length() );
-			int stepY = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf2D.getHeight() / (double)winY.length() );
+			int stepX = (int)MathXv1.nextLargerPowerOf2( 2.0 * (double)_sf2D.getWidth()  / (double)winX.length() );
+			int stepY = (int)MathXv1.nextLargerPowerOf2( 2.0 * (double)_sf2D.getHeight() / (double)winY.length() );
 			int stepZ = (int)Math.ceil( (float)_sf3D.getDepth()/128.0 );
 
 			ScalarField2D red2D = new Subsample2D( _sf2D, stepX, stepY );
@@ -373,8 +374,8 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			view_sf3d.set( red3D );
 
 			// update the color maps
+			double [] r = ScalarFieldND.Default.getValueRange( view_sf2d.get() );
 			if( COLORMAP_GLOBAL ){
-				double [] r = view_sf2d.get().getValueRange();
 				FloatRange1D selRange = null;
 				
 				switch(viewmode){
@@ -388,7 +389,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 				colormap.setRange( selRange );
 			} 
 			else{
-				colormap.setRange( new FloatRange1D( view_sf2d.get().getValueRange() ) );
+				colormap.setRange( new FloatRange1D( r ) );
 			}
 		}
 

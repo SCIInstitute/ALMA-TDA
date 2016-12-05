@@ -32,11 +32,11 @@ import static org.jocl.CL.CL_MEM_WRITE_ONLY;
 import static org.jocl.CL.CL_RGBA;
 
 import java.io.IOException;
+
 import org.jocl.cl_image_format;
 import org.jocl.cl_sampler;
 
 import processing.core.PMatrix3D;
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.SystemX;
 import usf.saav.common.jocl.joclController;
 import usf.saav.common.jocl.joclDevice;
@@ -50,6 +50,7 @@ import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.mvc.swing.TImage;
 import usf.saav.common.types.Float4;
+import usf.saav.scalarfield.ScalarField3D;
 
 public class VolumeRenderer extends ControllerComponent.Default implements ViewComponent, ControllerComponent {
 

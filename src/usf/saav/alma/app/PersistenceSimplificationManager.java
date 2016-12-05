@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.processors.PersistenceSimplifier2D;
 import usf.saav.alma.data.processors.PersistenceSimplifier3D;
 import usf.saav.alma.data.processors.PersistenceSimplifierND;
 import usf.saav.alma.util.ContourTreeThread;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
 
 public class PersistenceSimplificationManager {
 	

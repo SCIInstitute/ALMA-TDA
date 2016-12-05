@@ -23,8 +23,9 @@ package usf.saav.alma.data.processors;
 
 import java.util.Vector;
 
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+
 
 public class LayeredVolume extends ScalarField3D.Default implements ScalarField3D {
 

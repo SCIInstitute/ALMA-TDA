@@ -23,11 +23,11 @@ package usf.saav.alma.data.fits;
 import java.io.File;
 import java.io.IOException;
 
-import usf.saav.alma.data.ScalarField1D;
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.BasicObject;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.scalarfield.ScalarField1D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
 
 public interface FitsReader {
 

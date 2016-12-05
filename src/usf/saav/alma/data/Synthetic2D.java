@@ -20,9 +20,10 @@
  */
 package usf.saav.alma.data;
 
-import usf.saav.alma.data.ScalarField2D.Default;
+import usf.saav.scalarfield.ScalarField2D;
 
-public abstract class Synthetic2D extends Default {
+
+public abstract class Synthetic2D extends ScalarField2D.Default {
 
 	int width, height;
 	

@@ -1,7 +1,8 @@
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField1D;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.scalarfield.ScalarField1D;
+import usf.saav.scalarfield.ScalarField3D;
+
 
 public class Extract1Dfrom3D extends ScalarField1D.Default implements ScalarField1D {
 

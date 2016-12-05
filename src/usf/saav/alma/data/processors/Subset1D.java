@@ -20,8 +20,8 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField1D;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.scalarfield.ScalarField1D;
 
 public class Subset1D extends ScalarField1D.Default {
 
@@ -55,5 +55,5 @@ public class Subset1D extends ScalarField1D.Default {
 	@Override public int getWidth() { return xN; }
 	@Override public int getSize() { return xN; }
 	@Override public float getValue(int nodeID) { return src.getValue(nodeID+x0); }
-	@Override public double getCoordinate(int nodeID) { return src.getCoordinate(nodeID+x0); }
+	//@Override public double getCoordinate(int nodeID) { return src.getCoordinate(nodeID+x0); }
 }

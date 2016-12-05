@@ -20,11 +20,13 @@
  */
 package usf.saav.alma.drawing;
 
-import usf.saav.alma.data.ScalarField2D;
+import usf.saav.common.colormap.Colormap;
 import usf.saav.common.colormap.DivergentColormap;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.mvc.swing.TImage;
+import usf.saav.common.types.Float4;
+import usf.saav.scalarfield.ScalarField2D;
 
 public class ScalarFieldDrawing extends ViewComponent.Default implements ViewComponent {
 
@@ -63,7 +65,7 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		if( sf == null ) return;
 		if( colormap == null ) return;
 
-		img = sf.toPImage( papplet, colormap );
+		img = toPImage( papplet, sf, colormap );
 	}
 
 	@Override
@@ -107,4 +109,21 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 	
 	// Temporary zoom
 	private float zoom = 1;
+	
+	
+	
+	private static TImage toPImage( TGraphics g, ScalarField2D sf, Colormap colormap ){
+		TImage img = g.createImage( sf.getWidth(), sf.getHeight(), TGraphics.RGB);
+		int i = 0;
+		for(int h = 0; h < sf.getHeight(); h++){
+			for(int w = 0; w < sf.getWidth(); w++){
+				Float4 c = colormap.getColor( sf.getValue(i) );
+				img.set( w, h, c.x,c.y,c.z,c.w );
+				//img.pixels[i] = TGraphics.color(c.x,c.y,c.z,c.w);
+				i++;
+			}
+		}
+		return img;
+	}
+	
 }

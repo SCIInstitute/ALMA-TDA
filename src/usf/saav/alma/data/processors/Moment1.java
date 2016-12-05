@@ -22,8 +22,9 @@ package usf.saav.alma.data.processors;
 
 import java.util.Arrays;
 
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+
 
 // http://www.alma.inaf.it/images/Moments.pdf
 

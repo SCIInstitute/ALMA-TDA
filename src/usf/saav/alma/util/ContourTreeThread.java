@@ -20,15 +20,10 @@
  */
 package usf.saav.alma.util;
 
-import usf.saav.alma.algorithm.mesh.ConnectedComponentMesh;
-import usf.saav.alma.algorithm.mesh.Mesh;
-import usf.saav.alma.algorithm.mesh.ScalarFieldMesh;
-import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.algorithm.topology.PseudoContourTree;
-import usf.saav.alma.data.ScalarField1D;
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
-import usf.saav.alma.data.ScalarFieldND;
+import usf.saav.scalarfield.ScalarField1D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+import usf.saav.scalarfield.ScalarFieldND;
 import usf.saav.alma.data.processors.Extract1Dfrom3D;
 import usf.saav.alma.data.processors.Extract2DFrom3D;
 import usf.saav.alma.data.processors.Subset1D;
@@ -37,6 +32,11 @@ import usf.saav.alma.data.processors.Subset3D;
 import usf.saav.common.BasicObject;
 import usf.saav.common.Callback;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.mesh.ConnectedComponentMesh;
+import usf.saav.mesh.Mesh;
+import usf.saav.mesh.ScalarFieldMesh;
+import usf.saav.topology.TopoTree;
+import usf.saav.topology.contour.PseudoContourTree;
 
 public class ContourTreeThread extends BasicObject implements Runnable {
 
@@ -125,7 +125,7 @@ public class ContourTreeThread extends BasicObject implements Runnable {
 		}
 	}
 
-	public PersistenceSet getTree( ){			   return ct; }
+	public TopoTree       getTree( ){			   return ct; }
 	public Mesh           getComponentList(){	   return cl; }
 	public IntRange1D	  getX( ){				   return rx; }
 	public IntRange1D	  getY( ){				   return ry; }

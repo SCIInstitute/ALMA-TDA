@@ -20,8 +20,8 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.scalarfield.ScalarField3D;
 
 public class Subset3D extends ScalarField3D.Default {
 	ScalarField3D src;

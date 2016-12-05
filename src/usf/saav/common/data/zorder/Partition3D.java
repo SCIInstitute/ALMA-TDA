@@ -1,6 +1,6 @@
 package usf.saav.common.data.zorder;
 
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
 
 public class Partition3D {
 	
@@ -12,8 +12,8 @@ public class Partition3D {
 	int configDir;
 	
 	public Partition3D( long sizeX, long sizeY, long sizeZ ){
-		size = MathX.min( sizeX, sizeY, sizeZ );
-		size = MathX.nextLargerPowerOf2( size );
+		size = MathXv1.min( sizeX, sizeY, sizeZ );
+		size = MathXv1.nextLargerPowerOf2( size );
 		size = Math.max(size, MIN_PARTITION_SIZE);
 		
 		if( sizeX <= size && sizeY <= size && sizeZ <= size ){

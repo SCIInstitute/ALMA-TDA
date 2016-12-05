@@ -20,7 +20,8 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.scalarfield.ScalarField3D;
+
 
 public class Subsample3D extends ScalarField3D.Default {
 	int sx,sy,sz;

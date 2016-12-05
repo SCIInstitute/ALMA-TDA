@@ -2,7 +2,7 @@ package usf.saav.common.data.zorder;
 
 import java.util.Arrays;
 
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
 
 public class TiledZOrder2D {
 
@@ -11,11 +11,11 @@ public class TiledZOrder2D {
 	private long tileX, tileY;
 	
 	public TiledZOrder2D( long sizeX, long sizeY ){
-		dim_size = MathX.min( sizeX, sizeY );
+		dim_size = MathXv1.min( sizeX, sizeY );
 
 		System.out.println( dim_size );
 
-		dim_size = MathX.nextSmallerPowerOf2( dim_size );
+		dim_size = MathXv1.nextSmallerPowerOf2( dim_size );
 		//dim_size = MathX.max( dim_size, MIN_PARTITION_SIZE );
 		//System.out.println(dim_size);
 		System.out.println( dim_size );

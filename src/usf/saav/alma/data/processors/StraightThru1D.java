@@ -20,7 +20,8 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField1D;
+import usf.saav.scalarfield.ScalarField1D;
+
 
 public class StraightThru1D implements ScalarField1D {
 
@@ -33,7 +34,7 @@ public class StraightThru1D implements ScalarField1D {
 	@Override public int getWidth() { return src.getSize(); }
 	@Override public int getSize() { return src.getSize(); }
 	@Override public float getValue(int nodeID) { return src.getValue(nodeID); }
-	@Override public int[] getNeighbors(int nodeID) { return src.getNeighbors(nodeID); }
-	@Override public double getCoordinate(int nodeID) { return src.getCoordinate(nodeID); }
-	@Override public double[] getValueRange() { return src.getValueRange(); }
+	//@Override public int[] getNeighbors(int nodeID) { return src.getNeighbors(nodeID); }
+	//@Override public double getCoordinate(int nodeID) { return src.getCoordinate(nodeID); }
+	//@Override public double[] getValueRange() { return src.getValueRange(); }
 }

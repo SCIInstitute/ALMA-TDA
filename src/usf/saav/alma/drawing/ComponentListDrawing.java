@@ -20,10 +20,10 @@
  */
 package usf.saav.alma.drawing;
 
-import usf.saav.alma.algorithm.mesh.Mesh;
-import usf.saav.alma.algorithm.mesh.Mesh.Vertex;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
+import usf.saav.mesh.Mesh;
+import usf.saav.mesh.Mesh.Vertex;
 
 public class ComponentListDrawing extends ViewComponent.Default implements ViewComponent  {
 

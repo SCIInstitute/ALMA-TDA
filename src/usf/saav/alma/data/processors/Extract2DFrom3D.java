@@ -20,8 +20,9 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+
 
 public class Extract2DFrom3D extends ScalarField2D.Default implements ScalarField2D {
 

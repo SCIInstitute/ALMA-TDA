@@ -1,12 +1,12 @@
 package usf.saav.alma.drawing;
 
-import usf.saav.alma.data.ScalarField1D;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.spline.LinearSpline;
 import usf.saav.common.spline.Spline;
 import usf.saav.common.types.Float2;
+import usf.saav.scalarfield.ScalarField1D;
 
 public class SpectralLineDrawing  extends ViewComponent.Default implements ViewComponent { 
 

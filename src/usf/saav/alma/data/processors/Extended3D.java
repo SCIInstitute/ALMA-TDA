@@ -1,6 +1,7 @@
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.scalarfield.ScalarField3D;
+
 
 public class Extended3D extends ScalarField3D.Default implements ScalarField3D {
 

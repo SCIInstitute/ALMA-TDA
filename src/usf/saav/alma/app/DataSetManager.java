@@ -6,8 +6,6 @@ import java.util.Vector;
 import org.json.JSONException;
 
 import nom.tam.fits.common.FitsException;
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.Settings;
 import usf.saav.alma.data.Settings.SettingsDouble;
 import usf.saav.alma.data.Settings.SettingsInt;
@@ -19,6 +17,8 @@ import usf.saav.alma.data.processors.Extended3D;
 import usf.saav.alma.data.processors.Extract2DFrom3D;
 import usf.saav.alma.data.processors.Subset2D;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
 
 public class DataSetManager {
 

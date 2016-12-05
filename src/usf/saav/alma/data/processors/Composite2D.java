@@ -20,7 +20,8 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField2D;
+import usf.saav.scalarfield.ScalarField2D;
+
 
 public class Composite2D extends ScalarField2D.Default implements ScalarField2D {
 

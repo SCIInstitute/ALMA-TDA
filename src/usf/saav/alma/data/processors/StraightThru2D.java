@@ -20,10 +20,7 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.common.colormap.Colormap;
-import usf.saav.common.mvc.swing.TGraphics;
-import usf.saav.common.mvc.swing.TImage;
+import usf.saav.scalarfield.ScalarField2D;
 
 public class StraightThru2D implements ScalarField2D {
 
@@ -35,12 +32,12 @@ public class StraightThru2D implements ScalarField2D {
 
 	@Override public int getSize() { return src.getSize(); }
 	@Override public float getValue(int nodeID) { return src.getValue(nodeID); }
-	@Override public int[] getNeighbors(int nodeID) { return src.getNeighbors(nodeID); }
+	//@Override public int[] getNeighbors(int nodeID) { return src.getNeighbors(nodeID); }
 	@Override public int getWidth() { return src.getWidth(); }
 	@Override public int getHeight() { return src.getHeight(); }
 	@Override public float getValue(int x, int y) { return src.getValue(x, y); }
 	@Override public double[] getCoordinate(int x, int y) { return src.getCoordinate(x, y); }
-	@Override public double[] getValueRange() { return src.getValueRange(); }
-	@Override public TImage toPImage(TGraphics g, Colormap colormap) { return src.toPImage(g, colormap); }
+	//@Override public double[] getValueRange() { return src.getValueRange(); }
+	//@Override public TImage toPImage(TGraphics g, Colormap colormap) { return src.toPImage(g, colormap); }
 
 }

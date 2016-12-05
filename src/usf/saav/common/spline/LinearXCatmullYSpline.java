@@ -2,7 +2,7 @@ package usf.saav.common.spline;
 
 import java.util.Vector;
 
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
 import usf.saav.common.types.Float2;
 
 public abstract class LinearXCatmullYSpline extends Spline {
@@ -15,14 +15,14 @@ public abstract class LinearXCatmullYSpline extends Spline {
 	@Override
 	public Float2 interpolate(float t) {
 		
-		int idx0 = MathX.clamp( (int)(t * size() - 1), 0, size()-1 );
-		int idx1 = MathX.clamp( (int)(t * size() + 0), 0, size()-1 );
-		int idx2 = MathX.clamp( (int)(t * size() + 1), 0, size()-1 );
-		int idx3 = MathX.clamp( (int)(t * size() + 2), 0, size()-1 );
+		int idx0 = MathXv1.clamp( (int)(t * size() - 1), 0, size()-1 );
+		int idx1 = MathXv1.clamp( (int)(t * size() + 0), 0, size()-1 );
+		int idx2 = MathXv1.clamp( (int)(t * size() + 1), 0, size()-1 );
+		int idx3 = MathXv1.clamp( (int)(t * size() + 2), 0, size()-1 );
 		float off = (float) (t * size() - Math.floor( t * size() ));
 	
-		float x = MathX.Interpolate.Linear( getControlPoint(idx1).x, getControlPoint(idx2).x, off );
-		float y = MathX.Interpolate.CatmullRom( getControlPoint(idx0).y, getControlPoint(idx1).y, getControlPoint(idx2).y, getControlPoint(idx3).y, off );
+		float x = MathXv1.Interpolate.Linear( getControlPoint(idx1).x, getControlPoint(idx2).x, off );
+		float y = MathXv1.Interpolate.CatmullRom( getControlPoint(idx0).y, getControlPoint(idx1).y, getControlPoint(idx2).y, getControlPoint(idx3).y, off );
 		
 		return new Float2(x,y);
 	}

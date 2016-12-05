@@ -20,23 +20,20 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.algorithm.mesh.Mesh;
-import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.data.ScalarField2D;
 import usf.saav.common.Callback;
-import usf.saav.common.colormap.Colormap;
-import usf.saav.common.mvc.swing.TGraphics;
-import usf.saav.common.mvc.swing.TImage;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.mesh.Mesh;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.topology.TopoTree;
 
 public class PersistenceSimplifier2D extends PersistenceSimplifierND implements ScalarField2D {
 
 	private ScalarField2D sf;
 	
-	public PersistenceSimplifier2D(ScalarField2D sf, PersistenceSet ct, Mesh cl, int z, boolean runImmediately ) {
+	public PersistenceSimplifier2D(ScalarField2D sf, TopoTree ct, Mesh cl, int z, boolean runImmediately ) {
 		this( sf, ct, cl, z, runImmediately, true );
 	}
-	public PersistenceSimplifier2D(ScalarField2D sf, PersistenceSet ct, Mesh cl, int z, boolean runImmediately, boolean verbose ) {
+	public PersistenceSimplifier2D(ScalarField2D sf, TopoTree ct, Mesh cl, int z, boolean runImmediately, boolean verbose ) {
 		super(sf, ct, cl, new IntRange1D(z), runImmediately);
 		this.sf = sf;
 	}
@@ -45,7 +42,7 @@ public class PersistenceSimplifier2D extends PersistenceSimplifierND implements 
 	@Override public int getHeight() { return sf.getHeight(); }
 	@Override public float getValue(int x, int y) { return super.getValue( y*getWidth()+x ); }
 	@Override public double[] getCoordinate(int x, int y) { return sf.getCoordinate(x, y); }
-	@Override public TImage toPImage(TGraphics g, Colormap colormap) { return sf.toPImage(g, colormap); }
+	//@Override public TImage toPImage(TGraphics g, Colormap colormap) { return sf.toPImage(g, colormap); }
 	public int				getZ( ){			  	return z.start(); }
 
 	@Override

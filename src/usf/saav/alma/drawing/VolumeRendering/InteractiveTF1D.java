@@ -21,7 +21,7 @@
 package usf.saav.alma.drawing.VolumeRendering;
 
 import usf.saav.alma.drawing.HistogramDrawing;
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
 import usf.saav.common.monitor.MonitoredTrigger;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
@@ -49,19 +49,19 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	Constraint spline_constraint = new Constraint() {
 		public void constrainFirstPoint( Float2 p ){
 			p.x = 0;
-			p.y = MathX.clamp( p.y, 0, 1 );
+			p.y = MathXv1.clamp( p.y, 0, 1 );
 		}
 		public void constrainLastPoint( Float2 p ){
 			p.x = 1;
-			p.y = MathX.clamp( p.y, 0, 1 );
+			p.y = MathXv1.clamp( p.y, 0, 1 );
 		}
 		public void constrainIntermediatePoint( Float2 p ){
-			p.x = MathX.clamp( p.x, 0, 1 );
-			p.y = MathX.clamp( p.y, 0, 1 );
+			p.x = MathXv1.clamp( p.x, 0, 1 );
+			p.y = MathXv1.clamp( p.y, 0, 1 );
 		}
 		public void constrainInterpolatedPoint( Float2 p ){
-			p.x = MathX.clamp( p.x, 0, 1 );
-			p.y = MathX.clamp( p.y, 0, 1 );
+			p.x = MathXv1.clamp( p.x, 0, 1 );
+			p.y = MathXv1.clamp( p.y, 0, 1 );
 		}
 	};
 
@@ -93,9 +93,9 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	private void buildTF( ){
 		for( int i = 0; i < tf.length; i++){
 			float t = (float)i/(float)tf.length;
-			float r = MathX.clamp( red.interpolate( t ).y, 0, 1 );
-			float g = MathX.clamp( grn.interpolate( t ).y, 0, 1 );
-			float b = MathX.clamp( blu.interpolate( t ).y, 0, 1 );
+			float r = MathXv1.clamp( red.interpolate( t ).y, 0, 1 );
+			float g = MathXv1.clamp( grn.interpolate( t ).y, 0, 1 );
+			float b = MathXv1.clamp( blu.interpolate( t ).y, 0, 1 );
 			float a = (float)(Math.pow(10,alp.interpolate(t).y)-1)/9;
 			tf[i].set( r,g,b,a );
 		}

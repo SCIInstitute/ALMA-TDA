@@ -20,9 +20,9 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
-import usf.saav.alma.data.ScalarFieldND;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+import usf.saav.scalarfield.ScalarFieldND;
 
 public class Composite3D extends ScalarField3D.Default implements ScalarField3D {
 

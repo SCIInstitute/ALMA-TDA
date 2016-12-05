@@ -27,19 +27,19 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Vector;
 
-import usf.saav.alma.algorithm.mesh.Mesh;
-import usf.saav.alma.algorithm.mesh.Mesh.Vertex;
-import usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode;
-import usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode.NodeType;
-import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.data.ScalarFieldND;
 import usf.saav.common.Callback;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.mesh.Mesh;
+import usf.saav.mesh.Mesh.Vertex;
+import usf.saav.scalarfield.ScalarFieldND;
+import usf.saav.topology.TopoTree;
+import usf.saav.topology.TopoTreeNode;
+import usf.saav.topology.TopoTreeNode.NodeType;
 
 public abstract class PersistenceSimplifierND extends ScalarFieldND.Default implements ScalarFieldND, Runnable {
 
 	private ScalarFieldND sf;
-	private PersistenceSet ct;
+	private TopoTree ct;
 	private Mesh cl;
 	protected IntRange1D z;
 
@@ -50,11 +50,11 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 	protected Callback cb = null;
 
 
-	public PersistenceSimplifierND( ScalarFieldND sf, PersistenceSet ct, Mesh cl, IntRange1D z, boolean runImmediately ){
+	public PersistenceSimplifierND( ScalarFieldND sf, TopoTree ct, Mesh cl, IntRange1D z, boolean runImmediately ){
 		this( sf, ct, cl, z, runImmediately, true );
 	}
 
-	public PersistenceSimplifierND( ScalarFieldND sf, PersistenceSet ct, Mesh cl, IntRange1D z, boolean runImmediately, boolean verbose ){
+	public PersistenceSimplifierND( ScalarFieldND sf, TopoTree ct, Mesh cl, IntRange1D z, boolean runImmediately, boolean verbose ){
 		super( verbose );
 		this.sf = sf;
 		this.ct = ct;
@@ -64,13 +64,13 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 	}
 
 
-	public PersistenceSet			getTree( ){				return ct; }
+	public TopoTree			getTree( ){				return ct; }
 	public Mesh			getComponentList(){ 	return cl; }
 	public ScalarFieldND			getScalarField( ){  	return sf; }
 
 	@Override public int getSize() {	return sf.getSize();	}
 	@Override public float getValue(int idx) { 	return img[idx]; }
-	@Override public int[] getNeighbors(int nodeID) { 	return sf.getNeighbors(nodeID); }
+	//@Override public int[] getNeighbors(int nodeID) { 	return sf.getNeighbors(nodeID); }
 
 	public abstract void setCallback( Object obj, String func_name );
 
@@ -88,12 +88,12 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 			img[i] = sf.getValue(i);
 		}
 
-		Vector<AugmentedJoinTreeNode> workList = new Vector<AugmentedJoinTreeNode>();
+		Vector<TopoTreeNode> workList = new Vector<TopoTreeNode>();
 
 		// Simplify the field, component by component
 		for(int i = 0; i < ct.size(); i++){
 			if( !ct.isActive(i) ){
-				AugmentedJoinTreeNode n = ct.getNode(i);
+				TopoTreeNode n = ct.getNode(i);
 				switch( n.getType() ){
 					case LEAF_MAX: workList.add(n); break;
 					case LEAF_MIN: workList.add(n); break;
@@ -104,10 +104,10 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 			}
 		}
 
-		workList.sort( new AugmentedJoinTreeNode.ComparePersistenceAscending() );
+		workList.sort( new TopoTreeNode.ComparePersistenceAscending() );
 
 		for( int i = 0; i < workList.size(); i++ ){
-			AugmentedJoinTreeNode n = workList.get(i);
+			TopoTreeNode n = workList.get(i);
 			simplify( n );
 		}
 
@@ -120,10 +120,10 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 
 	}
 
-	private void simplify(AugmentedJoinTreeNode n) {
-		AugmentedJoinTreeNode p = n.getPartner();
+	private void simplify(TopoTreeNode n) {
+		TopoTreeNode p = n.getPartner();
 
-		if( p.getLocation() == n.getLocation() ) return;
+		if( p.getPosition() == n.getPosition() ) return;
 
 		// Skip MERGE / LEAF
 		if( n.getType() == NodeType.MERGE ) return;
@@ -152,8 +152,8 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 			float inval  = n.getBirth();
 			float outval = n.getDeath();
 
-			compUsed.add( n.getLocation() );
-			workList.add( n.getLocation() );
+			compUsed.add( n.getPosition() );
+			workList.add( n.getPosition() );
 
 
 			while( !workList.isEmpty() ){
@@ -163,7 +163,7 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 				pModify.add(cur);
 
 				// If the component is the partner, we're done
-				if( cur == p.getLocation() ) break;
+				if( cur == p.getPosition() ) break;
 
 				// Add neighbors who haven't already been processed to the process queue
 				for( int neighbor : cl.get(cur).neighbors() ){

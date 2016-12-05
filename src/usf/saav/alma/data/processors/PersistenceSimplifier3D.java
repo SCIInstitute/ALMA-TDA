@@ -20,22 +20,22 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.algorithm.mesh.Mesh;
-import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.Callback;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.mesh.Mesh;
+import usf.saav.scalarfield.ScalarField3D;
+import usf.saav.topology.TopoTree;
 
 public class PersistenceSimplifier3D extends PersistenceSimplifierND implements ScalarField3D {
 
 	private ScalarField3D sf;
 	
 
-	public PersistenceSimplifier3D(ScalarField3D sf, PersistenceSet ct, Mesh cl, IntRange1D z, boolean runImmediately ) {
+	public PersistenceSimplifier3D(ScalarField3D sf, TopoTree ct, Mesh cl, IntRange1D z, boolean runImmediately ) {
 		this( sf, ct, cl, z, runImmediately, true );
 	}
 	
-	public PersistenceSimplifier3D(ScalarField3D sf, PersistenceSet ct, Mesh cl, IntRange1D z, boolean runImmediately, boolean verbose ) {
+	public PersistenceSimplifier3D(ScalarField3D sf, TopoTree ct, Mesh cl, IntRange1D z, boolean runImmediately, boolean verbose ) {
 		super(sf, ct, cl, z, runImmediately);
 		this.sf = sf;
 	}

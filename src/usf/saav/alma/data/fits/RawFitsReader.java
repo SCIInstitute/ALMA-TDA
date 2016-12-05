@@ -31,10 +31,10 @@ import nom.tam.fits.ImageHDU;
 import nom.tam.fits.common.FitsException;
 import nom.tam.image.ImageTiler;
 import nom.tam.util.Cursor;
-import usf.saav.alma.data.ScalarField1D;
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.scalarfield.ScalarField1D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
 
 
 public class RawFitsReader extends FitsReader.Default implements FitsReader {
@@ -256,10 +256,12 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 					);
 		}
 
+		/*
 		@Override 
 		public double getCoordinate( int x ){ 
 			return coordOrigin[0] + (x0+x)*coordDelta[0];
 		}
+		*/
 
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
@@ -279,10 +281,12 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 		}
 
+		/*
 		@Override
 		public double getCoordinate( int y ){
 			return coordOrigin[1] + (y0+y)*coordDelta[1];
 		}
+		*/
 
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
@@ -301,10 +305,12 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 					);
 		}
 
+		/*
 		@Override
 		public double getCoordinate( int z ){
 			return coordOrigin[2] + (z0+z)*coordDelta[2];
 		}
+		*/
 
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }

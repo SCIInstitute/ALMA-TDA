@@ -2,7 +2,7 @@ package usf.saav.common.mvc.swing;
 
 import java.util.Vector;
 
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
 import usf.saav.common.types.Float3;
 import usf.saav.common.types.Integer3;
 
@@ -94,7 +94,7 @@ public class GeodesicSphere {
 	}
 
 	public void drawSolidSphere(TGraphics g, int sphereDetail) {
-		int tess_level = MathX.clamp(sphereDetail-3, 0, 10);
+		int tess_level = MathXv1.clamp(sphereDetail-3, 0, 10);
 		if( tess_level >= idata.size() ){
 			subdivide( tess_level );
 		}
@@ -111,7 +111,7 @@ public class GeodesicSphere {
 	}
 
 	public void drawWireSphere(TGraphics g, int sphereDetail) {
-		int tess_level = MathX.clamp(sphereDetail-3, 0, 10);
+		int tess_level = MathXv1.clamp(sphereDetail-3, 0, 10);
 		if( tess_level >= idata.size() ){
 			subdivide( tess_level );
 		}

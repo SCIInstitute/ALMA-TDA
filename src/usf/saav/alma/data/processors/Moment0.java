@@ -22,8 +22,9 @@ package usf.saav.alma.data.processors;
 
 import java.util.Arrays;
 
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+
 
 // Let’s assume that the spectrum is given in terms of intensity A(v) (e.g. brightness
 // temperature T_B) as a function of radial velocity v with a bin width of Δv. The

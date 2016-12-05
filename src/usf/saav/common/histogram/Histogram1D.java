@@ -2,7 +2,7 @@ package usf.saav.common.histogram;
 
 import java.util.Arrays;
 
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
 import usf.saav.common.range.FloatRange1D;
 
 public class Histogram1D {
@@ -36,7 +36,7 @@ public class Histogram1D {
 	
 	public void Add( float x ){
 		double norm = bb.getNormalized( x );
-		int bin_x = MathX.constrain( (int)(norm*(bins.length)), 0, bins.length-1 );
+		int bin_x = MathXv1.constrain( (int)(norm*(bins.length)), 0, bins.length-1 );
 		bins[bin_x]++;
 		bin_max = Math.max(bin_max, bins[bin_x]);
 	}
@@ -60,7 +60,7 @@ public class Histogram1D {
 		for( int b : bins ) cnt+= b;
 		for( int i = 0; i < bins.length; i++){
 			double w = (double)bins[i]/(double)cnt;
-			double loc = MathX.lerp( bb.getMinimum(), bb.getMaximum(), ((double)i+0.5) / ((double)bins.length) );
+			double loc = MathXv1.lerp( bb.getMinimum(), bb.getMaximum(), ((double)i+0.5) / ((double)bins.length) );
 			mean += loc * w;
 		}
 		return mean;
@@ -73,7 +73,7 @@ public class Histogram1D {
 		for( int b : bins ) cnt+= b;
 		for( int i = 0; i < bins.length; i++){
 			double w = (double)bins[i]/(double)cnt;
-			double loc = MathX.lerp( bb.getMinimum(), bb.getMaximum(), ((double)i+0.5) / ((double)bins.length) );
+			double loc = MathXv1.lerp( bb.getMinimum(), bb.getMaximum(), ((double)i+0.5) / ((double)bins.length) );
 			var += (loc-mean)*(loc-mean) * w;
 		}
 		return var;

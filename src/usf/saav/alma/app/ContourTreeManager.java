@@ -8,12 +8,12 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import usf.saav.alma.algorithm.topology.PersistenceSet;
 import usf.saav.alma.app.views.AlmaGui;
 import usf.saav.alma.app.views.AlmaGui.TreeDimension;
 import usf.saav.alma.util.ContourTreeThread;
 import usf.saav.common.monitor.MonitoredObject;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.topology.TopoTree;
 
 public class ContourTreeManager {
 
@@ -23,7 +23,7 @@ public class ContourTreeManager {
 	ExecutorService threadPool = Executors.newFixedThreadPool(4);
 	
 	public MonitoredContourTreeThread cur_ctt = new MonitoredContourTreeThread( );
-	public MonitoredObject< Set<PersistenceSet> > pss = new MonitoredObject< Set<PersistenceSet> >( ){
+	public MonitoredObject< Set<TopoTree> > pss = new MonitoredObject< Set<TopoTree> >( ){
 		@Override protected Class<?> getClassType() { return Set.class; } 
 	};
 
@@ -76,7 +76,7 @@ public class ContourTreeManager {
 		
 		if( !stillProcessing ){
 			cur_ctt.set( ctt_map.containsKey( dvm.curZ.get() ) ? ctt_map.get( dvm.curZ.get() ) : null );
-			Set<PersistenceSet> _pss = new HashSet<PersistenceSet>( );
+			Set<TopoTree> _pss = new HashSet<TopoTree>( );
 
 			// Only simplify the current slice, if slice is outside of range of interest
 			if( dvm.curZ.get() < dvm.z0.get() || dvm.curZ.get() > dvm.z1.get() ){

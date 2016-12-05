@@ -1,7 +1,6 @@
 package usf.saav.alma.app.views;
 
 import usf.saav.alma.app.DataViewManager;
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.drawing.LabelDrawing;
 import usf.saav.alma.drawing.LabelDrawing.BasicLabel;
 import usf.saav.alma.drawing.VolumeRendering.InteractiveTF1D;
@@ -12,6 +11,7 @@ import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.DefaultGLFrame;
 import usf.saav.common.mvc.PositionedComponent;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.scalarfield.ScalarField3D;
 
 public class VolumeRenderingView extends DefaultGLFrame {
 
