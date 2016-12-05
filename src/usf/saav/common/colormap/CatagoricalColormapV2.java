@@ -3,20 +3,7 @@ package usf.saav.common.colormap;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.types.Float4;
 
-public class CatagoricalColormap extends Colormap.VectorColormap {
-
-	public CatagoricalColormap( ){ }
-
-	public Float4 getColor( float t ) { 
-		while(t<0){t+=cols.size();} 
-		return cols.get( ((int)t)%cols.size() ); 
-	}
-
-	public Float4 getColor( float t, float alpha_255_override ) {
-		Float4 ret = getColor(t);
-		ret.w = alpha_255_override/255.0f;
-		return ret;
-	}	
+public class CatagoricalColormapV2 extends CatagoricalColormap implements ColormapV2 {
 
 
 	@Override
@@ -56,7 +43,7 @@ public class CatagoricalColormap extends Colormap.VectorColormap {
 
 
 
-	public static class DefaultCatagorical extends CatagoricalColormap {
+	public static class DefaultCatagorical extends CatagoricalColormapV2 {
 
 		public DefaultCatagorical( float alpha ){
 			initializeMap( (int)(alpha * 255.0f) );
@@ -86,7 +73,7 @@ public class CatagoricalColormap extends Colormap.VectorColormap {
 		}
 	}
 	
-	public static class DefaultCatagoricalNoGray extends CatagoricalColormap {
+	public static class DefaultCatagoricalNoGray extends CatagoricalColormapV2 {
 
 		public DefaultCatagoricalNoGray( float alpha ){
 			initializeMap( (int)(alpha * 255.0f) );
@@ -116,7 +103,7 @@ public class CatagoricalColormap extends Colormap.VectorColormap {
 	}	
 
 
-	public static class DefaultCohomology extends CatagoricalColormap {
+	public static class DefaultCohomology extends CatagoricalColormapV2 {
 		public DefaultCohomology( ){
 			addColor( new Float4(141,211,199,255).divide(255.0f) );
 			addColor( new Float4(255,255,179,255).divide(255.0f) );
@@ -137,7 +124,7 @@ public class CatagoricalColormap extends Colormap.VectorColormap {
 	
 	
 
-	public class OrangePurpleColormap extends CatagoricalColormap {
+	public class OrangePurpleColormap extends CatagoricalColormapV2 {
 		public OrangePurpleColormap( ){
 			clear();
 			addColor( new Float4(  84,  39, 136, 255 ).divide(255.0f) );
@@ -156,7 +143,7 @@ public class CatagoricalColormap extends Colormap.VectorColormap {
 	}
 	
 	
-	public static class PathlineColormap extends CatagoricalColormap {
+	public static class PathlineColormap extends CatagoricalColormapV2 {
 		public PathlineColormap( ){
 		    addColor( new Float4(251, 180, 174, 255 ).divide(255.0f) );   
 		    addColor( new Float4(179, 205, 227, 255 ).divide(255.0f) );

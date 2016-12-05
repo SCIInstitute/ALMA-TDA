@@ -19,7 +19,7 @@ import usf.saav.alma.drawing.ScalarFieldDrawing;
 import usf.saav.alma.drawing.SpectralLineDrawing;
 import usf.saav.alma.util.ContourTreeThread;
 import usf.saav.common.MathXv1;
-import usf.saav.common.colormap.DivergentColormap;
+import usf.saav.common.colormap.DivergentColormapV2;
 import usf.saav.common.monitor.MonitoredObject;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.DefaultGLFrame;
@@ -51,7 +51,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 	private FloatRange1D m1_range = new FloatRange1D();
 	private FloatRange1D m2_range = new FloatRange1D();
 
-	private DivergentColormap colormap = new DivergentColormap.OrangePurple();
+	private DivergentColormapV2 colormap = new DivergentColormapV2.OrangePurple();
 
 	
 	private DataViewManager dataM;

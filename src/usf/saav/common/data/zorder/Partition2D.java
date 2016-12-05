@@ -1,6 +1,7 @@
 package usf.saav.common.data.zorder;
 
 import usf.saav.common.MathXv1;
+import usf.saav.common.algorithm.ZOrder;
 
 public class Partition2D {
 	

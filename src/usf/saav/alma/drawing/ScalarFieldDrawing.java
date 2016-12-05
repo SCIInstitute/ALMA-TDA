@@ -21,7 +21,7 @@
 package usf.saav.alma.drawing;
 
 import usf.saav.common.colormap.Colormap;
-import usf.saav.common.colormap.DivergentColormap;
+import usf.saav.common.colormap.DivergentColormapV2;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.mvc.swing.TImage;
@@ -34,7 +34,7 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		this.papplet = papplet;
 	}
 
-	public void setColormap( DivergentColormap cm ){
+	public void setColormap( DivergentColormapV2 cm ){
 		colormap = cm;
 	}
 
@@ -99,7 +99,7 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 
 	// Image related variables
 	private TImage img = null;
-	private DivergentColormap colormap = null;
+	private DivergentColormapV2 colormap = null;
 
 	// Input scalar field
 	private ScalarField2D sf;

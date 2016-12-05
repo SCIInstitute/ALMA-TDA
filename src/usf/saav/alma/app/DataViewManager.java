@@ -1,16 +1,18 @@
 package usf.saav.alma.app;
 
+import usf.saav.alma.app.PersistenceSimplificationManager.PS2D;
+import usf.saav.alma.app.PersistenceSimplificationManager.PS3D;
 import usf.saav.alma.app.views.AlmaGui;
 import usf.saav.alma.app.views.AlmaGui.ViewMode;
 import usf.saav.alma.app.views.SingleScalarFieldView;
+import usf.saav.scalarfield.PersistenceSimplifier2D;
+import usf.saav.scalarfield.PersistenceSimplifier3D;
+import usf.saav.scalarfield.PersistenceSimplifierND;
 import usf.saav.scalarfield.ScalarField2D;
 import usf.saav.scalarfield.ScalarField3D;
 import usf.saav.alma.data.processors.Composite2D;
 import usf.saav.alma.data.processors.Extract2DFrom3D;
 import usf.saav.alma.data.processors.LayeredVolume;
-import usf.saav.alma.data.processors.PersistenceSimplifier2D;
-import usf.saav.alma.data.processors.PersistenceSimplifier3D;
-import usf.saav.alma.data.processors.PersistenceSimplifierND;
 import usf.saav.alma.drawing.SelectBoxDrawing;
 import usf.saav.alma.drawing.SelectPointDrawing;
 import usf.saav.alma.util.ContourTreeThread;
@@ -173,13 +175,13 @@ public class DataViewManager {
 
 	
 	
-	public void completedSimplification( PersistenceSimplifier2D pst ){
+	public void completedSimplification( PS2D pst ){
 		psm.psf_map.put( pst.getZ(), pst );
 		need2DSimpSFRefresh = true;
 		need3DSimpSFRefresh = true;
 	}
 	
-	public void completedSimplification( PersistenceSimplifier3D pst ){
+	public void completedSimplification( PS3D pst ){
 		for( int i = pst.getZ().start(); i <= pst.getZ().end(); i++ ){
 			psm.psf_map.put( i,  pst ); 
 		}

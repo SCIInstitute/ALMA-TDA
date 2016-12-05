@@ -4,40 +4,9 @@ import java.text.DecimalFormat;
 
 import usf.saav.common.MathXv1;
 import usf.saav.common.mvc.swing.TGraphics;
-import usf.saav.common.range.FloatRange1D;
-import usf.saav.common.types.Float3;
 import usf.saav.common.types.Float4;
 
-public class SequentialColormap extends Colormap.VectorColormap {
-
-	protected FloatRange1D br = new FloatRange1D( 0, 1 );
-	private Float4 nanColor = new Float4(0,0,0,1);
-	private Float4 infColor = new Float4(0,0,0,1);
-
-	public SequentialColormap(){ }
-
-	public void setRange(FloatRange1D b){
-		br = b.clone();
-	}
-
-	public Float4 getColor( float v ) {
-		if( cols.size() == 0 ) return new Float4(1.0f,1.0f,1.0f,1.0f); 
-		if( Float.isNaN(v) ) return nanColor;
-		if( Float.isInfinite(v) ) return infColor;
-
-		float t = (float) br.getNormalized(v);
-		
-		if( t <= 0.0f ) return cols.get(0);
-		if( t >= 1.0f ) return cols.lastElement();
-
-		float ti = t*(float)(cols.size()-1);
-
-		int   i0 = (int)Math.floor(ti);
-		int   i1 = Math.min( i0+1, (int)cols.size()-1 );
-
-		return Float4.lerp( cols.get(i0), cols.get(i1), ti-Math.floor(ti) );
-
-	}
+public class SequentialColormapV2 extends SequentialColormap implements ColormapV2 {
 
 	@Override
 	public void drawScale(TGraphics g, int loc_x, int loc_y, int w, int h) {
@@ -67,27 +36,10 @@ public class SequentialColormap extends Colormap.VectorColormap {
 	}
 	
 
-	public void setNaNColor(Float3 col) {
-		this.nanColor  = new Float4(col.x,col.y,col.z,1);
-	}
-	
-	public void setNaNColor(Float4 col) {
-		this.nanColor  = col;
-	}
-	
-	public void setInfColor(Float3 col) {
-		this.infColor  = new Float4(col.x,col.y,col.z,1);
-	}
-	
-	public void setInfColor(Float4 col) {
-		this.infColor  = col;
-	}
-	
-	
 
 
 
-	public static class ColorblindSafeRainbowSequential extends SequentialColormap {
+	public static class ColorblindSafeRainbowSequential extends SequentialColormapV2 {
 		public ColorblindSafeRainbowSequential( ){
 			addColor( new Float4( 235.0f/255.0f,   0.0f/255.0f,   0.0f/255.0f, 255/255.0f ) );
 			addColor( new Float4( 251.0f/255.0f, 167.0f/255.0f,  91.0f/255.0f, 255/255.0f ) );
@@ -98,7 +50,7 @@ public class SequentialColormap extends Colormap.VectorColormap {
 		}
 	}
 
-	public static class RainbowSequential extends SequentialColormap {
+	public static class RainbowSequential extends SequentialColormapV2 {
 		public RainbowSequential( ){
 			addColor( new Float4(   0/255.0f,   0/255.0f, 255/255.0f, 255/255.0f ) );
 			addColor( new Float4(   0/255.0f, 255/255.0f, 255/255.0f, 255/255.0f ) );
@@ -109,7 +61,7 @@ public class SequentialColormap extends Colormap.VectorColormap {
 	}
 
 
-	public static class RedBlueWhiteSequential extends SequentialColormap {
+	public static class RedBlueWhiteSequential extends SequentialColormapV2 {
 		public RedBlueWhiteSequential( ){
 			addColor( new Float4( 255/255.0f,   0/255.0f,   0/255.0f, 255/255.0f ) );
 			addColor( new Float4(   0/255.0f,   0/255.0f, 255/255.0f, 255/255.0f ) );
@@ -117,7 +69,7 @@ public class SequentialColormap extends Colormap.VectorColormap {
 		}
 	}
 	
-	public static class RedBlueSequential extends SequentialColormap {
+	public static class RedBlueSequential extends SequentialColormapV2 {
 
 		public RedBlueSequential( ){
 			clear();
@@ -129,7 +81,7 @@ public class SequentialColormap extends Colormap.VectorColormap {
 		}
 	}
 
-	public static class RedSequential extends SequentialColormap {
+	public static class RedSequential extends SequentialColormapV2 {
 		public RedSequential( ){
 			addColor( new Float4( 255/255.0f, 255/255.0f, 255/255.0f, 255.0f/255.0f )  );
 			addColor( new Float4( 254/255.0f, 229/255.0f, 217/255.0f, 255.0f/255.0f )  );
@@ -141,7 +93,7 @@ public class SequentialColormap extends Colormap.VectorColormap {
 		}
 	}
 	
-	public static class GreenSequential extends SequentialColormap {
+	public static class GreenSequential extends SequentialColormapV2 {
 		public GreenSequential( ){
 			addColor( new Float4( 255/255.0f, 255/255.0f, 255/255.0f, 255.0f/255.0f )  );
 			addColor( new Float4( 237/255.0f,248/255.0f,251/255.0f, 255.0f/255.0f )  );
@@ -153,7 +105,7 @@ public class SequentialColormap extends Colormap.VectorColormap {
 		}
 	}
 
-	public static class BlueSequential extends SequentialColormap {
+	public static class BlueSequential extends SequentialColormapV2 {
 		public BlueSequential( ){
 			addColor( new Float4( 255/255.0f, 255/255.0f, 255/255.0f, 255.0f/255.0f )  );
 			addColor( new Float4( 242/255.0f, 240/255.0f, 247/255.0f, 255.0f/255.0f ) );
@@ -165,7 +117,7 @@ public class SequentialColormap extends Colormap.VectorColormap {
 		}
 	}	
 
-	public static class GreySequential extends SequentialColormap {
+	public static class GreySequential extends SequentialColormapV2 {
 		public GreySequential( ){
 			addColor( new Float4( 247/255.0f,247/255.0f,247/255.0f, 255.0f/255.0f )  );
 			addColor( new Float4( 217/255.0f,217/255.0f,217/255.0f, 255.0f/255.0f ) );
