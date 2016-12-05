@@ -49,7 +49,7 @@ public class AlmaTDADev extends TApp {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
                 
-                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65.fits";
+                String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65.fits";
                 //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub.fits";
                 //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_uniform_smooth.fits";
                 //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_cont.fits";
@@ -62,7 +62,7 @@ public class AlmaTDADev extends TApp {
            		
            		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
            		
-           		String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
+           		//String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/ALMA-TDA/data/betsy/CH3OH_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
            		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
@@ -104,7 +104,7 @@ public class AlmaTDADev extends TApp {
 	public AlmaTDADev( int x, int y, int w, int h, boolean verbose ){ 
 		super( x, y, w, h ); 
 		
-		jocl = new joclController( ); 
+		jocl = new joclController( false ); 
 		
 		menuStartup = new AlmaStartupMenu( );
 		menuStartup.monFileOpen.addMonitor(  this, "fileOpen" );

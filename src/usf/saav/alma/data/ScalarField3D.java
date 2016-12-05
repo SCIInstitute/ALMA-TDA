@@ -22,7 +22,7 @@ package usf.saav.alma.data;
 
 import java.util.Arrays;
 
-import usf.saav.common.algorithm.Surface3D;
+import usf.saav.common.data.Surface3D;
 
 public interface ScalarField3D extends ScalarFieldND, Surface3D {
 

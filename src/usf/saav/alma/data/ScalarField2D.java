@@ -23,8 +23,8 @@ package usf.saav.alma.data;
 import java.util.Arrays;
 import java.util.Random;
 
-import usf.saav.common.algorithm.Surface2D;
 import usf.saav.common.colormap.Colormap;
+import usf.saav.common.data.Surface2D;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.mvc.swing.TImage;
 import usf.saav.common.types.Float4;

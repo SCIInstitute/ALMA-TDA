@@ -112,6 +112,7 @@ public class VolumeRenderingView extends DefaultGLFrame {
 		public void setup( ){
 			
 			registerSubController( tf1d, 15 );
+			registerSubController( vr, 25 );
 
 			gui.monShowSimp.addMonitor( this, "simp_sf3d_update" );
 

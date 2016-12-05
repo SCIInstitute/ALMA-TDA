@@ -25,7 +25,7 @@ import java.util.Vector;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.ScalarFieldND;
-import usf.saav.common.algorithm.Surface1D;
+import usf.saav.common.data.Surface1D;
 
 public abstract class Mesh extends Vector<Mesh.Vertex> implements Surface1D {
 	private static final long serialVersionUID = 2187532695992737840L;

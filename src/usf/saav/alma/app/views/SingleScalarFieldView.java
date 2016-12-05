@@ -355,7 +355,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 
 			ScalarField2D _sf2D = ((showSimplified)?(dataM.simp_sf2d):(dataM.src_sf2d)).get();
 			ScalarField3D _sf3D = ((showSimplified)?(dataM.simp_sf3d):(dataM.src_sf3d)).get();
-
+ 
 			int stepX = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf2D.getWidth()  / (double)winX.length() );
 			int stepY = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf2D.getHeight() / (double)winY.length() );
 			int stepZ = (int)Math.ceil( (float)_sf3D.getDepth()/128.0 );
@@ -386,7 +386,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 				selRange.expand( r );
 				selRange.expand( 0 );
 				colormap.setRange( selRange );
-			}
+			} 
 			else{
 				colormap.setRange( new FloatRange1D( view_sf2d.get().getValueRange() ) );
 			}

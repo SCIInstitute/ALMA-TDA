@@ -22,6 +22,7 @@ package usf.saav.alma.drawing.VolumeRendering;
 
 import usf.saav.alma.drawing.HistogramDrawing;
 import usf.saav.common.MathX;
+import usf.saav.common.monitor.MonitoredTrigger;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
@@ -35,6 +36,9 @@ import usf.saav.common.types.Pair;
 public class InteractiveTF1D extends HistogramDrawing implements ControllerComponent, ViewComponent, TransferFunction1D { // extends ControllerComponent.Default implements ControllerComponent, ViewComponent, TransferFunction1D {
 
 	Float4 [] tf = new Float4[64];
+
+	MonitoredTrigger modifiedCB = new MonitoredTrigger( );
+	
 	//Histogram1D histogram;
 	//Gaussian distro;
 	
@@ -95,6 +99,7 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 			float a = (float)(Math.pow(10,alp.interpolate(t).y)-1)/9;
 			tf[i].set( r,g,b,a );
 		}
+		modifiedCB.trigger();
 	}
 
 	@Override
@@ -200,4 +205,12 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	public boolean mouseWheel(int mouseX, int mouseY, float count) {
 		return false;
 	}
+	
+	
+
+	public void addModifiedCallback( Object obj, String func ){
+		modifiedCB.addMonitor( obj,  func );
+	}
+	
+	
 }

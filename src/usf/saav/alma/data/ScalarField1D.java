@@ -20,7 +20,7 @@
  */
 package usf.saav.alma.data;
 
-import usf.saav.common.algorithm.Surface1D;
+import usf.saav.common.data.Surface1D;
 
 public interface ScalarField1D extends ScalarFieldND, Surface1D {
 	
