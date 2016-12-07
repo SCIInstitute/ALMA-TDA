@@ -18,11 +18,12 @@
  *     
  *     You may contact the Paul Rosen at <prosen@usf.edu>. 
  */
-package usf.saav.alma.data;
+package usf.saav.alma.app;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,7 +48,7 @@ public class Settings extends BasicObject {
 	public Settings( String filename ) throws JSONException, IOException {
 		this.filename = filename;
 		try{
-			json = new JSONObject(SystemX.readFileContents(filename));
+			json = new JSONObject( SystemX.readFileContentsAsString(filename) );
 		} catch( FileNotFoundException e ){
 			json = new JSONObject();
 		}
@@ -77,6 +78,7 @@ public class Settings extends BasicObject {
 		try {
 			PrintWriter pw = new PrintWriter( filename );
 			pw.print( json.toString(1) );
+			System.out.println(json.toString());
 			pw.close();
 		} catch (FileNotFoundException e) {
 			print_error_message("Serialization failed");

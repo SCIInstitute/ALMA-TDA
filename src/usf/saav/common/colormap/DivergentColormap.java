@@ -7,9 +7,54 @@ import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.types.Float4;
 
-public class DivergentColormapV2 extends DivergentColormap implements ColormapV2 {
+public class DivergentColormap implements Colormap {
 
+    protected FloatRange1D br = new FloatRange1D( -1, 1 );
+    protected double absMax = 1;
+    protected SequentialColormap positive = new SequentialColormap();
+    protected SequentialColormap negative = new SequentialColormap();
+    double min,zero,max;
+    
+	DivergentColormap( ){ }
 
+	public void setRange(FloatRange1D b){
+		if( b.getRange() < 1.0e-15 ){ 
+			double c = b.getCenter();
+			b.expand( c + 0.0001f );
+			b.expand( c - 0.0001f );
+		}
+		//positive.setRange( new FloatRange1D( 0, Math.max(0, b.getMaximum()) ) );
+		//negative.setRange( new FloatRange1D( 0, Math.max(0,-b.getMinimum()) ) );
+		positive.setRange( new FloatRange1D( 0, 1 ) );
+		negative.setRange( new FloatRange1D( 0, 1 ) );
+		min = b.getMinimum(); zero = 0; max = b.getMaximum();
+		br = new FloatRange1D(b.getMinimum(),b.getMaximum());
+		absMax = Math.max( Math.abs(b.getMinimum()), Math.abs(b.getMaximum()) );
+	}
+	
+
+	public void setRange(double _min, double _zero, double _max){
+
+		//positive.setRange( new FloatRange1D( zero, max ) );
+		//negative.setRange( new FloatRange1D( zero, min ) );
+		positive.setRange( new FloatRange1D( 0, 1 ) );
+		negative.setRange( new FloatRange1D( 0, 1 ) );
+		min = _min; zero = _zero; max = _max;
+		br = new FloatRange1D(min,max);
+		absMax = Math.max( Math.abs(min), Math.abs(max) );
+	}
+	
+	public Float4 getColor( float t ) {
+		if( t >= zero )
+			return positive.getColor( (float)((t-zero)/(max-zero)) );
+		return negative.getColor( (float)((t-zero)/(min-zero)) );
+		/*
+		if( t >= positive.br.getMinimum() ) 
+			return positive.getColor(t);
+		return negative.getColor(t);
+		*/
+	}
+	
 
 	@Override
 	public void drawScale( TGraphics g, int loc_x, int loc_y, int w, int h ){
@@ -44,7 +89,7 @@ public class DivergentColormapV2 extends DivergentColormap implements ColormapV2
 	}
 	
 
-	public static class OrangePurple extends DivergentColormapV2 {
+	public static class OrangePurple extends DivergentColormap {
 		public OrangePurple( ){
 			positive.addColor( 247, 247, 247, 255 );
 			positive.addColor( 254, 224, 182, 255 );

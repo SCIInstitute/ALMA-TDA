@@ -45,28 +45,28 @@ public interface FitsReader {
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A SINGLE ELEMENT FROM THE DATA            //
 	/////////////////////////////////////////////////////////////////////
-	public float getElement( int x, int y, int z, int w );
+	//public float getElement( int x, int y, int z, int w );
 
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A ROW FROM THE DATA                       //
 	/////////////////////////////////////////////////////////////////////
-	public ScalarField1D getRow( int y, int z, int w ) throws IOException;
-	public ScalarField1D getRow( IntRange1D x_range, int y, int z, int w ) throws IOException;
+	//public ScalarField1D getRow( int y, int z, int w ) throws IOException;
+	//public ScalarField1D getRow( IntRange1D x_range, int y, int z, int w ) throws IOException;
 
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A COLUMN FROM THE DATA                    //
 	/////////////////////////////////////////////////////////////////////
-	public ScalarField1D getColumn( int x, int z, int w ) throws IOException;
-	public ScalarField1D getColumn( int x, IntRange1D y_range, int z, int w ) throws IOException;
+	//public ScalarField1D getColumn( int x, int z, int w ) throws IOException;
+	//public ScalarField1D getColumn( int x, IntRange1D y_range, int z, int w ) throws IOException;
 
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A LINE FROM THE DATA                      //
 	/////////////////////////////////////////////////////////////////////
-	public ScalarField1D getLine( int x, int y, int w ) throws IOException;
-	public ScalarField1D getLine( int x, int y, IntRange1D z_range, int w ) throws IOException;
+	//public ScalarField1D getLine( int x, int y, int w ) throws IOException;
+	//public ScalarField1D getLine( int x, int y, IntRange1D z_range, int w ) throws IOException;
 
 
 	/////////////////////////////////////////////////////////////////////
@@ -90,6 +90,7 @@ public interface FitsReader {
 			super(verbose);
 		}
 
+		/*
 		public ScalarField1D getRow( int y, int z, int w ) throws IOException {
 			return getRow( getAxesSize()[0], y, z, w );
 		}
@@ -101,6 +102,7 @@ public interface FitsReader {
 		public ScalarField1D getLine( int x, int y, int w ) throws IOException {
 			return getLine( x, y, getAxesSize()[2], w );
 		}
+		*/
 
 		public ScalarField2D getSlice( int z, int w ) throws IOException {
 			return getSlice( getAxesSize()[0], getAxesSize()[1], z, w );

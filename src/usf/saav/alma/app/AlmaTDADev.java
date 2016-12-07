@@ -49,27 +49,31 @@ public class AlmaTDADev extends TApp {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
                 
-                String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65.fits";
-                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub.fits";
-                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_uniform_smooth.fits";
-                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_cont.fits";
-                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom0.fits";
-                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom1.fits";
-                //String filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom2.fits";
+                String filename = null;
+                String filename2 = null;
                 
-           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
+                //filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65.fits";
+                //filename2 = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub.fits";
+                //filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_uniform_smooth.fits";
+                //filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_cont.fits";
+                //filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom0.fits";
+                //filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom1.fits";
+                //filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom2.fits";
+                
+           		filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
+           		//filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
            		
-           		//String filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
+           		//filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
            		
-           		//String filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
-           		//String filename = "/Users/prosen/Code/ALMA-TDA/data/betsy/CH3OH_7m+12m_natural.feather.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";
-           		//String filename = "/Users/prosen/Code/alma/data/betsy/SO_7m+12m_natural.feather.fits";
+           		//filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
+           		//filename = "/Users/prosen/Code/ALMA-TDA/data/betsy/CH3OH_7m+12m_natural.feather.fits";
+           		//filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
+           		//filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
+           		//filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";
+           		//filename = "/Users/prosen/Code/alma/data/betsy/SO_7m+12m_natural.feather.fits";
             		
-           		frame.loadFile( filename );
+           		//frame.loadFile( filename, filename2 );
+           		frame.loadFile( filename, filename2 );
 
             }
         });
@@ -165,7 +169,7 @@ public class AlmaTDADev extends TApp {
 		switch( fc.showOpenDialog(this) ){
 			case JFileChooser.APPROVE_OPTION: 
 				fileClose(); 
-				loadFile( fc.getSelectedFile().getAbsolutePath() ); 
+				loadFile( fc.getSelectedFile().getAbsolutePath(), null ); 
 				break;
 			case JFileChooser.CANCEL_OPTION:  
 				return;
@@ -221,10 +225,13 @@ public class AlmaTDADev extends TApp {
 		this.setJMenuBar( menuStartup );
 	}
 	
-	public void loadFile( String filename ){
+	public void loadFile( String filename, String filename2 ){
 		
 		try {
-			dataSM = new DataSetManager( filename );
+			if( filename2 == null )
+				dataSM = new DataSetManager( filename );
+			else
+				dataSM = new DataSetManager( filename, filename2 );
 		} catch ( IOException | FitsException e) {
 			System.err.println("Unable to read file");
 			return;

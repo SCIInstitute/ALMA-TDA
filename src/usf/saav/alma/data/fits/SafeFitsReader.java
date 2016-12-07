@@ -65,7 +65,7 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		reader.close();
 	}
 
-
+	/*
 	@Override
 	public float getElement(int x, int y, int z, int w) {
 		if( !reader.getAxesSize()[0].inRange(x) ) return Float.NaN;
@@ -104,6 +104,7 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		// TODO: Make this safe
 		return reader.getLine(x, y, z_range, w);
 	}
+	*/
 
 	@Override
 	public ScalarField2D getSlice(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {
@@ -207,4 +208,6 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		}
 	}
 
+	
 }
+

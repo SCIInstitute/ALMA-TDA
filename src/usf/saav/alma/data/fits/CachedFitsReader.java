@@ -163,6 +163,7 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		return reader.getAxesSize();
 	}
 
+	/*
 	@Override
 	public float getElement(int x, int y, int z, int w) {
 		return reader.getElement(x, y, z, w);
@@ -182,6 +183,7 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	public ScalarField1D getLine(int x, int y, IntRange1D z_range, int w) throws IOException {
 		return reader.getLine(x, y, z_range, w);
 	}
+	*/
 
 	@Override
 	public ScalarField2D getSlice(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {

@@ -175,13 +175,15 @@ public class DataViewManager {
 
 	
 	
-	public void completedSimplification( PS2D pst ){
+	public void completedSimplification( PersistenceSimplifier2D _pst ){
+		PS2D pst = (PS2D)_pst;
 		psm.psf_map.put( pst.getZ(), pst );
 		need2DSimpSFRefresh = true;
 		need3DSimpSFRefresh = true;
 	}
 	
-	public void completedSimplification( PS3D pst ){
+	public void completedSimplification( PersistenceSimplifier3D _pst ){
+		PS3D pst = (PS3D)_pst;
 		for( int i = pst.getZ().start(); i <= pst.getZ().end(); i++ ){
 			psm.psf_map.put( i,  pst ); 
 		}

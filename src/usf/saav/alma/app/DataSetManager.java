@@ -6,10 +6,10 @@ import java.util.Vector;
 import org.json.JSONException;
 
 import nom.tam.fits.common.FitsException;
-import usf.saav.alma.data.Settings;
-import usf.saav.alma.data.Settings.SettingsDouble;
-import usf.saav.alma.data.Settings.SettingsInt;
+import usf.saav.alma.app.Settings.SettingsDouble;
+import usf.saav.alma.app.Settings.SettingsInt;
 import usf.saav.alma.data.fits.CachedFitsReader;
+import usf.saav.alma.data.fits.FitsAdder;
 import usf.saav.alma.data.fits.FitsReader;
 import usf.saav.alma.data.fits.RawFitsReader;
 import usf.saav.alma.data.fits.SafeFitsReader;
@@ -33,6 +33,34 @@ public class DataSetManager {
 	public Vector<FitsReader> reader = new Vector<FitsReader>( );
 	public ScalarField3D data;
 
+	
+	public DataSetManager( String filename, String filename2 ) throws IOException, FitsException {
+
+		FitsReader fr0 = new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true );
+		FitsReader fr1 = new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename2, true), true ), true );
+
+		reader.add( new FitsAdder(fr0,fr1) );
+		data = reader.firstElement().getVolume(0);
+	
+		try {
+			settings = new Settings( filename + ".snapshot" );
+			x0 = settings.initInteger( "x0", 0 );
+			y0 = settings.initInteger( "y0", 0 );
+			z0 = settings.initInteger( "z0", 0 );
+			z1 = settings.initInteger( "z1", 20 );
+			curZ = settings.initInteger( "curZ", 0 );
+			zoom = settings.initDouble( "zoom", 1 );
+			
+			x0.setValidRange( reader.firstElement().getAxesSize()[0] );
+			y0.setValidRange( reader.firstElement().getAxesSize()[1] );
+			z0.setValidRange( reader.firstElement().getAxesSize()[2] );
+			z1.setValidRange( reader.firstElement().getAxesSize()[2] );
+			curZ.setValidRange( reader.firstElement().getAxesSize()[2] );
+			
+		} catch (JSONException | IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public DataSetManager( String filename ) throws IOException, FitsException {
 
