@@ -20,6 +20,7 @@
  */
 package usf.saav.alma.drawing.VolumeRendering;
 
+import usf.saav.common.monitor.MonitoredTrigger;
 import usf.saav.common.types.Float4;
 
 // TODO: Auto-generated Javadoc
@@ -28,10 +29,12 @@ import usf.saav.common.types.Float4;
  */
 public interface TransferFunction1D  {
 
-	int size();
-	Float4 get( int idx );
-	float getOffset( );
-	float getScale( );
+	public int size();
+	public Float4 get( int idx );
+	public float getOffset( );
+	public float getScale( );
+	
+	public void addModifiedCallback( Object obj, String func );
 
 	/**
 	 * The Class Default.
@@ -81,5 +84,12 @@ public interface TransferFunction1D  {
 		public float getScale() {
 			return 1;
 		}
+		
+		MonitoredTrigger modifiedCB = new MonitoredTrigger( );
+
+		public void addModifiedCallback( Object obj, String func ){
+			modifiedCB.addMonitor( obj,  func );
+		}
+
 	}
 }

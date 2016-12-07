@@ -20,7 +20,8 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.common.range.IntRange1D;
+import usf.saav.scalarfield.ScalarField3D;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,48 +41,19 @@ public class Subset3D extends ScalarField3D.Default {
 	 * @param y_range the y range
 	 * @param z_range the z range
 	 */
-	public Subset3D( ScalarField3D src, int [] x_range, int [] y_range, int [] z_range ){
+	public Subset3D( ScalarField3D src, IntRange1D x_range, IntRange1D y_range, IntRange1D z_range ){
 		this.src = src;
+		this.x0 = x_range.start();
+		this.xN = x_range.length();
+		
+		this.y0 = y_range.start();
+		this.yN = y_range.length();
 
-		if( x_range.length == 0 ){
-			this.x0 = 0;
-			this.xN = src.getWidth();
-		}
-		if( x_range.length == 1 ){
-			this.x0 = 0;
-			this.xN = x_range[0];
-		}
-		if( x_range.length >= 2 ){
-			this.x0 = x_range[0];
-			this.xN = x_range[1]-x_range[0]+1;
-		}
+		this.z0 = z_range.start();
+		this.zN = z_range.length();
 
-		if( y_range.length == 0 ){
-			this.y0 = 0;
-			this.yN = src.getHeight();
-		}
-		if( y_range.length == 1 ){
-			this.y0 = 0;
-			this.yN = y_range[0];
-		}
-		if( y_range.length >= 2 ){
-			this.y0 = y_range[0];
-			this.yN = y_range[1]-y_range[0]+1;
-		}
-
-		if( z_range.length == 0 ){
-			this.z0 = 0;
-			this.zN = src.getDepth();
-		}
-		if( z_range.length == 1 ){
-			this.z0 = 0;
-			this.zN = z_range[0];
-		}
-		if( z_range.length >= 2 ){
-			this.z0 = z_range[0];
-			this.zN = z_range[1]-z_range[0]+1;
-		}
 	}
+
 
 	/* (non-Javadoc)
 	 * @see usf.saav.alma.data.ScalarField3D#getWidth()
@@ -102,9 +74,5 @@ public class Subset3D extends ScalarField3D.Default {
 	 * @see usf.saav.alma.data.ScalarField3D#getValue(int, int, int)
 	 */
 	@Override public float getValue(int x, int y, int z) { return src.getValue(x+x0, y+y0, z+zN); }
-	
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.ScalarField3D.Default#getCoordinate(int, int, int)
-	 */
-	@Override public double[] getCoordinate(int x, int y, int z) { return src.getCoordinate(x+x0, y+y0, z+z0); }
+
 }

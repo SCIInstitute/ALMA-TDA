@@ -70,7 +70,8 @@ public abstract class Spline extends ViewComponent.Default implements ViewCompon
 		public void draw( TGraphics g ){
 			if( !isEnabled() ) return;
 			
-			g.strokeWeight(2);
+			g.hint( TGraphics.DISABLE_DEPTH_TEST );
+			g.strokeWeight(8);
 			g.stroke(colr,colg,colb,cola);
 			g.noFill();
 			
@@ -88,10 +89,9 @@ public abstract class Spline extends ViewComponent.Default implements ViewCompon
 			g.fill(colr,colg,colb,cola);
 
 			for(int i = 0; i < size(); i++ ){
-				g.translate(  winX.interpolate( (getControlPoint(i).x+xo)*xs ),  winY.interpolate( 1 - ((getControlPoint(i).y+yo)*ys) ) );
-				g.sphere( 2 );
-				g.translate( -winX.interpolate( (getControlPoint(i).x+xo)*xs ), -winY.interpolate( 1 - ((getControlPoint(i).y+yo)*ys) ) );
+				g.ellipse(winX.interpolate( (getControlPoint(i).x+xo)*xs ),  winY.interpolate( 1 - ((getControlPoint(i).y+yo)*ys) ), 8, 8, 8 );
 			}
+			g.hint( TGraphics.DISABLE_DEPTH_TEST );
 		}
 		
 		

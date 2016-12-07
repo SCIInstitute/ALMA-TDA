@@ -1,7 +1,8 @@
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField1D;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.scalarfield.ScalarField1D;
+import usf.saav.scalarfield.ScalarField3D;
+
 
 // TODO: Auto-generated Javadoc
 /**

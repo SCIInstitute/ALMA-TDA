@@ -45,10 +45,10 @@ uint argbFloatToInt(float4 rgba)
     return ((uint)(rgba.w*255.0f)<<24) | ((uint)(rgba.z*255.0f)<<0) | ((uint)(rgba.y*255.0f)<<8) | ((uint)(rgba.x*255.0f)<<16);
     */
 
-    return    (clamp((uint)(rgba.x*255.0f),0,255) << 16)
-    		| (clamp((uint)(rgba.y*255.0f),0,255) << 8 )
-			| (clamp((uint)(rgba.z*255.0f),0,255) << 0 )
-			| (clamp((uint)(rgba.w*255.0f),0,255) << 24);
+    return    (clamp((uint)(rgba.x*255.0f),(uint)0,(uint)255) << 16)
+    		| (clamp((uint)(rgba.y*255.0f),(uint)0,(uint)255) << 8 )
+			| (clamp((uint)(rgba.z*255.0f),(uint)0,(uint)255) << 0 )
+			| (clamp((uint)(rgba.w*255.0f),(uint)0,(uint)255) << 24);
 
 }
 
@@ -112,14 +112,17 @@ d_render(__global uint *d_output,
         // read from 3D texture
         float4 sample = read_imagef(volume, volumeSampler, pos);
         
-        // lookup in transfer function texture
-        float2 transfer_pos = (float2)((sample.x+transferOffset)*transferScale, 0.5f);
-        float4 col = read_imagef(transferFunc, transferFuncSampler, transfer_pos);
+        if( !isnan(sample.x) ){
+			// lookup in transfer function texture
+			float2 transfer_pos = (float2)((sample.x+transferOffset)*transferScale, 0.5f);
 
-        // accumulate result
-        //float a = col.w*density;
-        float a = col.w;
-        temp = mix(temp, col, (float4)(a, a, a, a));
+			float4 col = read_imagef(transferFunc, transferFuncSampler, transfer_pos);
+
+			// accumulate result
+			//float a = col.w*density;
+			float a = col.w;
+			temp = mix(temp, col, (float4)(a, a, a, a));
+        }
         
         t -= tstep;
         if (t < tnear) break;

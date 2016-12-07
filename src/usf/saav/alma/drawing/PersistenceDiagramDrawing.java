@@ -24,14 +24,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
-import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
 import usf.saav.common.monitor.MonitoredFloat;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.types.Float2;
+import usf.saav.topology.TopoTree;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -46,7 +46,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 	 */
 	public PersistenceDiagramDrawing() { }
 
-	PersistenceSet curr = null;
+	TopoTree curr = null;
 
 	/**
 	 * Sets the parameterizations.
@@ -54,7 +54,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 	 * @param curr the curr
 	 * @param pd the pd
 	 */
-	public void setParameterizations( PersistenceSet curr, PersistenceSet ... pd ){
+	public void setParameterizations( TopoTree curr, TopoTree ... pd ){
 
 		if( curr == null || pd == null || pd.length == 0 ){
 			this.pd = null;
@@ -66,7 +66,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 
 		bd_range = new FloatRange1D( curr.getBirth(0) );
 
-		for( PersistenceSet _pd : pd ){
+		for( TopoTree _pd : pd ){
 			for(int i = 0; i < _pd.size(); i++){
 				bd_range.expand( _pd.getBirth(i) );
 				bd_range.expand( _pd.getDeath(i) );
@@ -126,10 +126,10 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		g.fill(255);
 		g.rect( winX.start(), winY.start(),winX.length(), winY.length() );
 
-		float px0 = MathX.lerp( winX.end()-5, winX.start()+5, 1 );
-		float py0 = MathX.lerp( winY.end()-5, winY.start()+5, (float)(simp/bd_range.getRange()) );
-		float px1 = MathX.lerp( winX.end()-5, winX.start()+5, (float)(simp/bd_range.getRange()) );
-		float py1 = MathX.lerp( winY.end()-5, winY.start()+5, 1 );
+		float px0 = MathXv1.lerp( winX.end()-5, winX.start()+5, 1 );
+		float py0 = MathXv1.lerp( winY.end()-5, winY.start()+5, (float)(simp/bd_range.getRange()) );
+		float px1 = MathXv1.lerp( winX.end()-5, winX.start()+5, (float)(simp/bd_range.getRange()) );
+		float py1 = MathXv1.lerp( winY.end()-5, winY.start()+5, 1 );
 		
 		g.strokeWeight(5);
 		g.stroke(150,0,0);
@@ -139,11 +139,11 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		g.stroke(0);
 		g.fill(100);
 
-		for( PersistenceSet _pd : pd ){
+		for( TopoTree _pd : pd ){
 			for(int i = 0; i < _pd.size(); i++){
 				
-				float x = MathX.lerp( winX.start()+5, winX.end()-5, (float)bd_range.getNormalized( _pd.getBirth(i) ) );
-				float y = MathX.lerp( winY.end()-5, winY.start()+5, (float)bd_range.getNormalized( _pd.getDeath(i) ) );
+				float x = MathXv1.lerp( winX.start()+5, winX.end()-5, (float)bd_range.getNormalized( _pd.getBirth(i) ) );
+				float y = MathXv1.lerp( winY.end()-5, winY.start()+5, (float)bd_range.getNormalized( _pd.getDeath(i) ) );
 				
 				if( selected.contains(i) ) g.strokeWeight( 3 );
 
@@ -170,8 +170,8 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		float curD = 3*3;
 		for(int i = 0; i < curr.size(); i++){
 			
-			float x = MathX.lerp( winX.start()+5, winX.end()-5, (float)bd_range.getNormalized( curr.getBirth(i) ) );
-			float y = MathX.lerp( winY.end()-5, winY.start()+5, (float)bd_range.getNormalized( curr.getDeath(i) ) );
+			float x = MathXv1.lerp( winX.start()+5, winX.end()-5, (float)bd_range.getNormalized( curr.getBirth(i) ) );
+			float y = MathXv1.lerp( winY.end()-5, winY.start()+5, (float)bd_range.getNormalized( curr.getDeath(i) ) );
 			
 			float dx = x - mouseX;
 			float dy = y - mouseY;
@@ -212,8 +212,8 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 
 		if( modifySimpl ){
 			simp = ( mouseY + mouseX-winX.start() - winY.end() - 5 )*(float)bd_range.getRange()/( winY.start() - winY.end() + 10 );
-			simp = MathX.clamp( simp, 0, (float)bd_range.getMaximum() );
-			for( PersistenceSet _pd : pd ){
+			simp = MathXv1.clamp( simp, 0, (float)bd_range.getMaximum() );
+			for( TopoTree _pd : pd ){
 				_pd.setPersistentSimplification( simp );
 			}
 			return true;
@@ -271,7 +271,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 	}
 
 	private MonitoredFloat simplification = new MonitoredFloat( 0 );
-	private PersistenceSet [] pd = null;
+	private TopoTree [] pd = null;
 	private Set<Integer> selected = new HashSet<Integer>();
 	private float simp;
 	private boolean modifySimpl = false;

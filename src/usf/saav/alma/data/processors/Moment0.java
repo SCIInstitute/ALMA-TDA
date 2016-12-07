@@ -22,8 +22,9 @@ package usf.saav.alma.data.processors;
 
 import java.util.Arrays;
 
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+
 
 // TODO: Auto-generated Javadoc
 // Let’s assume that the spectrum is given in terms of intensity A(v) (e.g. brightness
@@ -39,7 +40,7 @@ public class Moment0 extends ScalarField2D.Default {
 	int w,h;
 	double [] data;
 	ScalarField3D src;
-	double dV;
+	//double dV;
 
 	/**
 	 * Instantiates a new moment 0.
@@ -51,7 +52,7 @@ public class Moment0 extends ScalarField2D.Default {
 		w = src.getWidth();
 		h = src.getHeight();
 		data = new double[w*h];
-		dV = src.getCoordinate(0, 0, 1)[2] - src.getCoordinate(0, 0, 0)[2];
+		//dV = src.getCoordinate(0, 0, 1)[2] - src.getCoordinate(0, 0, 0)[2];
 
 		Arrays.fill(data, Double.NaN);
 	}
@@ -73,16 +74,10 @@ public class Moment0 extends ScalarField2D.Default {
 		if( Double.isNaN(data[y*w+x]) ){
 			data[y*w+x] = 0;
 			for( int z = 0; z < src.getDepth(); z++){
-				data[y*w+x] += Math.abs(dV*src.getValue(x, y, z));
+				data[y*w+x] += Math.abs(src.getValue(x, y, z));
 			}
 		}
 		return (float) data[y*w+x];
 	}
 
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.ScalarField2D.Default#getCoordinate(int, int)
-	 */
-	@Override public double[] getCoordinate(int x, int y) {
-		return Arrays.copyOf(src.getCoordinate(x, y, 0),2);
-	}
 }

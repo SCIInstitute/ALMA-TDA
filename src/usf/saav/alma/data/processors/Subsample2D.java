@@ -20,7 +20,8 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField2D;
+import usf.saav.scalarfield.ScalarField2D;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -52,7 +53,7 @@ public class Subsample2D extends ScalarField2D.Default {
 		this.field = field;
 		this.sx = Math.max( 1, step_x );
 		this.sy = Math.max( 1, step_y );
-		print_info_message( step_x + " " + step_y );
+		print_info_message( step_x + " " + step_y + " " + field.getWidth() + " " + field.getHeight() );
 	}
 	
 	/* (non-Javadoc)

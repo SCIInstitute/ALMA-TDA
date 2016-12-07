@@ -23,12 +23,12 @@ package usf.saav.alma.data.fits;
 import java.io.File;
 import java.io.IOException;
 
-import usf.saav.alma.data.ScalarField1D;
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.data.cache.FloatDMCache;
 import usf.saav.common.data.zorder.Partition2D;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.scalarfield.ScalarField1D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,11 +40,11 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	FloatDMCache cache = null;
 	Partition2D partition =null;
 	long sliceOffset;
-	int sx,sy,sz;
+	long sx,sy,sz;
 	
-	private static final int	 page_size_bytes = 8096;
-	private static final int	 page_size_elems = 2048;
-	private static final int	 page_count      = 2048;
+	private static final long	 page_size_elems = 4096;
+	private static final long	 page_size_bytes = page_size_elems*4;
+	private static final long	 page_count      = 8096;
 	private static final boolean use_zorder 	 = true; 
 	
 	/**
@@ -53,7 +53,12 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	 * @param reader the reader
 	 * @param verbose the verbose
 	 */
+
 	public CachedFitsReader( FitsReader reader, boolean verbose ){
+		this(reader,false,verbose);
+	}
+	
+	public CachedFitsReader( FitsReader reader, boolean rebuild, boolean verbose ){
 		super(verbose);
 		
 		this.reader = reader;
@@ -64,12 +69,12 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		boolean cache_exists = cache_file.exists();
 		
 		try {
-			cache = new FloatDMCache( cache_file.getAbsolutePath(), page_size_bytes, page_count, false, false );
+			cache = new FloatDMCache( cache_file.getAbsolutePath(), (int)page_size_bytes, (int)page_count, false, false );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		if( !cache_exists ){
+		if( rebuild || !cache_exists ){
 			print_info_message("Initializing Cache");
 			for(int i = 0; i < page_size_elems; i++){
 				try {
@@ -102,6 +107,34 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		}
 	}
 	
+
+	@Override
+	public void close() {
+		try {
+			cache.close(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		reader.close();
+	}
+	
+	
+	@Override
+	public FitsHistory getHistory( ){
+		return reader.getHistory();
+	}
+	
+	@Override
+	public FitsProperties getProperties( ){
+		return reader.getProperties();
+	}
+	
+	@Override
+	public FitsTable getTable( ){
+		return reader.getTable();
+	}
+
+	
 	private long getOffset( int x, int y, int z ){
 		if( use_zorder )
 			return page_size_elems + sliceOffset*z + partition.getOrdered2( x,  y );
@@ -116,8 +149,8 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		for(int y = 0; y < sy; y+=1024){
 			for(int x = 0; x < sx; x+=1024 ){
 
-				ScalarField2D sf = reader.getSlice( new IntRange1D( x, Math.min( sx, x+1024 )-1 ), 
-													new IntRange1D( y, Math.min( sy, y+1024 )-1 ),
+				ScalarField2D sf = reader.getSlice( new IntRange1D( x, (int) (Math.min( sx, x+1024 )-1) ), 
+													new IntRange1D( y, (int) (Math.min( sy, y+1024 )-1) ),
 													z, 0 );
 				
 				for(int iy = 0; iy < sf.getHeight(); iy++ ){
@@ -147,37 +180,7 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		return reader.getAxesSize();
 	}
 
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.fits.FitsReader#getElement(int, int, int, int)
-	 */
-	@Override
-	public float getElement(int x, int y, int z, int w) {
-		return reader.getElement(x, y, z, w);
-	}
 
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.fits.FitsReader#getRow(usf.saav.common.range.IntRange1D, int, int, int)
-	 */
-	@Override
-	public ScalarField1D getRow(IntRange1D x_range, int y, int z, int w) throws IOException {
-		return reader.getRow(x_range, y, z, w);
-	}
-
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.fits.FitsReader#getColumn(int, usf.saav.common.range.IntRange1D, int, int)
-	 */
-	@Override
-	public ScalarField1D getColumn(int x, IntRange1D y_range, int z, int w) throws IOException {
-		return reader.getColumn(x, y_range, z, w);
-	}
-
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.fits.FitsReader#getLine(int, int, usf.saav.common.range.IntRange1D, int)
-	 */
-	@Override
-	public ScalarField1D getLine(int x, int y, IntRange1D z_range, int w) throws IOException {
-		return reader.getLine(x, y, z_range, w);
-	}
 
 	/* (non-Javadoc)
 	 * @see usf.saav.alma.data.fits.FitsReader#getSlice(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int, int)
@@ -265,5 +268,6 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		@Override public int getHeight() { return y.length(); }
 		@Override public int getDepth() { return z.length(); }
 	}
+
 
 }

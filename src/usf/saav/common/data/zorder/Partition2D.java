@@ -1,25 +1,37 @@
 package usf.saav.common.data.zorder;
 
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
+import usf.saav.common.algorithm.ZOrder;
 
 public class Partition2D {
 	
-	private static int MIN_PARTITION_SIZE = 64;
+	//private static int MIN_PARTITION_SIZE = 64;
 	
 	long dim_size;
-	Partition2D z0, z1, z2;
+	//Partition2D z0, z1, z2;
+	long x_rep, y_rep;
 	
 	public Partition2D( long sizeX, long sizeY ){
-		dim_size = MathX.min( sizeX, sizeY );
+		//dim_size = MathX.min( sizeX, sizeY );
 		//System.out.println( sizeX + ", " + sizeY );
-		//System.out.println( MathX.nextSmallerPowerOf2( dim_size ) );
+		//long main_tile = MathX.nextSmallerPowerOf2( dim_size );
+		//long x_rem = MathX.nextLargerPowerOf2( sizeX - main_tile );
+		//long y_rem = MathX.nextLargerPowerOf2( sizeY - main_tile );
+		dim_size = Math.min( 1024,  MathXv1.nextLargerPowerOf2( Math.max(sizeX,sizeY) ) );
+		x_rep = (sizeX+dim_size-1)/dim_size;
+		y_rep = (sizeY+dim_size-1)/dim_size;
+		System.out.println( dim_size );
+		System.out.println( dim_size + " x " + x_rep );
+		System.out.println( dim_size + " x " + y_rep );
+		
 		//System.out.println( MathX.nextLargerPowerOf2( dim_size ) );
 		
 		//dim_size = MathX.nextSmallerPowerOf2( dim_size );
-		dim_size = MathX.nextLargerPowerOf2( dim_size );
-		dim_size = MathX.max( dim_size, MIN_PARTITION_SIZE );
+		//dim_size = MathX.nextLargerPowerOf2( dim_size );
+		//dim_size = MathX.max( dim_size, MIN_PARTITION_SIZE );
 		//System.out.println(dim_size);
 		
+		/*
 		if( sizeX > dim_size ){
 			z0 = new Partition2D( sizeX-dim_size, dim_size );
 		}
@@ -29,20 +41,33 @@ public class Partition2D {
 		if( sizeX > dim_size && sizeY > dim_size ){
 			z2 = new Partition2D( sizeX-dim_size, sizeY-dim_size );
 		}
+		*/
 		
 		
 	}
 
 	public long size() { 
-		long tsize = dim_size*dim_size;
-		if( z0 != null ) tsize += z0.size();
-		if( z1 != null ) tsize += z1.size();
-		if( z2 != null ) tsize += z2.size();
+		long tsize = (dim_size*dim_size)*(x_rep*y_rep);
+		//if( z0 != null ) tsize += z0.size();
+		//if( z1 != null ) tsize += z1.size();
+		//if( z2 != null ) tsize += z2.size();
 		return tsize;
 	}
 	
 	public long getOrdered2( long x, long y ){
-		long off = 0;
+		
+		int tileX = (int) (x/dim_size);
+		int tileY = (int) (y/dim_size);
+		
+		int tileOffX = (int) (x%dim_size);
+		int tileOffY = (int) (y%dim_size);
+		
+		long tile_size = dim_size*dim_size;
+		long offset = tile_size*(tileY*x_rep+tileX);
+		
+		return offset + ZOrder.getOrdered2(tileOffX,tileOffY);
+		
+		/*
 		if( x < dim_size && y < dim_size ) return off + ZOrder.getOrdered2( x,y );
 		off+=dim_size*dim_size;
 		if( z0 != null ){
@@ -55,9 +80,27 @@ public class Partition2D {
 		}
 		if( z2 != null ) return off + z2.getOrdered2( x-dim_size, y-dim_size );
 		return -1;
+		*/
 	}
 
 	public long [] getPosition2( long elem ){
+		
+		long tile_size = dim_size*dim_size;
+		
+		long tile_off = elem%tile_size;
+		long tile_id  = elem/tile_size;
+		
+		long tileX = tile_id%x_rep;
+		long tileY = tile_id/x_rep;
+
+		long[] ret = ZOrder.getPosition2(tile_off);
+
+		ret[0] += tileX*tile_size;
+		ret[1] += tileY*tile_size;
+		
+		return ret;
+		
+		/*
 		if( elem < dim_size*dim_size ) return ZOrder.getPosition2(elem);
 		elem -= dim_size*dim_size;
 		if( z0 != null && elem < z0.size() ) return z0.getPosition2( elem );
@@ -66,7 +109,8 @@ public class Partition2D {
 		elem -= z1.size();
 		if( z2 != null && elem < z2.size() ) return z2.getPosition2( elem );
 		//if( zy != null ) return zy.getPosition2( elem - size*size );
-		return null;			
+		return null;
+		*/			
 	}
 
 }

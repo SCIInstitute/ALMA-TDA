@@ -21,7 +21,8 @@
 package usf.saav.alma.drawing.VolumeRendering;
 
 import usf.saav.alma.drawing.HistogramDrawing;
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
+import usf.saav.common.monitor.MonitoredTrigger;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
@@ -39,6 +40,9 @@ import usf.saav.common.types.Pair;
 public class InteractiveTF1D extends HistogramDrawing implements ControllerComponent, ViewComponent, TransferFunction1D { // extends ControllerComponent.Default implements ControllerComponent, ViewComponent, TransferFunction1D {
 
 	Float4 [] tf = new Float4[64];
+
+	MonitoredTrigger modifiedCB = new MonitoredTrigger( );
+	
 	//Histogram1D histogram;
 	//Gaussian distro;
 	
@@ -49,19 +53,19 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	Constraint spline_constraint = new Constraint() {
 		public void constrainFirstPoint( Float2 p ){
 			p.x = 0;
-			p.y = MathX.clamp( p.y, 0, 1 );
+			p.y = MathXv1.clamp( p.y, 0, 1 );
 		}
 		public void constrainLastPoint( Float2 p ){
 			p.x = 1;
-			p.y = MathX.clamp( p.y, 0, 1 );
+			p.y = MathXv1.clamp( p.y, 0, 1 );
 		}
 		public void constrainIntermediatePoint( Float2 p ){
-			p.x = MathX.clamp( p.x, 0, 1 );
-			p.y = MathX.clamp( p.y, 0, 1 );
+			p.x = MathXv1.clamp( p.x, 0, 1 );
+			p.y = MathXv1.clamp( p.y, 0, 1 );
 		}
 		public void constrainInterpolatedPoint( Float2 p ){
-			p.x = MathX.clamp( p.x, 0, 1 );
-			p.y = MathX.clamp( p.y, 0, 1 );
+			p.x = MathXv1.clamp( p.x, 0, 1 );
+			p.y = MathXv1.clamp( p.y, 0, 1 );
 		}
 	};
 
@@ -102,12 +106,13 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	private void buildTF( ){
 		for( int i = 0; i < tf.length; i++){
 			float t = (float)i/(float)tf.length;
-			float r = MathX.clamp( red.interpolate( t ).y, 0, 1 );
-			float g = MathX.clamp( grn.interpolate( t ).y, 0, 1 );
-			float b = MathX.clamp( blu.interpolate( t ).y, 0, 1 );
+			float r = MathXv1.clamp( red.interpolate( t ).y, 0, 1 );
+			float g = MathXv1.clamp( grn.interpolate( t ).y, 0, 1 );
+			float b = MathXv1.clamp( blu.interpolate( t ).y, 0, 1 );
 			float a = (float)(Math.pow(10,alp.interpolate(t).y)-1)/9;
 			tf[i].set( r,g,b,a );
 		}
+		modifiedCB.trigger();
 	}
 
 	/* (non-Javadoc)
@@ -191,7 +196,7 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 		haveControl = false;
 		if( inRange(mouseX,mouseY) ){
 			haveControl = true;
-			sel = new Pair<Float2,Float>(null,5.0f);
+			sel = new Pair<Float2,Float>(null,10.0f);
 			Pair<Float2,Float> s;
 			s = red.selectPoint( mouseX, mouseY );
 			if( s.getSecond() < sel.getSecond() ) sel = s;
@@ -249,4 +254,12 @@ public class InteractiveTF1D extends HistogramDrawing implements ControllerCompo
 	public boolean mouseWheel(int mouseX, int mouseY, float count) {
 		return false;
 	}
+	
+	
+
+	public void addModifiedCallback( Object obj, String func ){
+		modifiedCB.addMonitor( obj,  func );
+	}
+	
+	
 }

@@ -22,6 +22,7 @@ package usf.saav.alma.util;
 
 import java.util.Vector;
 
+import usf.saav.alma.drawing.ScalarFieldDrawing;
 import usf.saav.common.Callback;
 import usf.saav.common.monitor.MonitoredDouble;
 import usf.saav.common.monitor.MonitoredInteger;
@@ -78,6 +79,7 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 	 * @see usf.saav.alma.util.CoordinateSystem#getCoordinateSystemPosition(float, float)
 	 */
 	public float [] getCoordinateSystemPosition( float wx, float wy ){
+		//System.out.println( Arrays.toString(this.getPosition()) );
 		float csx = x.get() + (wx - (float)tx - (float)winX.start() - (float)winX.length()/2) / (float)zoom.get();
 		float csy = y.get() + (wy - (float)ty - (float)winY.start() - (float)winY.length()/2) / (float)zoom.get();
 		return new float[]{csx,csy};
@@ -87,30 +89,35 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 	 * @see usf.saav.alma.util.CoordinateSystem#getWindowPosition(float, float)
 	 */
 	public float [] getWindowPosition( float csx, float csy ){
-		float wx = winX.start() + winX.length()/2 + (float) ((csx-x.get())*zoom.get()) + tx;
-		float wy = winY.start() + winY.length()/2 + (float) ((csy-y.get())*zoom.get()) + ty;
+		//System.out.println( csx + " " + csy );
+		//System.out.println( Arrays.toString(this.getPosition()) );
+		float wx = winX.middle() + (float) ((csx-x.get())*zoom.get()) + tx;
+		float wy = winY.middle() + (float) ((csy-y.get())*zoom.get()) + ty;
 		return new float[]{wx,wy};
 	}
 
-	Vector<Callback> translationCallbacks = new Vector<Callback>( );
+	Vector<Callback> dragCallbacks = new Vector<Callback>( );
+	Vector<Callback> zoomCallbacks = new Vector<Callback>( );
+	Vector<Callback> releaseCallbacks = new Vector<Callback>( );
 
-	/**
-	 * Adds the translation callback.
-	 *
-	 * @param obj the obj
-	 * @param func_name the func name
-	 */
-	public void addTranslationCallback( Object obj, String func_name ){
+
+	public void addDragCallback( Object obj, String func_name ){
 		try {
-			translationCallbacks.add( new Callback(obj, func_name, int.class, int.class ) );
+			dragCallbacks.add( new Callback(obj, func_name, int.class, int.class ) );
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}
+	
 
-	/* (non-Javadoc)
-	 * @see usf.saav.common.mvc.ControllerComponent.Default#mousePressed(int, int)
-	 */
+	public void addZoomCallback( Object obj, String func_name ){
+		try {
+			zoomCallbacks.add( new Callback(obj, func_name, float.class ) );
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}		
+	}
+
 	@Override
 	public boolean mousePressed( int mouseX, int mouseY ) {
 		if( !isEnabled() ) return false;
@@ -141,7 +148,7 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 		this.tx += dX;
 		this.ty += dY;
 
-		for( Callback c : translationCallbacks ){
+		for( Callback c : dragCallbacks ){
 			c.call( tx, ty );
 		}
 
@@ -163,8 +170,8 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 
 		this.tx = 0;
 		this.ty = 0;
-
-		for( Callback c : translationCallbacks ){
+		
+		for( Callback c : releaseCallbacks ){
 			c.call( tx, ty );
 		}
 
@@ -179,7 +186,13 @@ public class CoordinateSystemController extends ControllerComponent.Default impl
 		if( !isEnabled() ) return false;
 		if( !winX.inRange(mouseX) || !winY.inRange(mouseY) ) return false;
 
-		zoom.set( zoom.get()*Math.pow(0.95, count) );
+		zoom.set( zoom.get()*Math.pow(0.9, count) );
+
+		for( Callback c : zoomCallbacks ){
+			c.call( (float)Math.pow(0.9, count) );
+		}
+
 		return true;
 	}
+
 }

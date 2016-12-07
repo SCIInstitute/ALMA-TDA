@@ -1,8 +1,6 @@
 package usf.saav.alma.app.views;
 
-import usf.saav.alma.app.AlmaGui;
-import usf.saav.alma.app.DataManager;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.alma.app.DataViewManager;
 import usf.saav.alma.drawing.LabelDrawing;
 import usf.saav.alma.drawing.LabelDrawing.BasicLabel;
 import usf.saav.alma.drawing.VolumeRendering.InteractiveTF1D;
@@ -13,6 +11,7 @@ import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.DefaultGLFrame;
 import usf.saav.common.mvc.PositionedComponent;
 import usf.saav.common.mvc.ViewComponent;
+import usf.saav.scalarfield.ScalarField3D;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -22,8 +21,7 @@ public class VolumeRenderingView extends DefaultGLFrame {
 
 	private static final long serialVersionUID = -4977266239265456457L;
 
-	//private AlmaModel model;
-	private DataManager dataM;
+	private DataViewManager dataM;
 	private BasicLabel rangeLabel;
 
 	VolumeRenderer vr;
@@ -37,7 +35,6 @@ public class VolumeRenderingView extends DefaultGLFrame {
 	/**
 	 * Instantiates a new volume rendering view.
 	 *
-	 * @param _dataM the data M
 	 * @param gui the gui
 	 * @param jocl the jocl
 	 * @param title the title
@@ -46,16 +43,23 @@ public class VolumeRenderingView extends DefaultGLFrame {
 	 * @param width the width
 	 * @param height the height
 	 */
-	public VolumeRenderingView( DataManager _dataM, AlmaGui gui, joclController jocl, String title, int x, int y, int width, int height ){
+	public VolumeRenderingView( AlmaGui gui, joclController jocl, String title, int x, int y, int width, int height ){
 		super(title,x,y,width,height);
 
 		this.gui = gui;
-		this.dataM = _dataM;
 		//this.model = _model;
 
 		vr   = new VolumeRenderer( graphics, jocl, 512 );
 		tf1d = new InteractiveTF1D( );
 		vr.setTransferFunction( tf1d );
+
+		view = new View();
+		controller = new Controller(true);
+	}
+	
+	public void setData( DataViewManager _dataM ){
+
+		dataM = _dataM;
 
 		rangeLabel = new LabelDrawing.BasicLabel() {
 			@Override
@@ -64,8 +68,8 @@ public class VolumeRenderingView extends DefaultGLFrame {
 			}
 		};
 		
-		view = new View();
-		controller = new Controller(true);
+		((View)getView()).setData(dataM);
+		((Controller)getController()).setData(dataM);
 	}
 
 
@@ -107,9 +111,8 @@ public class VolumeRenderingView extends DefaultGLFrame {
 			super.setup();
 		}
 
-		/* (non-Javadoc)
-		 * @see usf.saav.common.mvc.PositionedComponent.Default#setPosition(int, int, int, int)
-		 */
+		public void setData(DataViewManager dataM) { }
+
 		@Override
 		public void setPosition( int u0, int v0, int w, int h ){
 			super.setPosition(u0, v0, w, h);
@@ -130,6 +133,7 @@ public class VolumeRenderingView extends DefaultGLFrame {
 	 */
 	public class Controller extends ControllerComponent.Subcontroller implements ControllerComponent {
 		
+
 		/**
 		 * Instantiates a new controller.
 		 *
@@ -145,10 +149,9 @@ public class VolumeRenderingView extends DefaultGLFrame {
 		public void setup( ){
 			
 			registerSubController( tf1d, 15 );
+			registerSubController( vr, 25 );
 
 			gui.monShowSimp.addMonitor( this, "simp_sf3d_update" );
-
-			dataM.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
 
 			view_sf3d.addMonitor( vr, "setVolume" );
 			view_sf3d.addMonitor( tf1d, "setData" );
@@ -158,9 +161,11 @@ public class VolumeRenderingView extends DefaultGLFrame {
 		
 		boolean needUpdate = true;
 		
-		/**
-		 * Simp sf 3 d update.
-		 */
+
+		public void setData(DataViewManager dataM) {
+			dataM.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
+		}
+
 		public void simp_sf3d_update( ){
 			needUpdate = true;
 		}

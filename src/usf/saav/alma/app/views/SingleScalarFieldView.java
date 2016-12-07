@@ -2,17 +2,15 @@ package usf.saav.alma.app.views;
 
 import java.util.Map.Entry;
 
-import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.app.AlmaGui;
-import usf.saav.alma.app.AlmaGui.MouseMode;
-import usf.saav.alma.app.AlmaGui.ViewMode;
-import usf.saav.alma.app.DataManager;
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.alma.app.DataViewManager;
+import usf.saav.alma.app.views.AlmaGui.MouseMode;
+import usf.saav.alma.app.views.AlmaGui.ViewMode;
 import usf.saav.alma.data.processors.Extract1Dfrom3D;
 import usf.saav.alma.data.processors.Moment0;
 import usf.saav.alma.data.processors.Moment1;
 import usf.saav.alma.data.processors.Moment2;
+import usf.saav.alma.data.processors.Subsample2D;
+import usf.saav.alma.data.processors.Subsample3D;
 import usf.saav.alma.drawing.ContourTreeDrawing;
 import usf.saav.alma.drawing.HistogramDrawing;
 import usf.saav.alma.drawing.LabelDrawing;
@@ -20,6 +18,7 @@ import usf.saav.alma.drawing.PersistenceDiagramDrawing;
 import usf.saav.alma.drawing.ScalarFieldDrawing;
 import usf.saav.alma.drawing.SpectralLineDrawing;
 import usf.saav.alma.util.ContourTreeThread;
+import usf.saav.common.MathXv1;
 import usf.saav.common.colormap.DivergentColormap;
 import usf.saav.common.monitor.MonitoredObject;
 import usf.saav.common.mvc.ControllerComponent;
@@ -27,6 +26,10 @@ import usf.saav.common.mvc.DefaultGLFrame;
 import usf.saav.common.mvc.PositionedComponent;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.range.FloatRange1D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+import usf.saav.scalarfield.ScalarFieldND;
+import usf.saav.topology.TopoTree;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -55,7 +58,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 	private DivergentColormap colormap = new DivergentColormap.OrangePurple();
 
 	
-	private DataManager dataM;
+	private DataViewManager dataM;
 
 	private ViewMode viewmode = ViewMode.SCALARFIELD;
 
@@ -74,7 +77,6 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 	/**
 	 * Instantiates a new single scalar field view.
 	 *
-	 * @param _dataM the data M
 	 * @param gui the gui
 	 * @param title the title
 	 * @param x the x
@@ -82,20 +84,17 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 	 * @param width the width
 	 * @param height the height
 	 */
-	public SingleScalarFieldView( DataManager _dataM, AlmaGui gui, String title, int x, int y, int width, int height ){
+	public SingleScalarFieldView( AlmaGui gui, String title, int x, int y, int width, int height ){
 		super(title,x,y,width,height);
 		
 		this.gui = gui;
 		
-		dataM = _dataM;
-		dataM.ssfv = this;
-
 		view = new View();
 		controller = new Controller(true);
 		
 		sfv  = new ScalarFieldDrawing( this.graphics );
 		pdd  = new PersistenceDiagramDrawing();
-		ctv  = new ContourTreeDrawing( dataM.curZ );
+
 		hist2d = new HistogramDrawing( 32 );		
 		hist3d = new HistogramDrawing( 32 );
 		lineD  = new SpectralLineDrawing( );
@@ -110,6 +109,18 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			}
 		};
 
+	}
+
+	
+
+
+	public void setData( DataViewManager _dataM ) {
+
+		dataM = _dataM;
+		dataM.ssfv = this;
+
+		ctv  = new ContourTreeDrawing( dataM.curZ );
+
 		sliceLabel = new LabelDrawing.BasicLabel() {
 			@Override public void update( ){
 				label = "Slice: " + dataM.curZ.get( );
@@ -121,9 +132,14 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 				label = "Range: " + dataM.z0.get() + "-" + dataM.z1.get();
 			}
 		};
-
+		
+		((View)getView()).setData(dataM);
+		((Controller)getController()).setData(dataM);
+		
 	}
 
+	
+	
 
 	@Override
 	protected void update() {
@@ -156,11 +172,8 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		 */
 		public View( ){  }
 
-		/* (non-Javadoc)
-		 * @see usf.saav.common.mvc.ViewComponent.Subview#setup()
-		 */
-		public void setup() {
-			
+		public void setData( DataViewManager dataM ){
+			this.unregisterAll( );
 			registerSubView( sfv,   		 10 );
 			registerSubView( ctv,   		 20 );
 			registerSubView( hist2d,		 27 );
@@ -173,7 +186,6 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			registerSubView( sliceLabel,	 55 );
 			registerSubView( rangeLabel,	 60 );
 			
-			super.setup();
 		}
 		
 
@@ -184,17 +196,20 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		public void setPosition( int u0, int v0, int w, int h ){
 			super.setPosition(u0, v0, w, h);
 			
+			//int panelSize = Math.min( 400,  h/4 );
+			int panelSize = h/3;
+			
 			sfv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			ctv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
+			
 			dataM.sel_box.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			dataM.sel_pnt.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 
-			pdd.setPosition( winX.start()+10, winY.start()+10, 200,   200 );
-
-			hist2d.setPosition( winX.start()+10, winY.start()+220, 400,   200 );
-			hist3d.setPosition( winX.start()+10, winY.start()+440, 400,   200 );
+			pdd.setPosition(    winX.start()+10, winY.start()+10, 			  panelSize, panelSize );
+			hist2d.setPosition( winX.start()+10, winY.start()+panelSize+20,   panelSize, panelSize/2 );
+			hist3d.setPosition( winX.start()+10, winY.start()+panelSize*3/2+40, panelSize, panelSize/2 );
 			
-			lineD.setPosition( winX.end()-220, winY.start()+220, 200, 100 );
+			lineD.setPosition( winX.end()-panelSize*3/2-20,   winY.start()+panelSize+20, panelSize*3/2, panelSize );
 
 			sliceLabel.setPosition( winX.start()+10, winY.end()-40, 20, 20 );
 			rangeLabel.setPosition( winX.start()+10, winY.end()-40, 20, 20 );
@@ -243,19 +258,6 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		 */
 		public void setup( ){
 			
-			registerSubController( pdd,   5 );
-			registerSubController( dataM.csCont,		   15 );
-
-			dataM.sel_box.setCoordinateSystem( dataM.csCont );
-			dataM.sel_pnt.setCoordinateSystem( dataM.csCont );
-			ctv.setCoordinateSystem( dataM.csCont );
-
-			dataM.csCont.addTranslationCallback( sfv, "setTranslation" );
-			//dataM.csCont.addTranslationCallback( ctv, "setTranslation" );
-
-			dataM.simp_sf2d.addMonitor( this, "simp_sf2d_update" );
-			dataM.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
-
 			gui.monMM.addMonitor( this, "setMouseMode" );
 			gui.monView.addMonitor( this, "setViewMode" );
 			gui.monShowSimp.addMonitor( this, "setViewRefresh" );
@@ -265,17 +267,37 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			view_sf2d.addMonitor( sfv, "setScalarField" );
 			
 			view_sf3d.addMonitor( hist3d, "setData" );
-			
-			dataM.pss.addMonitor( this,  "need_pdd_update" );
-			
-			dataM.cur_ctt.addMonitor( this, "contourTreeUpdate" );
 
-			//pdd.addPersistentSimplificationCallback( mvc.controller, "setSimplifyScalarField" );
-
-			dataM.sel_pnt.addMonitor( this, "single_line_update" );
-
+			pdd.addPersistentSimplificationCallback( dataM.psm, "refreshSimplification" );
 
 			super.setup();
+
+		}
+		
+		public void setData( DataViewManager dataM ){
+			
+			unregisterAll( );
+			registerSubController( pdd, 		  5 );
+			registerSubController( dataM.csCont, 15 );
+
+			dataM.sel_box.setCoordinateSystem( dataM.csCont );
+			dataM.sel_pnt.setCoordinateSystem( dataM.csCont );
+			ctv.setCoordinateSystem( dataM.csCont );
+
+			dataM.csCont.addDragCallback( sfv, "setTranslation" );
+			dataM.csCont.addZoomCallback( sfv, "adjustZoom" );
+			//dataM.csCont.addTranslationCallback( ctv, "setTranslation" );
+
+			dataM.simp_sf2d.addMonitor( this, "simp_sf2d_update" );
+			dataM.simp_sf3d.addMonitor( this, "simp_sf3d_update" );
+
+
+			dataM.ctm.pss.addMonitor( this,  "need_pdd_update" );
+			
+			dataM.ctm.cur_ctt.addMonitor( this, "contourTreeUpdate" );
+
+
+			dataM.sel_pnt.addMonitor( this, "single_line_update" );
 
 		}
 		
@@ -340,9 +362,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			unregisterSubController( dataM.sel_box );
 			unregisterSubController( dataM.sel_pnt );
 			switch(mm){
-			case NAVIGATE: registerSubController(dataM.csCont, 10 ); break;
-			case SELECT_REGION: registerSubController( dataM.sel_box, 10 ); break;
-			case SELECT_LINE: registerSubController( dataM.sel_pnt, 10 ); break;
+				case NAVIGATE:		registerSubController( dataM.csCont,  10 ); break;
+				case SELECT_REGION: registerSubController( dataM.sel_box, 10 ); break;
+				case SELECT_LINE:	registerSubController( dataM.sel_pnt, 10 ); break;
 			}
 		}
 		
@@ -364,7 +386,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			
 			
 			boolean showCTLabel = false;
-			for( Entry<Integer,ContourTreeThread> ctt : dataM.ctt_map.entrySet() ){
+			for( Entry<Integer,ContourTreeThread> ctt : dataM.ctm.ctt_map.entrySet() ){
 				showCTLabel = showCTLabel || !ctt.getValue().isProcessingComplete();
 			}
 			ctLabel.setEnabled( showCTLabel );
@@ -375,7 +397,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			//setMouseMode( model.gui.monMM.get() );
 			
 			if( needUpdate ) refreshViewSF( );
-			if( needPDDUpdate) pdd.setParameterizations( dataM.cur_ctt.get().getTree(), dataM.pss.get().toArray( new PersistenceSet[dataM.pss.get().size()] ) );
+			if( needPDDUpdate){
+				pdd.setParameterizations( dataM.ctm.cur_ctt.get().getTree(), dataM.ctm.pss.get().toArray( new TopoTree[dataM.ctm.pss.get().size()] ) );
+			}
 
 			needUpdate = false;
 			needPDDUpdate = false;
@@ -384,12 +408,11 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			super.update();
 		}
 
-
 		/**
 		 * Contour tree update.
 		 */
 		public void contourTreeUpdate( ){
-			ContourTreeThread ctt = dataM.cur_ctt.get();
+			ContourTreeThread ctt = dataM.ctm.cur_ctt.get();
 			if( ctt != null ){
 				ctv.setRegion( ctt.getX(), ctt.getY() );
 				ctv.setField( ctt.getScalarField(), ctt.getTree(), ctt.getComponentList(), ctt.getZ() );
@@ -399,28 +422,35 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 				ctv.setField( null, null, null, null );
 			}
 		}
+		
 
 
-		@SuppressWarnings("incomplete-switch")
 		private void refreshViewSF( ){ 
 			//boolean showSimplified = model.gui.monShowSimp.get();
 			boolean showSimplified = true;
 
-			ScalarField2D sf2D = ((showSimplified)?(dataM.simp_sf2d):(dataM.src_sf2d)).get();
-			ScalarField3D sf3D = ((showSimplified)?(dataM.simp_sf3d):(dataM.src_sf3d)).get();
+			ScalarField2D _sf2D = ((showSimplified)?(dataM.simp_sf2d):(dataM.src_sf2d)).get();
+			ScalarField3D _sf3D = ((showSimplified)?(dataM.simp_sf3d):(dataM.src_sf3d)).get();
+ 
+			int stepX = (int)MathXv1.nextLargerPowerOf2( 2.0 * (double)_sf2D.getWidth()  / (double)winX.length() );
+			int stepY = (int)MathXv1.nextLargerPowerOf2( 2.0 * (double)_sf2D.getHeight() / (double)winY.length() );
+			int stepZ = (int)Math.ceil( (float)_sf3D.getDepth()/128.0 );
+
+			ScalarField2D red2D = new Subsample2D( _sf2D, stepX, stepY );
+			ScalarField3D red3D = new Subsample3D( _sf3D, stepX, stepY, stepZ );
 
 			switch(viewmode){
-			case SCALARFIELD: view_sf2d.set( sf2D );			    break;
-			case MOMENT0: 	  view_sf2d.set( new Moment0( sf3D ) ); break;
-			case MOMENT1: 	  view_sf2d.set( new Moment1( sf3D ) ); break;
-			case MOMENT2: 	  view_sf2d.set( new Moment2( sf3D ) ); break;
+			case SCALARFIELD: view_sf2d.set( red2D );			    break;
+			case MOMENT0: 	  view_sf2d.set( new Moment0( red3D ) ); break;
+			case MOMENT1: 	  view_sf2d.set( new Moment1( red3D ) ); break;
+			case MOMENT2: 	  view_sf2d.set( new Moment2( red3D ) ); break;
 			default: break;
 			}
-			view_sf3d.set( sf3D );
+			view_sf3d.set( red3D );
 
 			// update the color maps
+			double [] r = ScalarFieldND.Default.getValueRange( view_sf2d.get() );
 			if( COLORMAP_GLOBAL ){
-				double [] r = view_sf2d.get().getValueRange();
 				FloatRange1D selRange = null;
 				
 				switch(viewmode){
@@ -430,10 +460,11 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 					case SCALARFIELD: selRange = sf_range; break;
 				}
 				selRange.expand( r );
+				selRange.expand( 0 );
 				colormap.setRange( selRange );
-			}
+			} 
 			else{
-				colormap.setRange( new FloatRange1D( view_sf2d.get().getValueRange() ) );
+				colormap.setRange( new FloatRange1D( r ) );
 			}
 		}
 
@@ -444,6 +475,8 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		@Override
 		public boolean keyPressed( char key ){
 			if( super.keyPressed(key) ) return true;
+			if( key == '-' ){ dataM.curZ.decr(); return true; }
+			if( key == '+' ){ dataM.curZ.incr(); return true; }
 			return false;
 		}
 	}

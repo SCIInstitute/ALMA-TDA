@@ -26,7 +26,7 @@ package processing.core;
 
 import java.io.Serializable;
 
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
 
 /**
  * ( begin auto-generated from PVector.xml )
@@ -823,9 +823,9 @@ public class PVector implements Serializable {
    * @see PApplet#lerp(float, float, float)
    */
   public PVector lerp(PVector v, float amt) {
-    x = MathX.lerp(x, v.x, amt);
-    y = MathX.lerp(y, v.y, amt);
-    z = MathX.lerp(z, v.z, amt);
+    x = MathXv1.lerp(x, v.x, amt);
+    y = MathXv1.lerp(y, v.y, amt);
+    z = MathXv1.lerp(z, v.z, amt);
     return this;
   }
 
@@ -849,9 +849,9 @@ public class PVector implements Serializable {
    * @param z the z component to lerp to
    */
   public PVector lerp(float x, float y, float z, float amt) {
-    this.x = MathX.lerp(this.x, x, amt);
-    this.y = MathX.lerp(this.y, y, amt);
-    this.z = MathX.lerp(this.z, z, amt);
+    this.x = MathXv1.lerp(this.x, x, amt);
+    this.y = MathXv1.lerp(this.y, y, amt);
+    this.z = MathXv1.lerp(this.z, z, amt);
     return this;
   }
 

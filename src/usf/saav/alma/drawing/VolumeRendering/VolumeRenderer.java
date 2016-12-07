@@ -31,14 +31,13 @@ import static org.jocl.CL.CL_MEM_READ_ONLY;
 import static org.jocl.CL.CL_MEM_WRITE_ONLY;
 import static org.jocl.CL.CL_RGBA;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.jocl.cl_image_format;
 import org.jocl.cl_sampler;
 
 import processing.core.PMatrix3D;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.common.SystemX;
 import usf.saav.common.jocl.joclController;
 import usf.saav.common.jocl.joclDevice;
 import usf.saav.common.jocl.joclException;
@@ -51,6 +50,7 @@ import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.mvc.swing.TImage;
 import usf.saav.common.types.Float4;
+import usf.saav.scalarfield.ScalarField3D;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -100,38 +100,41 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		this.platform = jocl.getPlatform(0);
 		this.res = res;
 
-		init( new File("/Users/prosen/Code/alma/src/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl") );
-
-		matrixView.translate(0, 0, -4);
-	}
-
-	private void init( File program ){
-
 		try {
-			for(int d = 0; d < platform.getDeviceCount(); d++){
-				joclDevice _device = platform.getDevice(d);
-				if( device == null ) device = _device;
-				else if( _device.isAccelerator() ) device = _device;
-				else if( _device.isGPU() && device.isCPU() ) device = _device;
-			}
-			kernel   = device.buildProgram(program, "d_render");
-
-			print_info_message(device.toString());
-
+			init( SystemX.readFileContents( getClass().getResourceAsStream("/usf/saav/alma/drawing/VolumeRendering/volumeRender.cl") ) );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		matrixView.translate(0, 0, -4);
+	}
+
+	private void init( String [] program ){
+
+		for(int d = 0; d < platform.getDeviceCount(); d++){
+			joclDevice _device = platform.getDevice(d);
+			if( device == null ) device = _device;
+			else if( _device.isAccelerator() ) device = _device;
+			else if( _device.isGPU() && device.isCPU() ) device = _device;
+		}
+		kernel   = device.buildProgram(program, "d_render");
+
+		print_info_message(device.toString());
 
 		// Create samplers for transfer function, linear interpolation and nearest interpolation
 		try {
-			d_invViewMatrix 	 = device.CreateBuffer( CL_MEM_READ_ONLY, 12*4 );
-			transferFuncSampler  = device.CreateSampler( true, CL_ADDRESS_CLAMP_TO_EDGE, CL_FILTER_LINEAR);
-			volumeSamplerLinear  = device.CreateSampler( true, CL_ADDRESS_REPEAT, CL_FILTER_LINEAR);
-			volumeSamplerNearest = device.CreateSampler( true, CL_ADDRESS_REPEAT, CL_FILTER_NEAREST);
-			d_output = device.CreateBuffer( CL_MEM_WRITE_ONLY, res*res*4 );
+			d_invViewMatrix 	 = device.createBuffer( "d_invViewMatrix", CL_MEM_READ_ONLY, 12*4 );
+			transferFuncSampler  = device.createSampler( true, CL_ADDRESS_CLAMP_TO_EDGE, CL_FILTER_LINEAR);
+			volumeSamplerLinear  = device.createSampler( true, CL_ADDRESS_REPEAT, CL_FILTER_LINEAR);
+			volumeSamplerNearest = device.createSampler( true, CL_ADDRESS_REPEAT, CL_FILTER_NEAREST);
+			d_output = device.createBuffer( "d_invViewMatrix", CL_MEM_WRITE_ONLY, res*res*4 );
 		} catch (joclException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void tfUpdate( ){
+		needUpdate = true;
 	}
 
 	/**
@@ -145,6 +148,8 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		if( tf == null ){
 			return;
 		}
+		
+		tf.addModifiedCallback( this,  "tfUpdate" );
 
 		// create transfer function texture
 		float transferFunc[] = new float[tf.size()*4];
@@ -161,7 +166,7 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		transferFunc_format.image_channel_data_type = CL_FLOAT;
 
 		try {
-			d_transferFuncArray = device.CreateImage2D( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, transferFunc_format, transferFunc.length/4, 1, transferFunc);
+			d_transferFuncArray = device.createImage2D( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, transferFunc_format, transferFunc.length/4, 1, transferFunc);
 		} catch (joclException e) {
 			e.printStackTrace();
 		}
@@ -196,7 +201,7 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		volume_format.image_channel_data_type = CL_FLOAT;
 
 		try {
-			d_volumeArray = device.CreateImage3D( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
+			d_volumeArray = device.createImage3D( CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
 					volume_format, sf.getWidth(), sf.getHeight(), sf.getDepth(),
 					h_tempVolume );
 		} catch (joclException e) {
@@ -213,7 +218,7 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		if( tf == null ) return;
 		if( sf == null ) return;
 		if( !needUpdate ) return;
-
+		
 		float [] invViewMatrix = new float[12];
 		PMatrix3D matrixMVP = new PMatrix3D();
 		matrixMVP.apply( matrixView );
@@ -235,24 +240,24 @@ public class VolumeRenderer extends ControllerComponent.Default implements ViewC
 		}
 
 		try {
-			d_invViewMatrix.EnqueueWriteBuffer( false, invViewMatrix );
+			d_invViewMatrix.enqueueWriteBuffer( false, invViewMatrix );
 			d_transferFuncArray.EnqueueWriteImage( true, transferFunc );
 
 			int arg = 0;
-			kernel.SetKernelArg( arg++, d_output );
-			kernel.SetKernelArg( arg++, res );
-			kernel.SetKernelArg( arg++, res );
-			kernel.SetKernelArg( arg++, tf.getOffset() );
-			kernel.SetKernelArg( arg++, tf.getScale() );
-			kernel.SetKernelArg( arg++, d_invViewMatrix );
-			kernel.SetKernelArg( arg++, d_volumeArray );
-			kernel.SetKernelArg( arg++, d_transferFuncArray );
-			kernel.SetKernelArg( arg++, linearFiltering ? volumeSamplerLinear : volumeSamplerNearest );
-			kernel.SetKernelArg( arg++, transferFuncSampler );
-			kernel.EnqueueNDRangeKernel( new long[]{res,res} );
+			kernel.setKernelArg( arg++, d_output );
+			kernel.setKernelArg( arg++, res );
+			kernel.setKernelArg( arg++, res );
+			kernel.setKernelArg( arg++, tf.getOffset() );
+			kernel.setKernelArg( arg++, tf.getScale() );
+			kernel.setKernelArg( arg++, d_invViewMatrix );
+			kernel.setKernelArg( arg++, d_volumeArray );
+			kernel.setKernelArg( arg++, d_transferFuncArray );
+			kernel.setKernelArg( arg++, linearFiltering ? volumeSamplerLinear : volumeSamplerNearest );
+			kernel.setKernelArg( arg++, transferFuncSampler );
+			kernel.enqueueNDRangeKernel( new long[]{res,res} );
 
 			if( img == null ) img = papplet.createImage( res, res, TGraphics.RGB);
-			d_output.EnqueueReadBuffer( true, img.getPixels() );
+			d_output.enqueueReadBuffer( true, img.getPixels() );
 			img.update();
 
 		} catch (joclException e) {

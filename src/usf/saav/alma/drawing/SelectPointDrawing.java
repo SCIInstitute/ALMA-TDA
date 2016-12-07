@@ -63,11 +63,13 @@ public class SelectPointDrawing  extends ControllerComponent.Default implements 
 			float x0 = xy0[0];
 			float y0 = xy0[1];
 			
+			g.hint(TGraphics.DISABLE_DEPTH_TEST);
 			g.strokeWeight(3);
 			g.noFill();
 			g.stroke( 255, 0, 0 );
 			g.rect( x0-4, y0-4, 8, 8 );
 			g.strokeWeight(1);
+			g.hint(TGraphics.ENABLE_DEPTH_TEST);
 			
 		}
 	}

@@ -23,10 +23,10 @@ package usf.saav.alma.data.fits;
 import java.io.File;
 import java.io.IOException;
 
-import usf.saav.alma.data.ScalarField1D;
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.scalarfield.ScalarField1D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -59,57 +59,28 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 	public IntRange1D[] getAxesSize() {
 		return reader.getAxesSize();
 	}
-
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.fits.FitsReader#getElement(int, int, int, int)
-	 */
+	
 	@Override
-	public float getElement(int x, int y, int z, int w) {
-		if( !reader.getAxesSize()[0].inRange(x) ) return Float.NaN;
-		if( !reader.getAxesSize()[1].inRange(y) ) return Float.NaN;
-		if( !reader.getAxesSize()[2].inRange(z) ) return Float.NaN;
-		if( !reader.getAxesSize()[3].inRange(w) ) return Float.NaN;
-		return reader.getElement(x, y, z, w);
+	public FitsHistory getHistory( ){
+		return reader.getHistory();
+	}
+	
+	@Override
+	public FitsProperties getProperties( ){
+		return reader.getProperties();
+	}
+	
+	@Override
+	public FitsTable getTable( ){
+		return reader.getTable();
+	}
+	
+
+	@Override
+	public void close() {
+		reader.close();
 	}
 
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.fits.FitsReader#getRow(usf.saav.common.range.IntRange1D, int, int, int)
-	 */
-	@Override
-	public ScalarField1D getRow(IntRange1D x_range, int y, int z, int w) throws IOException {
-		if( !reader.getAxesSize()[1].inRange(y) ) return new ScalarField1D.Empty( x_range.length(), Float.NaN );
-		if( !reader.getAxesSize()[2].inRange(z) ) return new ScalarField1D.Empty( x_range.length(), Float.NaN );
-		if( !reader.getAxesSize()[3].inRange(w) ) return new ScalarField1D.Empty( x_range.length(), Float.NaN );
-
-		// TODO: Make this safe
-		return reader.getRow(x_range, y, z, w);
-	}
-
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.fits.FitsReader#getColumn(int, usf.saav.common.range.IntRange1D, int, int)
-	 */
-	@Override
-	public ScalarField1D getColumn(int x, IntRange1D y_range, int z, int w) throws IOException {
-		if( !reader.getAxesSize()[0].inRange(x) ) return new ScalarField1D.Empty( y_range.length(), Float.NaN );
-		if( !reader.getAxesSize()[2].inRange(z) ) return new ScalarField1D.Empty( y_range.length(), Float.NaN );
-		if( !reader.getAxesSize()[3].inRange(w) ) return new ScalarField1D.Empty( y_range.length(), Float.NaN );
-
-		// TODO: Make this safe
-		return reader.getColumn(x, y_range, z, w);
-	}
-
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.fits.FitsReader#getLine(int, int, usf.saav.common.range.IntRange1D, int)
-	 */
-	@Override
-	public ScalarField1D getLine(int x, int y, IntRange1D z_range, int w) throws IOException {
-		if( !reader.getAxesSize()[0].inRange(x) ) return new ScalarField1D.Empty( z_range.length(), Float.NaN );
-		if( !reader.getAxesSize()[1].inRange(y) ) return new ScalarField1D.Empty( z_range.length(), Float.NaN );
-		if( !reader.getAxesSize()[3].inRange(w) ) return new ScalarField1D.Empty( z_range.length(), Float.NaN );
-
-		// TODO: Make this safe
-		return reader.getLine(x, y, z_range, w);
-	}
 
 	/* (non-Javadoc)
 	 * @see usf.saav.alma.data.fits.FitsReader#getSlice(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int, int)
@@ -163,7 +134,7 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 			baseVolume = reader.getVolume(subVolRX, subVolRY, subVolRZ, w);
 		}
 		
-		@Override public double [] getCoordinate( int x, int y, int z ){ return baseVolume.getCoordinate(x, y, z); }
+		//@Override public double [] getCoordinate( int x, int y, int z ){ return baseVolume.getCoordinate(x, y, z); }
 		@Override public int getWidth() {  return rx.length(); }
 		@Override public int getHeight() { return ry.length(); }
 		@Override public int getDepth() {  return rz.length(); }
@@ -218,4 +189,7 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 			return baseSlice.getValue(x-ox, y-oy);
 		}
 	}
+
+	
 }
+

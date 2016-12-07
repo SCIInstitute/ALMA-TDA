@@ -73,19 +73,25 @@ public class SelectBoxDrawing extends ControllerComponent.Default implements Vie
 	public void draw(TGraphics g) {
 		if( validSel ){
 
-			float[] xy0 = cs.getWindowPosition( selU0, selV0);
-			float[] xy1 = cs.getWindowPosition( selU1, selV1);
+			float[] xy0 = cs.getWindowPosition( selU0, selV0 );
+			float[] xy1 = cs.getWindowPosition( selU1, selV1 );
 
-			float x0 = xy0[0];
-			float x1 = xy1[0];
-			float y0 = xy0[1];
-			float y1 = xy1[1];
+			float x0 = Math.min(xy0[0],xy1[0]);
+			float x1 = Math.max(xy0[0],xy1[0]);
+			float y0 = Math.min(xy0[1],xy1[1]);
+			float y1 = Math.max(xy0[1],xy1[1]);
+			
+			//System.out.println( Arrays.toString(this.getPosition()) );
+			//System.out.println( "(" + x0 + "," + y0 + ") " + "(" + x1 + "," + y1 + ")");
 
+			g.hint( TGraphics.DISABLE_DEPTH_TEST );
 			g.strokeWeight(5);
 			g.noFill();
 			g.stroke( 255, 0, 0 );
 			g.rect( x0, y0, x1-x0, y1-y0 );
 			g.strokeWeight(1);
+			g.hint( TGraphics.ENABLE_DEPTH_TEST );
+
 		}
 	}
 

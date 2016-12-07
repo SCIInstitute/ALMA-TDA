@@ -28,6 +28,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
+import usf.saav.common.MathXv1;
 import usf.saav.common.types.Float4;
 
 public abstract class TGraphics implements GLEventListener, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
@@ -197,6 +198,26 @@ public abstract class TGraphics implements GLEventListener, MouseListener, Mouse
 	private Float4  strokeColor = new Float4(0,0,0,1);
 	private float   strokeWeight = 1;
 	
+
+
+	public static int color(float x, float y, float z, float w) {
+		return color( (int)(x*255), (int)(y*255), (int)(z*255), (int)(w*255) );
+	}
+
+	public static int color( int r, int g, int b, int a ){
+		
+		r = MathXv1.clamp(r, 0, 255);
+		g = MathXv1.clamp(g, 0, 255);
+		b = MathXv1.clamp(b, 0, 255);
+		a = MathXv1.clamp(a, 0, 255);
+		
+		int col = ((r&0xFF) << 16)
+				| ((g&0xFF) <<  8)
+				| ((b&0xFF) <<  0)
+				| ((a&0xFF) << 24);
+		
+		return col;
+	}
 
 	
 	public void noStroke( ){ strokeEnable = false; }
@@ -416,18 +437,38 @@ public abstract class TGraphics implements GLEventListener, MouseListener, Mouse
 		
 	}
 
-	public void ellipse(float px, float py, float size, float size2) {
-		// TODO Auto-generated method stub
+	public void ellipse(float px, float py, float sizeX, float sizeY, int detail ) {
+		int steps = detail;
 		
+		if( fillEnable ){
+			gl.glColor4f( fillColor.x, fillColor.y, fillColor.z, fillColor.w );
+			gl.glBegin( GL2ES3.GL_TRIANGLE_FAN );
+			gl.glVertex3d( px,  py, 0 );
+			for(int i = 0; i < steps; i++){
+				float a = 2.0f*(float)Math.PI*(float)i/(float)(steps-1);
+				gl.glVertex3d( px+sizeX*Math.cos(a),  py+sizeY*Math.sin(a), 0 );
+			}
+			gl.glEnd();
+		}
+		
+		if( strokeEnable ){
+			gl.glColor4f( strokeColor.x, strokeColor.y, strokeColor.z, strokeColor.w );
+			gl.glLineWidth( strokeWeight );
+			gl.glBegin( GL2ES3.GL_LINE_STRIP );
+			for(int i = 0; i < steps; i++){
+				float a = 2.0f*(float)Math.PI*(float)i/(float)(steps-1);
+				gl.glVertex3d( px+sizeX*Math.cos(a),  py+sizeY*Math.sin(a), 0 );
+			}
+			gl.glEnd();
+		}	
+	}
+	
+	public void ellipse(float px, float py, float sizeX, float sizeY) {
+		ellipse( px,py,sizeX,sizeY, (int) Math.pow(2,this.sphereDetail));
 	}
 
 	public TImage createImage(int img_w, int img_h, int img_type ) {
 		return new TImage( profile, img_w, img_h );
-	}
-
-	public static int color(float x, float y, float z, float w) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	

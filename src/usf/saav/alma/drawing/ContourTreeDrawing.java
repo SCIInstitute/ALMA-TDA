@@ -22,16 +22,19 @@ package usf.saav.alma.drawing;
 
 import java.util.Set;
 
-import usf.saav.alma.algorithm.mesh.Mesh;
-import usf.saav.alma.algorithm.topology.AugmentedJoinTreeNode;
-import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.data.ScalarFieldND;
 import usf.saav.alma.util.CoordinateSystem;
-import usf.saav.common.MathX;
+import usf.saav.common.MathXv1;
 import usf.saav.common.monitor.MonitoredInteger;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.mesh.Mesh;
+import usf.saav.mesh.Mesh.Vertex;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+import usf.saav.scalarfield.ScalarFieldND;
+import usf.saav.topology.TopoTree;
+import usf.saav.topology.TopoTreeNode;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,8 +43,8 @@ import usf.saav.common.range.IntRange1D;
 public class ContourTreeDrawing extends ViewComponent.Default implements ViewComponent {
 
 	private ScalarFieldND  sf;
-	private PersistenceSet ct;
-	private Mesh  cl;
+	private TopoTree ct;
+	private usf.saav.mesh.Mesh  cl;
 	private Set<Integer>   selected;
 	//private int tx = 0, ty = 0;
 	//private MonitoredInteger x,y;
@@ -97,7 +100,7 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 	 * @param cl the cl
 	 * @param zr the zr
 	 */
-	public void setField( ScalarFieldND sf, PersistenceSet ct, Mesh cl, IntRange1D zr ){
+	public void setField( ScalarFieldND sf, TopoTree ct, Mesh cl, IntRange1D zr ){
 		this.ct = ct;
 		this.sf = sf;
 		this.cl = cl;
@@ -155,12 +158,17 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 		float y0 = p0[1];
 		float y1 = p1[1];
 
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 		g.strokeWeight(3);
 		g.stroke(0);
 		g.noFill();
 		g.rect( x0, y0, (x1-x0), (y1-y0) );
+		g.hint( TGraphics.ENABLE_DEPTH_TEST );
+
 
 		if( sf == null || cl == null || ct == null ) return;
+		
+		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 
 		g.strokeWeight(1);
 		g.stroke(0);
@@ -169,18 +177,18 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 
 			for(int i = 0; i < ct.size(); i++){
 				if( !ct.isActive(i) ) continue;
-				AugmentedJoinTreeNode n = ct.getNode(i);
+				TopoTreeNode n = ct.getNode(i);
 				float per = n.getPersistence();
 				if( Float.isNaN(per) ){
 					per = -1;
 				}
 
-				float [] pos = Mesh.getComponentMidpoint( cl.get(n.getLocation()), sf );
+				float [] pos = getComponentMidpoint( cl.get(n.getPosition()), sf );
 
 				if( selected.contains(i) ) g.strokeWeight(3);
-				float size = MathX.lerp(2,15,per/maxPersistence);
-				if( Float.isNaN(size) ) size = 2;
-				if( size > 15 ) size = 20;
+				float size = MathXv1.lerp(4,10,per/maxPersistence);
+				if( Float.isNaN(size) ) size = 4;
+				if( size > 10 ) size = 10;
 
 
 				switch( n.getType() ){
@@ -189,7 +197,7 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 				case MERGE:  g.fill(255,255,  0); break;
 				case SPLIT:  g.fill(255,  0,255); break;
 				default:     g.fill(255,  0,  0);
-							 size = 20;
+							 size = 10;
 							 break;
 				}
 
@@ -201,11 +209,14 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 				float py = pp[1];
 
 				if( winX.inRange( (float)px ) && winY.inRange( (float)py ) )
-					g.ellipse( (float)px, (float)py, size, size);
+					g.ellipse( (float)px, (float)py, size, size, (int)(size*1.5) );
 
 				if( selected.contains(i) ) g.strokeWeight(1);
 
 			}
+			
+			g.hint( TGraphics.ENABLE_DEPTH_TEST );
+
 	}
 	
 	/* (non-Javadoc)
@@ -239,4 +250,45 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 
 	}
+	
+	
+	/**
+	 * Gets the component midpoint.
+	 *
+	 * @param c the c
+	 * @param sf the sf
+	 * @return the component midpoint
+	 */
+	private static float [] getComponentMidpoint( Vertex c, ScalarFieldND sf ){
+		if( sf instanceof ScalarField2D ){
+			return getComponentMidpoint( c, ((ScalarField2D)sf).getWidth(), ((ScalarField2D)sf).getHeight() );
+		}
+		if( sf instanceof ScalarField3D ){
+			return getComponentMidpoint( c, ((ScalarField3D)sf).getWidth(), ((ScalarField3D)sf).getHeight() );
+		}
+		return null;
+	}
+
+	/**
+	 * Gets the component midpoint.
+	 *
+	 * @param c the c
+	 * @param width the width
+	 * @param height the height
+	 * @return the component midpoint
+	 */
+	private static float [] getComponentMidpoint( Vertex c, int width, int height ){
+		float retX = 0, retY = 0, retZ = 0;
+		int cnt = 0;
+		int slc = width*height;
+		for( int p : c.positions() ){
+			retX += (p%slc)%width;
+			retY += (p%slc)/width;
+			retZ += p/slc;
+			cnt++;
+		}
+		return new float[]{retX/cnt,retY/cnt,retZ/cnt};
+	}
+	
+	
 }

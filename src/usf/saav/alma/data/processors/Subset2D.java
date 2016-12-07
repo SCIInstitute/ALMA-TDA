@@ -20,7 +20,8 @@
  */
 package usf.saav.alma.data.processors;
 
-import usf.saav.alma.data.ScalarField2D;
+import usf.saav.common.range.IntRange1D;
+import usf.saav.scalarfield.ScalarField2D;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -66,6 +67,16 @@ public class Subset2D extends ScalarField2D.Default {
 			this.y0 = y_range[0];
 			this.yN = y_range[1]-y_range[0]+1;
 		}
+	}
+
+	public Subset2D( ScalarField2D src, IntRange1D x_range, IntRange1D y_range ){
+		this.src = src;
+		this.x0 = x_range.start();
+		this.xN = x_range.length();
+		
+		this.y0 = y_range.start();
+		this.yN = y_range.length();
+
 	}
 
 	/* (non-Javadoc)

@@ -22,8 +22,9 @@ package usf.saav.alma.data.processors;
 
 import java.util.Arrays;
 
-import usf.saav.alma.data.ScalarField2D;
-import usf.saav.alma.data.ScalarField3D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,6 +35,7 @@ public class Moment2 extends ScalarField2D.Default {
 	int w,h;
 	double [] data;
 	ScalarField3D src;
+	Moment0 m0;
 	Moment1 m1;
 
 	/**
@@ -42,23 +44,18 @@ public class Moment2 extends ScalarField2D.Default {
 	 * @param src the src
 	 */
 	public Moment2( ScalarField3D src ){
-		init( src, new Moment1(src) );
+		this( src, new Moment0(src) );
 	}
 
-	/**
-	 * Instantiates a new moment 2.
-	 *
-	 * @param src the src
-	 * @param mom1 the mom 1
-	 */
-	public Moment2( ScalarField3D src, Moment1 mom1 ){
-		init( src, mom1 );
+	public Moment2( ScalarField3D src, Moment0 mom0 ){
+		this( src,mom0,new Moment1(src,mom0));
 	}
 
-	private void init( ScalarField3D src, Moment1 mom1 ){
+	public Moment2( ScalarField3D src, Moment0 mom0, Moment1 mom1 ){
 
 		this.src = src;
-		this.m1  = mom1;
+		this.m0 = mom0;
+		this.m1 = mom1;
 		w = src.getWidth();
 		h = src.getHeight();
 		data = new double[w*h];
@@ -83,6 +80,9 @@ public class Moment2 extends ScalarField2D.Default {
 		if( Double.isNaN(data[y*w+x]) ){
 			double denom = 0;
 			data[y*w+x] = 0;
+			
+			//if( m0.getValue(x,y) < 2.5 ) return (float) data[y*w+x];
+
 
 			for( int z = 0; z < src.getDepth(); z++){
 						double m = m1.getValue(x, y);
@@ -95,10 +95,4 @@ public class Moment2 extends ScalarField2D.Default {
 		return (float) data[y*w+x];
 	}
 
-	/* (non-Javadoc)
-	 * @see usf.saav.alma.data.ScalarField2D.Default#getCoordinate(int, int)
-	 */
-	@Override public double[] getCoordinate(int x, int y) {
-		return Arrays.copyOf(src.getCoordinate(x, y, 0),2);
-	}
 }

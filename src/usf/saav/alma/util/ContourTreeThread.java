@@ -20,18 +20,23 @@
  */
 package usf.saav.alma.util;
 
-import java.io.IOException;
-
-import usf.saav.alma.algorithm.mesh.Mesh;
-import usf.saav.alma.algorithm.mesh.ConnectedComponentMesh;
-import usf.saav.alma.algorithm.mesh.ScalarFieldMesh;
-import usf.saav.alma.algorithm.topology.PersistenceSet;
-import usf.saav.alma.algorithm.topology.PseudoContourTree;
-import usf.saav.alma.data.ScalarFieldND;
-import usf.saav.alma.data.fits.FitsReader;
+import usf.saav.scalarfield.ScalarField1D;
+import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.ScalarField3D;
+import usf.saav.scalarfield.ScalarFieldND;
+import usf.saav.alma.data.processors.Extract1Dfrom3D;
+import usf.saav.alma.data.processors.Extract2DFrom3D;
+import usf.saav.alma.data.processors.Subset1D;
+import usf.saav.alma.data.processors.Subset2D;
+import usf.saav.alma.data.processors.Subset3D;
 import usf.saav.common.BasicObject;
 import usf.saav.common.Callback;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.mesh.ConnectedComponentMesh;
+import usf.saav.mesh.Mesh;
+import usf.saav.mesh.ScalarFieldMesh;
+import usf.saav.topology.TopoTree;
+import usf.saav.topology.contour.PseudoContourTree;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -47,42 +52,55 @@ public class ContourTreeThread extends BasicObject implements Runnable {
 	private Callback cb = null;
 	private boolean ready = false;
 
-	/**
-	 * Instantiates a new contour tree thread.
-	 *
-	 * @param fits the fits
-	 * @param rx the rx
-	 * @param ry the ry
-	 * @param z the z
-	 */
-	public ContourTreeThread( FitsReader fits, IntRange1D rx, IntRange1D ry, int z ){
-		this(fits,rx,ry,z,true);
+/**
+ * Instantiates a new contour tree thread.
+ *
+ * @param fits the fits
+ * @param rx the rx
+ * @param ry the ry
+ * @param z the z
+ */
+	/*
+	public ContourTreeThread( ScalarField3D fits, int rx, int ry, IntRange1D rz ){
+		this(fits,rx,ry,rz,true);
 	}
+	*/
 
-	/**
-	 * Instantiates a new contour tree thread.
-	 *
-	 * @param fits the fits
-	 * @param rx the rx
-	 * @param ry the ry
-	 * @param z the z
-	 * @param verbose the verbose
-	 */
-	public ContourTreeThread( FitsReader fits, IntRange1D rx, IntRange1D ry, int z, boolean verbose ){
+/**
+ * Instantiates a new contour tree thread.
+ *
+ * @param fits the fits
+ * @param rx the rx
+ * @param ry the ry
+ * @param z the z
+ * @param verbose the verbose
+ */
+	
+	
+	public ContourTreeThread( ScalarField3D fits, int rx, int ry, IntRange1D rz, boolean verbose ){
 		super(verbose);
 
-		print_info_message("Building 2D Contour Tree");
+		this.rx = new IntRange1D(rx,rx);
+		this.ry = new IntRange1D(ry,ry);
+		this.rz = rz;
+		
+		sf = new Subset1D( new Extract1Dfrom3D( fits, rx, ry ), rz );
+
+	}
+		
+	public ContourTreeThread( ScalarField3D fits, IntRange1D rx, IntRange1D ry, int z ){
+		this(fits,rx,ry,z,true);
+	}
+	public ContourTreeThread( ScalarField3D fits, IntRange1D rx, IntRange1D ry, int z, boolean verbose ){
+		super(verbose);
 
 		this.rx = rx;
 		this.ry = ry;
 		this.rz = new IntRange1D(z,z);
-
-		try {
-			sf = fits.getSlice( rx, ry, z, 0 );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
+		sf = new Subset2D( new Extract2DFrom3D( fits, z ), rx, ry );
 	}
+	
 
 	/**
 	 * Instantiates a new contour tree thread.
@@ -92,7 +110,7 @@ public class ContourTreeThread extends BasicObject implements Runnable {
 	 * @param ry the ry
 	 * @param rz the rz
 	 */
-	public ContourTreeThread( FitsReader fits, IntRange1D rx, IntRange1D ry, IntRange1D rz ){
+	public ContourTreeThread( ScalarField3D fits, IntRange1D rx, IntRange1D ry, IntRange1D rz ){
 		this(fits,rx,ry,rz,true);
 	}
 
@@ -105,20 +123,14 @@ public class ContourTreeThread extends BasicObject implements Runnable {
 	 * @param rz the rz
 	 * @param verbose the verbose
 	 */
-	public ContourTreeThread( FitsReader fits, IntRange1D rx, IntRange1D ry, IntRange1D rz, boolean verbose ){
+	public ContourTreeThread( ScalarField3D fits, IntRange1D rx, IntRange1D ry, IntRange1D rz, boolean verbose ){
 		super(verbose);
-
-		print_info_message("Building 3D Contour Tree");
 
 		this.rx = rx;
 		this.ry = ry;
 		this.rz = rz;
+		this.sf = new Subset3D( fits,rx,ry,rz );
 
-		try {
-			sf = fits.getVolume( rx, ry, rz, 0 );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/* (non-Javadoc)
@@ -127,8 +139,25 @@ public class ContourTreeThread extends BasicObject implements Runnable {
 	@Override
 	public void run() {
 		if( sf == null ) return;
+		
+		
 
+		if( sf instanceof ScalarField1D ) print_info_message("Building 1D Contour Tree of " + rx.length()*ry.length()*rz.length() + " elements");
+		if( sf instanceof ScalarField2D ) print_info_message("Building 2D Contour Tree of " + rx.length()*ry.length()*rz.length() + " elements");
+		if( sf instanceof ScalarField3D ) print_info_message("Building 3D Contour Tree of " + rx.length()*ry.length()*rz.length() + " elements");
+		
+		print_info_message( sf.getSize() );
+		try{
+		print_info_message( sf.getValue(0) );
+		print_info_message( sf.getValue(1) );
+		print_info_message( sf.getValue(2) );
+		} catch (Exception e ){
+			e.printStackTrace();
+		}
+		
+		print_info_message("Constructing Mesh");
 		cl = new ConnectedComponentMesh( new ScalarFieldMesh( sf ) );
+		print_info_message("Constructing Tree");
 		ct = new PseudoContourTree( cl );
 		print_info_message("Contour Tree Construction Complete");
 
@@ -138,54 +167,14 @@ public class ContourTreeThread extends BasicObject implements Runnable {
 		}
 	}
 
-	/**
-	 * Gets the tree.
-	 *
-	 * @return the tree
-	 */
-	public PersistenceSet getTree( ){		  return ct; }
-	
-	/**
-	 * Gets the component list.
-	 *
-	 * @return the component list
-	 */
-	public Mesh  getComponentList(){ return cl; }
-	
-	/**
-	 * Gets the x.
-	 *
-	 * @return the x
-	 */
-	public IntRange1D	  getX( ){			  return rx; }
-	
-	/**
-	 * Gets the y.
-	 *
-	 * @return the y
-	 */
-	public IntRange1D	  getY( ){			  return ry; }
-	
-	/**
-	 * Gets the z.
-	 *
-	 * @return the z
-	 */
-	public IntRange1D	  getZ( ){			  return rz; }
-	
-	/**
-	 * Gets the scalar field.
-	 *
-	 * @return the scalar field
-	 */
-	public ScalarFieldND  getScalarField( ){  return sf; }
-	
-	/**
-	 * Checks if is processing complete.
-	 *
-	 * @return true, if is processing complete
-	 */
-	public boolean isProcessingComplete( ){ return ready; }
+
+	public TopoTree       getTree( ){			   return ct; }
+	public Mesh           getComponentList(){	   return cl; }
+	public IntRange1D	  getX( ){				   return rx; }
+	public IntRange1D	  getY( ){				   return ry; }
+	public IntRange1D	  getZ( ){				   return rz; }
+	public ScalarFieldND  getScalarField( ){       return sf; }
+	public boolean        isProcessingComplete( ){ return ready; }
 
 	/**
 	 * Sets the callback.
