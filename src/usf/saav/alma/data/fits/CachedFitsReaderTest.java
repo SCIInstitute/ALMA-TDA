@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import nom.tam.fits.common.FitsException;
 import usf.saav.alma.data.ScalarField1D;
+import usf.saav.alma.data.ScalarField2D;
+import usf.saav.alma.data.ScalarField3D;
 import usf.saav.common.range.IntRange1D;
 
 public class CachedFitsReaderTest {
@@ -105,13 +107,28 @@ public class CachedFitsReaderTest {
 	}
 
 	@Test
-	public void testGetSlice() {
-		fail("Not yet implemented");
+	public void testGetSlice() throws IOException {
+		
+		ScalarField2D fullSlice = reader.getSlice(0, 0);
+		assertTrue(fullSlice instanceof CachedFitsReader.CachedSlice);
+		assertEquals(256, fullSlice.getWidth());
+		assertEquals(256, fullSlice.getHeight());
+		assertEquals(256*256, fullSlice.getSize());
+		assertEquals(fullSlice.getValue(250, 30), 0.005653, 1e-6);
+		assertEquals(fullSlice.getValue(3, 159), -0.001908, 1e-6);
+		
+		reader.getSlice(1, 0);
 	}
 
 	@Test
-	public void testGetVolume() {
-		fail("Not yet implemented");
+	public void testGetVolume() throws IOException {
+		
+		ScalarField3D fullVolume = reader.getVolume(0);
+		assertTrue(fullVolume instanceof CachedFitsReader.CachedVolume);
+		assertEquals(256, fullVolume.getWidth());
+		assertEquals(256, fullVolume.getHeight());
+		assertEquals(1, fullVolume.getDepth());
+		assertEquals(256*256*1, fullVolume.getSize());
 	}
 
 }
