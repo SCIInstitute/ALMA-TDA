@@ -20,7 +20,8 @@ public class CachedFitsReaderTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		reader = new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/fits1/Continuum_33GHz.fits", true), true );
+		reader = new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/fits1/Continuum_33GHz.fits", true), true,
+				CacheFactory.Default.Instance());
 	}
 
 	@AfterClass
@@ -29,11 +30,11 @@ public class CachedFitsReaderTest {
 
 	@Test
 	public void testCachedFitsReader() throws Exception {
-		new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/fits1/Continuum_33GHz.fits", true), true );
-		new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/fits2/Continuum_33GHz.fits", true), true );
+		new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/fits1/Continuum_33GHz.fits", true), true, CacheFactory.Default.Instance() );
+		new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/fits2/Continuum_33GHz.fits", true), true, CacheFactory.Default.Instance() );
 		try
 		{ 
-			new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/test/dummy.fits", true), true );
+			new CachedFitsReader( new RawFitsReader("/Users/dwhite/Dropbox/alma/test/dummy.fits", true), true, CacheFactory.Default.Instance() );
 			fail("Ctor should throw for non-existent file");
 		}
 		catch(FitsException e)

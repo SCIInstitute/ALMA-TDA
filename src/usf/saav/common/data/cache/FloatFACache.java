@@ -20,13 +20,13 @@ public class FloatFACache extends FullyAssociativeCache<FloatPage> {
 		super( data_file, pg_size, pg_count, read_only, verbose );
 	}
 	
-	public float get( long element ) throws IOException {
+	public float getValue( long element ) throws IOException {
 		long pg = element*4/page_size;
 		long el = element%(page_size/4);
 		return getPage( pg ).getValue( (int)el );
 	}
 
-	public void set( long element, float val ) throws IOException {
+	public void setValue( long element, float val ) throws IOException {
 		if( read_only ) return;
 
 		long pg = element*4/page_size;
@@ -70,5 +70,17 @@ public class FloatFACache extends FullyAssociativeCache<FloatPage> {
 	public int sizeofElement()
 	{
 		return 4;
+	}
+
+	@Override
+	public boolean isSliceLoaded(int z) throws IOException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setSliceLoaded(int z) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 }

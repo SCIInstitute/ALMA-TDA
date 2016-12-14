@@ -26,7 +26,6 @@ import java.io.IOException;
 import usf.saav.alma.data.ScalarField1D;
 import usf.saav.alma.data.ScalarField2D;
 import usf.saav.alma.data.ScalarField3D;
-import usf.saav.common.data.cache.FloatDMCache;
 import usf.saav.common.data.zorder.Partition2D;
 import usf.saav.common.range.IntRange1D;
 
@@ -37,14 +36,12 @@ import usf.saav.common.range.IntRange1D;
 public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 
 	FitsReader reader = null;
-	FloatDMCache cache = null;
+	CacheInterface cache = null;
 	Partition2D partition =null;
 	long sliceOffset;
 	int sx,sy,sz;
 	
-	private static final int	 page_size_elems = 2048;
-	private static final int	 page_size_bytes = 4 * page_size_elems; // sizeof(float) = 4
-	private static final int	 page_count      = 2048;
+	private static final int	 page_size_elems = CacheFactory.Default.page_size_elems;
 	private static final boolean use_zorder 	 = true; 
 	
 	/**
@@ -53,30 +50,17 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	 * @param reader the reader
 	 * @param verbose the verbose
 	 */
-	public CachedFitsReader( FitsReader reader, boolean verbose ){
+	public CachedFitsReader( FitsReader reader, boolean verbose, CacheFactory cacheFactory ){
 		super(verbose);
 		
 		this.reader = reader;
-		
-		print_info_message( reader.getFile().getAbsolutePath() );
-		
-		File cache_file = new File(reader.getFile().getAbsolutePath() + ".cache");
-		boolean cache_exists = cache_file.exists();
+		String filename = reader.getFile().getAbsolutePath();
+		print_info_message( filename );
 		
 		try {
-			cache = new FloatDMCache( cache_file.getAbsolutePath(), page_size_bytes, page_count, false, false );
+			cache = cacheFactory.create(filename);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
-		if( !cache_exists ){
-			print_info_message("Initializing Cache");
-			try {
-				cache.initializeFirstPage();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
 		}
 		
 		sx = reader.getAxesSize()[0].length();

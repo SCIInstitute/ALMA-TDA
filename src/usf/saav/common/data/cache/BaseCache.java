@@ -8,7 +8,9 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-public abstract class BaseCache<PageType extends BasePage> {
+import usf.saav.alma.data.fits.CacheInterface;
+
+public abstract class BaseCache<PageType extends BasePage> implements CacheInterface {
 	
 	public static int PAGE_1K  = 1024;
 	public static int PAGE_2K  = 2048;

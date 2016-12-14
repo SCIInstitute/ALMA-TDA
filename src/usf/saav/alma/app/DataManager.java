@@ -18,6 +18,7 @@ import usf.saav.alma.data.ScalarField3D;
 import usf.saav.alma.data.Settings;
 import usf.saav.alma.data.Settings.SettingsDouble;
 import usf.saav.alma.data.Settings.SettingsInt;
+import usf.saav.alma.data.fits.CacheFactory;
 import usf.saav.alma.data.fits.CachedFitsReader;
 import usf.saav.alma.data.fits.FitsReader;
 import usf.saav.alma.data.fits.RawFitsReader;
@@ -102,7 +103,8 @@ public class DataManager {
 	public DataManager( String filename ){
 
 		try {
-			reader = new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true );
+			reader = new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true,
+					CacheFactory.Default.Instance()), true );
 		} catch (FitsException | IOException e) {
 			e.printStackTrace();
 		}
