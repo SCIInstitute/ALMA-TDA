@@ -18,34 +18,30 @@
  *
  *     You may contact the Paul Rosen at <prosen@usf.edu>.
  */
-package usf.saav.common.mvc;
+package usf.saav.alma.util;
 
-import usf.saav.common.BasicObject;
+import usf.saav.common.histogram.Histogram1D;
+import usf.saav.common.range.FloatRange1D;
+import usf.saav.scalarfield.ScalarField2D;
 
-public interface BasicComponent {
+public class HistogramCache2D {
+
+	FloatRange1D range;
+	int cacheBins;
 	
-	public void setup( );
-	public void update( );
+	public HistogramCache2D( FloatRange1D range, int cacheBins ){
+		this.range = range;
+		this.cacheBins = cacheBins;
+	}
+	
+	public Histogram1D getHistogram( ScalarField2D sf, int ox, int oy, int sx, int sy ){
 		
-	public void enable( );
-	public void disable( );
-	public void setEnabled( boolean enb );
-	public boolean isEnabled( );
-
-	public class Default extends BasicObject implements BasicComponent {
-
-		private boolean enabled = true; 
-		
-		protected Default( ){ }
-		protected Default(boolean verbose) { super(verbose); }
-		
-		@Override public void setup( ){ }
-		@Override public void update( ){ }
-
-		public void enable( ){ enabled = true; }
-		public void disable( ){ enabled = false; }
-		public void setEnabled( boolean enb ){ enabled = enb; }
-		public boolean isEnabled( ){ return enabled; }
-
+		Histogram1D histogram = new Histogram1D( range, cacheBins );
+		for(int i = 0; i < sf.getSize(); i++){
+			float v = sf.getValue(i);
+			if( !Float.isNaN(v) )
+				histogram.Add( v );
+		}
+		return histogram;
 	}
 }

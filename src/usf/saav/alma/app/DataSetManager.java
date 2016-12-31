@@ -1,3 +1,23 @@
+/*
+ *     ALMA TDA - Contour tree based simplification and visualization for ALMA
+ *     data cubes.
+ *     Copyright (C) 2016 PAUL ROSEN
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *     You may contact the Paul Rosen at <prosen@usf.edu>.
+ */
 package usf.saav.alma.app;
 
 import java.io.IOException;
@@ -8,6 +28,7 @@ import org.json.JSONException;
 import nom.tam.fits.common.FitsException;
 import usf.saav.alma.app.Settings.SettingsDouble;
 import usf.saav.alma.app.Settings.SettingsInt;
+import usf.saav.alma.app.views.BuildCacheProgressView;
 import usf.saav.alma.data.fits.CachedFitsReader;
 import usf.saav.alma.data.fits.FitsAdder;
 import usf.saav.alma.data.fits.FitsReader;
@@ -34,10 +55,10 @@ public class DataSetManager {
 	public ScalarField3D data;
 
 	
-	public DataSetManager( String filename, String filename2 ) throws IOException, FitsException {
+	public DataSetManager( BuildCacheProgressView progress, String filename, String filename2 ) throws IOException, FitsException {
 
-		FitsReader fr0 = new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true );
-		FitsReader fr1 = new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename2, true), true ), true );
+		FitsReader fr0 = new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), progress, true ), true );
+		FitsReader fr1 = new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename2, true), progress, true ), true );
 
 		reader.add( new FitsAdder(fr0,fr1) );
 		data = reader.firstElement().getVolume(0);
@@ -62,9 +83,9 @@ public class DataSetManager {
 		}
 	}
 	
-	public DataSetManager( String filename ) throws IOException, FitsException {
+	public DataSetManager( BuildCacheProgressView progress, String filename ) throws IOException, FitsException {
 
-		reader.add( new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true ) );
+		reader.add( new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), progress, true ), true ) );
 		data = reader.firstElement().getVolume(0);
 	
 		try {
@@ -87,13 +108,13 @@ public class DataSetManager {
 		}
 	}
 	
-	public void rebuildCache( ){
+	public void rebuildCache( BuildCacheProgressView progress ){
 		
 		for( int i = 0; i < reader.size(); i++ ){
 			String filename = reader.get(i).getFile().getAbsolutePath();
 			reader.get(i).close();
 			try {
-				reader.set( i, new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true, true ), true ) );
+				reader.set( i, new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), progress, true, true ), true ) );
 			} catch (IOException | FitsException e) {
 				e.printStackTrace();
 			}
@@ -108,8 +129,8 @@ public class DataSetManager {
 		
 	}
 
-	public void appendFile(String filename) throws IOException, FitsException {
-		reader.add( new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), true ), true ) );
+	public void appendFile(BuildCacheProgressView progress, String filename) throws IOException, FitsException {
+		reader.add( new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), progress, true ), true ) );
 		data = new Extended3D( data, reader.lastElement().getVolume(0) );
 	}
 	

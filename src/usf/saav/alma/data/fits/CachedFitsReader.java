@@ -23,10 +23,10 @@ package usf.saav.alma.data.fits;
 import java.io.File;
 import java.io.IOException;
 
+import usf.saav.alma.app.views.BuildCacheProgressView;
 import usf.saav.common.data.cache.FloatDMCache;
 import usf.saav.common.data.zorder.Partition2D;
 import usf.saav.common.range.IntRange1D;
-import usf.saav.scalarfield.ScalarField1D;
 import usf.saav.scalarfield.ScalarField2D;
 import usf.saav.scalarfield.ScalarField3D;
 
@@ -54,11 +54,11 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 	 * @param verbose the verbose
 	 */
 
-	public CachedFitsReader( FitsReader reader, boolean verbose ){
-		this(reader,false,verbose);
+	public CachedFitsReader( FitsReader reader, BuildCacheProgressView progress, boolean verbose ){
+		this(reader,progress,false,verbose);
 	}
 	
-	public CachedFitsReader( FitsReader reader, boolean rebuild, boolean verbose ){
+	public CachedFitsReader( FitsReader reader, BuildCacheProgressView progress, boolean rebuild, boolean verbose ){
 		super(verbose);
 		
 		this.reader = reader;
@@ -98,6 +98,8 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		print_info_message("slice offset=" + sliceOffset );
 		
 		for( int cz = 0; cz < sz; cz++ ){
+			progress.appendText( "Loading Slice " + (cz+1) + " of " + (sz) + "\n" );
+			progress.setProgress( (int)(100*(float)cz/(float)(sz-1)) );
 			try {
 				loadSlice(cz);
 			} catch (IOException e) {
@@ -105,6 +107,8 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 				e.printStackTrace();
 			}
 		}
+		progress.setProgress( 100 );
+
 	}
 	
 

@@ -112,12 +112,16 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 	public void setData( ScalarFieldND sf ){ _setData( sf ); }
 
 	protected void _setData( ScalarFieldND sf ){
+		// TODO: We need a better solution here. Precomputing some histogram data seems most logical. That could happen during the caching phase.
+		// want to sample 400k or fewer elements
+		int step = (sf.getSize()+399999) / 400000;
+		//System.err.println( sf.getSize() + ", " + step + ", " + (sf.getSize()/step) );
 		range = new FloatRange1D( );
-		for(int i = 0; i < sf.getSize(); i++){
+		for(int i = 0; i < sf.getSize(); i+=step){
 			range.expand( sf.getValue(i) );
 		}
 		histogram = new Histogram1D( range, binCount );
-		for(int i = 0; i < sf.getSize(); i++){
+		for(int i = 0; i < sf.getSize(); i+=step){
 			float v = sf.getValue(i);
 			if( !Float.isNaN(v) )
 				histogram.Add( v );

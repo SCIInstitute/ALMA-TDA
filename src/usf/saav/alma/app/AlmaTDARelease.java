@@ -21,6 +21,8 @@
 package usf.saav.alma.app;
 
 import javax.swing.JFrame;
+
+import usf.saav.alma.app.views.BuildCacheProgressView;
 import usf.saav.common.mvc.swing.TApp;
 
 // TODO: Auto-generated Javadoc
@@ -34,6 +36,8 @@ public class AlmaTDARelease extends AlmaTDADev {
 	public AlmaTDARelease( int x, int y, int w, int h ){ super(x,y,w,h,false); }
 
 	public static void main(String args[]) {
+		BuildCacheProgressView.createGUI();
+
 		javax.swing.SwingUtilities.invokeLater( new Runnable() {
             public void run() {
             	TApp frame = new AlmaTDARelease( 5, 5, 1200, 800 );

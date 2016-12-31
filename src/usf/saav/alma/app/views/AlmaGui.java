@@ -218,8 +218,8 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 		rcTree = new ButtonGroup();
 		JPanel panelTree = new JPanel(new GridLayout(0, 1));
 		panelTree.setBorder( BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.black), "Tree Type" ) );
-		panelTree.add( guiTreeMer    = createRadioButton("Merge Tree",   false, rcTree) );
-		panelTree.add( guiTreeSpl    = createRadioButton("Split Tree",   false, rcTree) );
+		//panelTree.add( guiTreeMer    = createRadioButton("Merge Tree",   false, rcTree) );
+		//panelTree.add( guiTreeSpl    = createRadioButton("Split Tree",   false, rcTree) );
 		panelTree.add( guiTreeCon    = createRadioButton("Contour Tree", true,  rcTree) );
 	    
 
@@ -228,14 +228,16 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 		panelDim.setBorder( BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.black), "Tree Calculation" ) );
 		panelDim.add( guiDim2D      = createRadioButton("2D",         false, rcDim) );
 		panelDim.add( guiDim2DStack = createRadioButton("2D Stacked", true,  rcDim) );
-		panelDim.add( guiDim3D      = createRadioButton("3D",         false, rcDim) );
+		//panelDim.add( guiDim3D      = createRadioButton("3D",         false, rcDim) );
 		panelDim.add( guiBuildTree  = createButton( "Calculate" ) );
 
 		slicePanel.setPreferredSize( new Dimension(150,65) );
 		viewPanel.setPreferredSize(  new Dimension(150,150) );
 		panelMM.setPreferredSize(    new Dimension(150,80) );
-		panelTree.setPreferredSize(  new Dimension(150,80) );
-		panelDim.setPreferredSize(   new Dimension(150,100) );
+		//panelTree.setPreferredSize(  new Dimension(150,80) );
+		panelTree.setPreferredSize(  new Dimension(150,50) );
+		//panelDim.setPreferredSize(   new Dimension(150,100) );
+		panelDim.setPreferredSize(   new Dimension(150,90) );
 
 		
 		JPanel mainPanel = new JPanel(new FlowLayout());
@@ -248,8 +250,10 @@ public class AlmaGui extends JInternalFrame implements ActionListener {
 			
 
 		this.add( mainPanel );
-		this.setPreferredSize( new Dimension(150,700) );
-		this.setSize( new Dimension(175,550) );
+		//this.setPreferredSize( new Dimension(150,700) );
+		this.setPreferredSize( new Dimension(150,675) );
+		//this.setSize( new Dimension(175,550) );
+		this.setSize( new Dimension(175,525) );
 		
 	}
 
