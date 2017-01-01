@@ -40,57 +40,28 @@ import usf.saav.common.jocl.joclController;
 import usf.saav.common.mvc.swing.TApp;
 import usf.saav.common.mvc.swing.TGLFrame;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class AlmaTDADev.
+ * The Class AlmaTDARelease.
  */
-public class AlmaTDADev extends TApp {
+public class AlmaTDARelease extends TApp  {
+
+	private static final long serialVersionUID = -226739546547617965L;
 
 
 	public static void main(String args[]) {
 		BuildCacheProgressView.createGUI();
 
 		javax.swing.SwingUtilities.invokeLater( new Runnable() {
-			public void run() {
-				AlmaTDADev frame = new AlmaTDADev( 5, 5, 1200, 800, true );
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setVisible(true);
-
-				String filename = null;
-				String filename2 = null;
-
-				//filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65.fits";
-				//filename2 = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub.fits";
-				//filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_uniform_smooth.fits";
-				//filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_cont.fits";
-				//filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom0.fits";
-				//filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom1.fits";
-				//filename = "/Users/prosen/Code/alma/data/Naseem/Arp220_CO65_ALMA/Arp220_CO65_contsub_CO.mom2.fits";
-
-				filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_briggs.pbcor.fits";
-				//filename = "/Users/prosen/Code/alma/data/anil_seth/NGC404_CO21_uniform.pbcor.fits";
-
-				//filename = "/Users/prosen/Code/alma/data/Continuum_33GHz.fits";
-
-				//filename = "/Users/prosen/Code/alma/data/betsy/CH3OH_7m+12m_natural.feather.fits";
-				//filename = "/Users/prosen/Code/ALMA-TDA/data/betsy/CH3OH_7m+12m_natural.feather.fits";
-				//filename = "/Users/prosen/Code/alma/data/betsy/HC3N_7m+12m_natural.feather.fits";
-				//filename = "/Users/prosen/Code/alma/data/betsy/HCN_7m+12m_natural.feather.fits";
-				//filename = "/Users/prosen/Code/alma/data/betsy/HCOp_7m+12m_natural.feather.fits";
-				//filename = "/Users/prosen/Code/alma/data/betsy/SO_7m+12m_natural.feather.fits";
-
-				//frame.loadFile( filename, filename2 );
-				frame.loadFile( filename, filename2 );
-
-			}
-		});
+            public void run() {
+            	TApp frame = new AlmaTDARelease( 5, 5, 1200, 800 );
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
+            }
+        });
 	}
-
-
-
-
-
-	private static final long serialVersionUID = 8573376435979745456L;
+	
+	
+	
 
 	private joclController  jocl;
 
@@ -118,7 +89,7 @@ public class AlmaTDADev extends TApp {
 	 * @param w the w
 	 * @param h the h
 	 */
-	public AlmaTDADev( int x, int y, int w, int h ){ 
+	public AlmaTDARelease( int x, int y, int w, int h ){ 
 		this( x, y, w, h, true );
 	}
 
@@ -133,7 +104,7 @@ public class AlmaTDADev extends TApp {
 	 * @param h the h
 	 * @param verbose the verbose
 	 */
-	public AlmaTDADev( int x, int y, int w, int h, boolean verbose ){ 
+	public AlmaTDARelease( int x, int y, int w, int h, boolean verbose ){ 
 		super( x, y, w, h ); 
 		
 		recent = new RecentFileList();
@@ -341,5 +312,5 @@ public class AlmaTDADev extends TApp {
 	}
 
 
-
+	
 }
