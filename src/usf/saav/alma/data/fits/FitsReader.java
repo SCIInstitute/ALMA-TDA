@@ -25,7 +25,6 @@ import java.io.IOException;
 
 import usf.saav.common.BasicObject;
 import usf.saav.common.range.IntRange1D;
-import usf.saav.scalarfield.ScalarField1D;
 import usf.saav.scalarfield.ScalarField2D;
 import usf.saav.scalarfield.ScalarField3D;
 

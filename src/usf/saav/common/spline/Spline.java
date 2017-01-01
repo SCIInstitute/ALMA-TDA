@@ -96,8 +96,8 @@ public abstract class Spline extends ViewComponent.Default implements ViewCompon
 			g.noFill();
 			
 			g.beginShape( TGraphics.LINE_STRIP );
-			for( float ti = 0; ti <= 100; ti++){
-				float t = (float)ti/(float)100;
+			for( float ti = 0; ti <= 250; ti++){
+				float t = (float)ti/(float)250;
 				Float2 xy = interpolate( t );
 				if( this.constraint != null ) this.constraint.constrainInterpolatedPoint(xy);
 				g.vertex( winX.interpolate( (xy.x+xo)*xs ), winY.interpolate( 1-((xy.y+yo)*ys) ) );
@@ -139,6 +139,10 @@ public abstract class Spline extends ViewComponent.Default implements ViewCompon
 			public void constrainInterpolatedPoint( Float2 p ){ }
 		}
 
+		public abstract FloatRange1D getRangeX();
+		public abstract FloatRange1D getRangeY();
+		
+		/*
 		public FloatRange1D getRangeY() {
 			FloatRange1D ret = new FloatRange1D();
 			for( float ti = 0; ti <= 100; ti++){
@@ -158,6 +162,7 @@ public abstract class Spline extends ViewComponent.Default implements ViewCompon
 			}
 			return ret;
 		}
+		*/
 
 		public void setDrawingOffset( float xo, float yo ) {
 			this.xo = xo;

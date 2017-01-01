@@ -78,7 +78,10 @@ public class DataSetManager {
 			z1.setValidRange( reader.firstElement().getAxesSize()[2] );
 			curZ.setValidRange( reader.firstElement().getAxesSize()[2] );
 			
-		} catch (JSONException | IOException e) {
+		} catch (JSONException e ) {
+			e.printStackTrace();
+		}
+		catch ( IOException e ) {
 			e.printStackTrace();
 		}
 	}
@@ -103,7 +106,10 @@ public class DataSetManager {
 			z1.setValidRange( reader.firstElement().getAxesSize()[2] );
 			curZ.setValidRange( reader.firstElement().getAxesSize()[2] );
 			
-		} catch (JSONException | IOException e) {
+		} catch (JSONException e ) {
+			e.printStackTrace();
+		}
+		catch ( IOException e ) {
 			e.printStackTrace();
 		}
 	}
@@ -115,7 +121,9 @@ public class DataSetManager {
 			reader.get(i).close();
 			try {
 				reader.set( i, new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), progress, true, true ), true ) );
-			} catch (IOException | FitsException e) {
+			} catch (IOException e){
+				e.printStackTrace();
+			} catch ( FitsException e ) {
 				e.printStackTrace();
 			}
 		}

@@ -43,7 +43,7 @@ import usf.saav.common.mvc.swing.TGLFrame;
 /**
  * The Class AlmaTDARelease.
  */
-public class AlmaTDARelease extends TApp  {
+public class AlmaTDA extends TApp  {
 
 	private static final long serialVersionUID = -226739546547617965L;
 
@@ -53,7 +53,7 @@ public class AlmaTDARelease extends TApp  {
 
 		javax.swing.SwingUtilities.invokeLater( new Runnable() {
             public void run() {
-            	TApp frame = new AlmaTDARelease( 5, 5, 1200, 800 );
+            	TApp frame = new AlmaTDA( 5, 5, 1200, 800 );
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
             }
@@ -89,7 +89,7 @@ public class AlmaTDARelease extends TApp  {
 	 * @param w the w
 	 * @param h the h
 	 */
-	public AlmaTDARelease( int x, int y, int w, int h ){ 
+	public AlmaTDA( int x, int y, int w, int h ){ 
 		this( x, y, w, h, true );
 	}
 
@@ -104,7 +104,7 @@ public class AlmaTDARelease extends TApp  {
 	 * @param h the h
 	 * @param verbose the verbose
 	 */
-	public AlmaTDARelease( int x, int y, int w, int h, boolean verbose ){ 
+	public AlmaTDA( int x, int y, int w, int h, boolean verbose ){ 
 		super( x, y, w, h ); 
 		
 		recent = new RecentFileList();
@@ -220,7 +220,10 @@ public class AlmaTDARelease extends TApp  {
     		BuildCacheProgressView.showGUI();
 			try {
 				dataSM.appendFile( BuildCacheProgressView.getGUI(), fc.getSelectedFile().getAbsolutePath() );
-			} catch ( IOException | FitsException e) {
+			} catch ( IOException e ){
+				System.err.println("Unable to read file");
+				return;
+			} catch( FitsException e ) {
 				System.err.println("Unable to read file");
 				return;
 			}
@@ -250,7 +253,7 @@ public class AlmaTDARelease extends TApp  {
 		this.setJMenuBar( menuStartup );
 	}
 
-	public void loadFile( String filename, String filename2 ){
+	public void loadFile( final String filename, final String filename2 ){
 
 		recent.add(filename);
 		menuStandard.updateRecent( recent );
@@ -267,7 +270,11 @@ public class AlmaTDARelease extends TApp  {
 						dataSM = new DataSetManager( BuildCacheProgressView.getGUI(), filename );
 					else
 						dataSM = new DataSetManager( BuildCacheProgressView.getGUI(), filename, filename2 );
-				} catch ( IOException | FitsException e) {
+				} catch ( IOException e ) {
+					System.err.println("Unable to read file");
+					return;
+				}
+				catch ( FitsException e ) {
 					System.err.println("Unable to read file");
 					return;
 				}

@@ -23,6 +23,7 @@ package usf.saav.common.spline;
 import java.util.Vector;
 
 import usf.saav.common.MathXv1;
+import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.types.Float2;
 
 public abstract class LinearXCatmullYSpline extends Spline {
@@ -47,17 +48,25 @@ public abstract class LinearXCatmullYSpline extends Spline {
 		return new Float2(x,y);
 	}
 	
+	
+	
 	public static class Default extends LinearXCatmullYSpline {
 		protected Vector<Float2> pnts = new Vector<Float2>( );
+		protected FloatRange1D rangeX = new FloatRange1D();
+		protected FloatRange1D rangeY = new FloatRange1D();
 
 		public Default( Float2 ... p){ 
-			for( Float2 _p : p)
+			for( Float2 _p : p){
+				rangeX.expand(_p.x);
+				rangeY.expand(_p.y);
 				pnts.add(_p);
+			}
 		}
 		
-		@Override public int size() { return pnts.size(); }
-
-		@Override public Float2 getControlPoint(int i) { return pnts.get(i); }
+		@Override public int          size() { return pnts.size(); }
+		@Override public Float2       getControlPoint(int i) { return pnts.get(i); }
+		@Override public FloatRange1D getRangeX() { return rangeX; }
+		@Override public FloatRange1D getRangeY() { return rangeY; }
 		
 	}
 

@@ -22,7 +22,6 @@ package usf.saav.alma.util;
 
 import java.util.Vector;
 
-import usf.saav.alma.drawing.ScalarFieldDrawing;
 import usf.saav.common.Callback;
 import usf.saav.common.monitor.MonitoredDouble;
 import usf.saav.common.monitor.MonitoredInteger;

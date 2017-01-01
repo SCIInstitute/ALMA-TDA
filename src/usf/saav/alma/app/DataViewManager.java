@@ -287,9 +287,4 @@ public class DataViewManager {
 	
 	
 
-	public static void main(String args[]) {
-		AlmaTDADev.main(args);
-	}
-
-
 }
