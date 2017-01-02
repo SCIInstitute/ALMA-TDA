@@ -54,6 +54,9 @@ public void close();
 	public FitsProperties getProperties( );
 	public FitsTable getTable();
 
+	public int getAxisCount();
+	
+	
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A SLICE FROM THE DATA                     //
@@ -129,6 +132,6 @@ public void close();
 		}
 
 	}
-	
-	
+
+
 }

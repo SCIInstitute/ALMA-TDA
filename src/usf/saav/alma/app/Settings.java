@@ -86,7 +86,7 @@ public class Settings extends BasicObject {
 		try {
 			PrintWriter pw = new PrintWriter( filename );
 			pw.print( json.toString(1) );
-			System.out.println(json.toString());
+			//System.out.println(json.toString());
 			pw.close();
 		} catch (FileNotFoundException e) {
 			print_error_message("Serialization failed");

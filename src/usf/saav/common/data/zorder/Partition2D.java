@@ -40,9 +40,9 @@ public class Partition2D {
 		dim_size = Math.min( 1024,  MathXv1.nextLargerPowerOf2( Math.max(sizeX,sizeY) ) );
 		x_rep = (sizeX+dim_size-1)/dim_size;
 		y_rep = (sizeY+dim_size-1)/dim_size;
-		System.out.println( dim_size );
-		System.out.println( dim_size + " x " + x_rep );
-		System.out.println( dim_size + " x " + y_rep );
+		//System.out.println( dim_size );
+		//System.out.println( dim_size + " x " + x_rep );
+		//System.out.println( dim_size + " x " + y_rep );
 		
 		//System.out.println( MathX.nextLargerPowerOf2( dim_size ) );
 		

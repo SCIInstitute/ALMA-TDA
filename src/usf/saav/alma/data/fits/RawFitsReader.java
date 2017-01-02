@@ -47,11 +47,13 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	Fits fits;
 
 	ImageTiler tiler;
+	
+	int nAxis;
 
 	IntRange1D [] axesRange;
 	
-	double [] coordOrigin = new double[4];
-	double [] coordDelta  = new double[4];
+	double [] coordOrigin;// = new double[4];
+	double [] coordDelta;//  = new double[4];
 
 	FitsHistory    history    = new FitsHistory( );
 	FitsProperties properties = new FitsProperties( );
@@ -71,8 +73,11 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		super(verbose);
 
 		file = new File(filename);
+		
+		//System.out.println( CompressionManager.isCompressed(file) );
+		
 		fits = new Fits( file );
-
+		
 		for(BasicHDU<?> header : fits.read() ){
 
 			if( header instanceof ImageHDU ){
@@ -80,13 +85,23 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 				ImageHDU img = (ImageHDU)header;
 				int [] axes;
 				axes = img.getAxes();
+				nAxis = axes.length;
 
-				axesRange = new IntRange1D[axes.length];
-				for(int i = 0; i < axes.length; i++){
+				axesRange = new IntRange1D[nAxis];
+				for(int i = 0; i < nAxis; i++){
 					axesRange[i] = new IntRange1D(0,axes[axes.length-i-1]-1);
 					print_info_message("Axis " + i + " " +axesRange[i].toString());
 				}
+			
+				//img.info( System.out );
 
+				coordOrigin = new double[nAxis];
+				coordDelta  = new double[nAxis];
+				for(int i = 0; i < nAxis; i++){
+					coordOrigin[i] = img.getHeader().getDoubleValue("CRVAL"+(i+1));
+					coordDelta[i] = img.getHeader().getDoubleValue("CDELT"+(i+1));
+				}
+				/*
 				coordOrigin[0] = img.getHeader().getDoubleValue("CRVAL1");
 				coordOrigin[1] = img.getHeader().getDoubleValue("CRVAL2");
 				coordOrigin[2] = img.getHeader().getDoubleValue("CRVAL3");
@@ -96,7 +111,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 				coordDelta[1] = img.getHeader().getDoubleValue("CDELT2");
 				coordDelta[2] = img.getHeader().getDoubleValue("CDELT3");
 				coordDelta[3] = img.getHeader().getDoubleValue("CDELT4");
-
+				 */
 				
       		   Cursor<String, HeaderCard> iter = img.getHeader().iterator();
       		   HeaderCard card;
@@ -112,9 +127,11 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
       			   }
       			   else{
       				 properties.add( new FitsProperty( card.getKey(), card.getValue(), card.getComment() ) );
+      				 //System.out.println( card.getKey() + " " + card.getValue() + " " + card.getComment() );
       			   }
       		   }
       		   
+      		   //img.get
 				tiler = img.getTiler();
 
 			}
@@ -145,6 +162,8 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 			}
 
 		}
+		
+		//System.exit(0);
 
 
 	}
@@ -186,6 +205,13 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		return table;
 	}
 
+
+	@Override
+	public int getAxisCount(){
+		return nAxis;
+	}
+	
+	
 	
 
 	/* (non-Javadoc)
@@ -277,9 +303,21 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	/////////////////////////////////////////////////////////////////////
 
 	private int [] tilePosition( int x, int y, int z, int w ){
+		if( nAxis==2 ){
+			return new int[]{y,x};
+		}
+		if( nAxis==3 ){
+			return new int[]{z,y,x};
+		}
 		return new int[]{w,z,y,x};
 	}
 	private int [] tileSize( int sx, int sy, int sz, int sw ){
+		if( nAxis==2 ){
+			return new int[]{sy,sx};
+		}
+		if( nAxis==3 ){
+			return new int[]{sz,sy,sx};
+		}
 		return new int[]{sw,sz,sy,sx};
 	}
 

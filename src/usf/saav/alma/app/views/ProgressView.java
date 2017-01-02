@@ -65,7 +65,7 @@ public class ProgressView extends JPanel {
     }
     
     public void setProgress( int val ){
-    	System.out.println(val);
+    	//System.out.println(val);
         progressBar.setValue(val);
     }
 

@@ -122,7 +122,7 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		g.stroke(0);
 		g.fill(255,255,255,240);
 		g.rect( winX.length()-105, 5, 100, 120);
-		colormap.drawScale(g, winX.length()-100, 10, 20, 110);
+		//colormap.drawScale(g, winX.length()-100, 10, 20, 110);
 
 		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 		

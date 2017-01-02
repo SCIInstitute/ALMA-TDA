@@ -80,14 +80,19 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		reader.close();
 	}
 
+	@Override
+	public int getAxisCount(){
+		return reader.getAxisCount();
+	}
+
 
 	/* (non-Javadoc)
 	 * @see usf.saav.alma.data.fits.FitsReader#getSlice(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int, int)
 	 */
 	@Override
 	public ScalarField2D getSlice(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {
-		if( !reader.getAxesSize()[2].inRange(z) ) return new ScalarField2D.Empty( x_range.length(), y_range.length(), Float.NaN );
-		if( !reader.getAxesSize()[3].inRange(w) ) return new ScalarField2D.Empty( x_range.length(), y_range.length(), Float.NaN );
+		if( reader.getAxisCount()>=3 && !reader.getAxesSize()[2].inRange(z) ) return new ScalarField2D.Empty( x_range.length(), y_range.length(), Float.NaN );
+		if( reader.getAxisCount()>=4 && !reader.getAxesSize()[3].inRange(w) ) return new ScalarField2D.Empty( x_range.length(), y_range.length(), Float.NaN );
 		return new SafeSlice( x_range, y_range, z, w);
 	}
 
@@ -96,7 +101,7 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 	 */
 	@Override
 	public ScalarField3D getVolume(IntRange1D x_range, IntRange1D y_range, IntRange1D z_range, int w) throws IOException {
-		if( !reader.getAxesSize()[3].inRange(w) ) return new ScalarField3D.Empty( x_range.length(), y_range.length(), z_range.length(), Float.NaN );
+		if( reader.getAxisCount()>=4 && !reader.getAxesSize()[3].inRange(w) ) return new ScalarField3D.Empty( x_range.length(), y_range.length(), z_range.length(), Float.NaN );
 		return new SafeVolume( x_range, y_range, z_range, w );
 	}
 	

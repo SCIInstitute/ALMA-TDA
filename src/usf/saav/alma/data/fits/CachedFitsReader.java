@@ -122,6 +122,12 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		reader.close();
 	}
 	
+	@Override
+	public int getAxisCount(){
+		return reader.getAxisCount();
+	}
+
+	
 	
 	@Override
 	public FitsHistory getHistory( ){

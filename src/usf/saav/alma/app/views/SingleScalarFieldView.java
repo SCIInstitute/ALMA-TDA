@@ -288,7 +288,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			
 			view_sf3d.addMonitor( hist3d, "setData" );
 
-			pdd.addPersistentSimplificationCallback( dataM.psm, "refreshSimplification" );
+			//pdd.addPersistentSimplificationCallback( dataM.psm, "refreshSimplification" );
+			pdd.addPersistentSimplificationCallback( dataM, "setSimplifyScalarField" );
+			
 
 			super.setup();
 
@@ -446,8 +448,9 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 
 
 		private void refreshViewSF( ){ 
-			//boolean showSimplified = model.gui.monShowSimp.get();
-			boolean showSimplified = true;
+			System.out.println("refresh");
+			boolean showSimplified = gui.monShowSimp.get();
+			//boolean showSimplified = true;
 
 			ScalarField2D _sf2D = ((showSimplified)?(dataM.simp_sf2d):(dataM.src_sf2d)).get();
 			ScalarField3D _sf3D = ((showSimplified)?(dataM.simp_sf3d):(dataM.src_sf3d)).get();
@@ -470,6 +473,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 
 			// update the color maps
 			double [] r = ScalarFieldND.Default.getValueRange( view_sf2d.get() );
+			//System.out.println( r[0] + " " + r[1] );
 			if( COLORMAP_GLOBAL ){
 				FloatRange1D selRange = null;
 				
@@ -479,12 +483,12 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 					case MOMENT2:	  selRange = m2_range; break;
 					case SCALARFIELD: selRange = sf_range; break;
 				}
-				selRange.expand( r );
+				if( r[1] > r[0] ) selRange.expand( r );
 				selRange.expand( 0 );
 				colormap.setRange( selRange );
 			} 
 			else{
-				colormap.setRange( new FloatRange1D( r ) );
+				if( r[1] > r[0] ) colormap.setRange( new FloatRange1D( r ) );
 			}
 		}
 

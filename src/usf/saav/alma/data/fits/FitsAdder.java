@@ -66,6 +66,12 @@ public class FitsAdder implements FitsReader {
 	public FitsTable getTable() {
 		return r0.getTable();
 	}
+	
+	@Override
+	public int getAxisCount(){
+		return r0.getAxisCount();
+	}
+
 
 	@Override
 	public ScalarField2D getSlice(int z, int w) throws IOException {

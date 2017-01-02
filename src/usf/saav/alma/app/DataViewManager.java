@@ -146,13 +146,14 @@ public class DataViewManager {
 	}
 	
 	
-	public void set2DSrcRefresh( ){ System.out.println("set refresh"); need2DSrcRefresh = true; }
+	public void set2DSrcRefresh( ){ /*System.out.println("set refresh");*/ need2DSrcRefresh = true; }
 	public void set3DSrcRefresh( ){ need3DSrcRefresh = true; }
 
 	public void set2DSimplificationRefresh( ){ need2DSimpSFRefresh = true; }
 	public void set3DSimplificationRefresh( ){ need3DSimpSFRefresh = true; }
 	
 	public void setSimplifyScalarField( ){
+		System.out.println( "setRefSimp" );
 		psm.psf_map.clear();
 		needSimpRefresh = true;
 	}
@@ -161,7 +162,7 @@ public class DataViewManager {
 	public SingleScalarFieldView ssfv;
 	
 	private void refresh2DSourceSF( ){ 
-		System.out.println("refresh2DSourceSF");
+		//System.out.println("refresh2DSourceSF");
 
 		csCont.setPosition( ssfv.getView().getPosition() );
 
