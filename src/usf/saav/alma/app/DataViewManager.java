@@ -153,7 +153,7 @@ public class DataViewManager {
 	public void set3DSimplificationRefresh( ){ need3DSimpSFRefresh = true; }
 	
 	public void setSimplifyScalarField( ){
-		System.out.println( "setRefSimp" );
+		//System.out.println( "setRefSimp" );
 		psm.psf_map.clear();
 		needSimpRefresh = true;
 	}

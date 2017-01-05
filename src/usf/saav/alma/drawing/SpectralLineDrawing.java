@@ -116,7 +116,7 @@ public class SpectralLineDrawing  extends ViewComponent.Default implements ViewC
 		g.noFill();
 		
 		g.stroke( 75 ); 
-		float t = (float) ((0-yr.getMinimum())/yr.getRange());
+		float t = 1.0f - (float) ((0-yr.getMinimum())/yr.getRange());
 		g.line( winX.start(), winY.interpolate(t), winX.end(), winY.interpolate(t) );
 		
 		g.stroke( 175 ); 
@@ -125,8 +125,8 @@ public class SpectralLineDrawing  extends ViewComponent.Default implements ViewC
 		g.textAlign( TGraphics.LEFT, TGraphics.BOTTOM );
 		for( int i = 1; i <= 6; i++ ){
 			float curr = (float) ((float)i * yr.getRange() / 8);
-			float t0 = (float) ((curr-yr.getMinimum())/yr.getRange());
-			float t1 = (float) ((-curr-yr.getMinimum())/yr.getRange());
+			float t0 = 1.0f - (float) ((curr-yr.getMinimum())/yr.getRange());
+			float t1 = 1.0f - (float) ((-curr-yr.getMinimum())/yr.getRange());
 			if( t0 > 0 && t0 < 1 ){
 				g.line( winX.start(), winY.interpolate(t0), winX.end(), winY.interpolate(t0) );
 				g.text( String.format("%+1.2e", curr), winX.start()+2, (int) winY.interpolate(t0)-3 );
@@ -137,8 +137,8 @@ public class SpectralLineDrawing  extends ViewComponent.Default implements ViewC
 			}
 		}
 		
-		line.setDrawingOffset( 0, (float) -yr.getMinimum() );
-		line.setDrawingScale( 1, (1.0f/(float)yr.getRange()) );
+		line.setDrawingOffset( 0, (float) -yr.getMinimum()-(float)yr.getRange()  );
+		line.setDrawingScale( 1, 1.0f-(1.0f/(float)yr.getRange()) );
 		line.draw(g);
 		
 		g.hint( TGraphics.ENABLE_DEPTH_TEST );

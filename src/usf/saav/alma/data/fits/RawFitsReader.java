@@ -87,9 +87,13 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 				axes = img.getAxes();
 				nAxis = axes.length;
 
-				axesRange = new IntRange1D[nAxis];
+				axesRange = new IntRange1D[4];
 				for(int i = 0; i < nAxis; i++){
 					axesRange[i] = new IntRange1D(0,axes[axes.length-i-1]-1);
+					print_info_message("Axis " + i + " " +axesRange[i].toString());
+				}
+				for(int i = nAxis; i < 4; i++){
+					axesRange[i] = new IntRange1D(0);
 					print_info_message("Axis " + i + " " +axesRange[i].toString());
 				}
 			

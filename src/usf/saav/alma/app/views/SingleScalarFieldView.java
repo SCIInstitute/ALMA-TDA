@@ -20,6 +20,7 @@
  */
 package usf.saav.alma.app.views;
 
+import java.util.Arrays;
 import java.util.Map.Entry;
 
 import usf.saav.alma.app.DataViewManager;
@@ -330,7 +331,12 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		 */
 		public void single_line_update( int [] _p ){
 			float [] p = dataM.csCont.getWindowPosition( _p[0], _p[1] );
-			lineD.setData( new Extract1Dfrom3D( view_sf3d.get(), (int)p[0], (int)p[1] ) );
+			//System.out.println(  _p[0] + " " + _p[1] );
+			//System.out.println( p[0] + " " + p[1] );
+			boolean showSimplified = gui.monShowSimp.get();
+			ScalarField3D _sf3D = ((showSimplified)?(dataM.simp_sf3d):(dataM.src_sf3d)).get();
+			//lineD.setData( new Extract1Dfrom3D( view_sf3d.get(), (int)p[0], (int)p[1] ) );
+			lineD.setData( new Extract1Dfrom3D( _sf3D, (int)p[0], (int)p[1] ) );
 		}
 
 		
@@ -448,7 +454,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 
 
 		private void refreshViewSF( ){ 
-			System.out.println("refresh");
+			//System.out.println("refresh");
 			boolean showSimplified = gui.monShowSimp.get();
 			//boolean showSimplified = true;
 

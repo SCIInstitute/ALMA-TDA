@@ -67,11 +67,11 @@ public class PersistenceSimplificationManager {
 	}
 
 	public void refreshSimplification( ) {
-		System.out.println("rsimp1");
+		//System.out.println("rsimp1");
 		if( !ctm.ctt_map.containsKey( dvm.curZ.get() ) ) return;
-		System.out.println("rsimp2");
+		//System.out.println("rsimp2");
 		if( psf_map.containsKey( dvm.curZ.get() ) ) return;
-		System.out.println("rsimp3");
+		//System.out.println("rsimp3");
 		
 		ContourTreeThread ctt = ctm.ctt_map.get( dvm.curZ.get() );
 		if( ctt.getScalarField() == null || ctt.getTree() == null ) return;
