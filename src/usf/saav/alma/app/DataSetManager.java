@@ -65,8 +65,8 @@ public class DataSetManager {
 	
 		try {
 			settings = new Settings( filename + ".snapshot" );
-			x0 = settings.initInteger( "x0", 0 );
-			y0 = settings.initInteger( "y0", 0 );
+			x0 = settings.initInteger( "x0", getXCenter() );
+			y0 = settings.initInteger( "y0", getYCenter() );
 			z0 = settings.initInteger( "z0", 0 );
 			z1 = settings.initInteger( "z1", 20 );
 			curZ = settings.initInteger( "curZ", 0 );
@@ -93,8 +93,8 @@ public class DataSetManager {
 	
 		try {
 			settings = new Settings( filename + ".snapshot" );
-			x0 = settings.initInteger( "x0", 0 );
-			y0 = settings.initInteger( "y0", 0 );
+			x0 = settings.initInteger( "x0", getXCenter() );
+			y0 = settings.initInteger( "y0", getYCenter() );
 			z0 = settings.initInteger( "z0", 0 );
 			z1 = settings.initInteger( "z1", 20 );
 			curZ = settings.initInteger( "curZ", 0 );
@@ -113,7 +113,7 @@ public class DataSetManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void rebuildCache( BuildCacheProgressView progress ){
 		
 		for( int i = 0; i < reader.size(); i++ ){
@@ -133,8 +133,6 @@ public class DataSetManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		
 	}
 
 	public void appendFile(BuildCacheProgressView progress, String filename) throws IOException, FitsException {
@@ -146,5 +144,17 @@ public class DataSetManager {
 		return new Subset2D( new Extract2DFrom3D( data, z), xr, yr );
 	}
 
-	
+	private int getXCenter()
+	{
+		int min = reader.firstElement().getAxesSize()[0].start();
+		int max = reader.firstElement().getAxesSize()[0].end();
+		return (min+max)/2;
+	}
+
+	private int getYCenter()
+	{
+		int min = reader.firstElement().getAxesSize()[1].start();
+		int max = reader.firstElement().getAxesSize()[1].end();
+		return (min+max)/2;
+	}
 }
