@@ -39,6 +39,7 @@ import usf.saav.alma.drawing.PersistenceDiagramDrawing;
 import usf.saav.alma.drawing.ScalarFieldDrawing;
 import usf.saav.alma.drawing.SpectralLineDrawing;
 import usf.saav.alma.util.ContourTreeThread;
+import usf.saav.alma.util.HistogramCache2D;
 import usf.saav.common.MathXv1;
 import usf.saav.common.colormap.DivergentColormap;
 import usf.saav.common.monitor.MonitoredObject;
@@ -51,6 +52,15 @@ import usf.saav.scalarfield.ScalarField2D;
 import usf.saav.scalarfield.ScalarField3D;
 import usf.saav.scalarfield.ScalarFieldND;
 import usf.saav.topology.TopoTree;
+
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -77,11 +87,15 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 	private FloatRange1D m2_range = new FloatRange1D();
 
 	private DivergentColormap colormap = new DivergentColormap.OrangePurple();
-
 	
 	private DataViewManager dataM;
 
 	private ViewMode viewmode = ViewMode.SCALARFIELD;
+
+	private Path cache_file;
+	private FileChannel   file_chan;
+	private HistogramCache2D hist_cache;
+	private boolean cache_exists;
 
 	private MonitoredObject<ScalarField2D> view_sf2d = new MonitoredObject<ScalarField2D>( ){
 		@Override protected Class<?> getClassType() { return ScalarField2D.class; } 
@@ -116,9 +130,30 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 		sfv  = new ScalarFieldDrawing( this.graphics );
 		pdd  = new PersistenceDiagramDrawing();
 
-		hist2d = new HistogramDrawing( 32 );		
-		hist3d = new HistogramDrawing( 32 );
+		final int histogramBins = 32;
+		hist2d = new HistogramDrawing( histogramBins );		
+		hist3d = new HistogramDrawing( histogramBins );
 		lineD  = new SpectralLineDrawing( );
+		cache_exists = false;
+
+		// init cache
+		 // TODO: test!!!
+		String test = new String("/Users/ayla/devel/alma/test_histogram.cache");
+		this.cache_file = FileSystems.getDefault().getPath(test);
+		//boolean cache_exists = cache_file.exists();
+
+		try {
+			file_chan = FileChannel.open( cache_file,
+					    StandardOpenOption.READ,
+					    StandardOpenOption.WRITE,
+					    StandardOpenOption.CREATE );
+		}
+		catch (IOException e) {
+			e.printStackTrace();			
+		}
+		cache_exists = true;
+		final int cache_size = 256; // test
+		hist_cache = new HistogramCache2D(sf_range, histogramBins, cache_size );
 
 		////////////////////////////////////////////////
 		//
@@ -132,8 +167,21 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 
 	}
 
-	
-
+	public final void closeCache( /*boolean delete*/ ) throws IOException {
+		if ( file_chan != null ) {
+			//System.out.printf("closing cache!\n");
+			//writeBackAll();
+			file_chan.close();
+			file_chan = null;
+//			if ( delete ){
+//				try {
+//				    Files.delete(cache_file);
+//				} catch (NoSuchFileException x) {
+//				    System.err.format("%s: no such" + " file or directory%n", cache_file);
+//				}
+//			}
+		}
+	}
 
 	public void setData( DataViewManager _dataM ) {
 
@@ -219,7 +267,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			
 			//int panelSize = Math.min( 400,  h/4 );
 			int panelSize = h/3;
-			
+System.out.println("[SingleScalarFieldView.View setPosition] " + winX.start() + ", " + winY.start() + ", " + winX.length() + ", " + winY.length());
 			sfv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			ctv.setPosition( winX.start(),    winY.start(),    winX.length(), winY.length()   );
 			
@@ -468,6 +516,8 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			ScalarField2D red2D = new Subsample2D( _sf2D, stepX, stepY );
 			ScalarField3D red3D = new Subsample3D( _sf3D, stepX, stepY, stepZ );
 
+			hist_cache.setData(red3D);
+
 			switch(viewmode){
 			case SCALARFIELD: view_sf2d.set( red2D );			    break;
 			case MOMENT0: 	  view_sf2d.set( new Moment0( red3D ) ); break;
@@ -476,6 +526,7 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			default: break;
 			}
 			view_sf3d.set( red3D );
+			hist_cache.setData(red3D);
 
 			// update the color maps
 			double [] r = ScalarFieldND.Default.getValueRange( view_sf2d.get() );
@@ -507,6 +558,13 @@ public class SingleScalarFieldView extends DefaultGLFrame {
 			if( super.keyPressed(key) ) return true;
 			if( key == '-' ){ dataM.curZ.decr(); return true; }
 			if( key == '+' ){ dataM.curZ.incr(); return true; }
+			// temporary
+//			if( key == 'o' ){ dataM.zoom.set((dataM.zoom.get() >= 0.1)?(dataM.zoom.get() - 0.05):dataM.zoom.get()); return true; }
+//			if( key == 'i' ){ dataM.zoom.set(dataM.zoom.get() + 0.05); return true; }
+			if( key == 'o' ){ dataM.zoom.set(dataM.zoom.get()*Math.pow(0.9, -2)); return true; }
+			if( key == 'i' ){ dataM.zoom.set(dataM.zoom.get()*Math.pow(0.9, 2)); return true; }
+			if( key == 'r' ){ dataM.zoom.set(1.0); return true; }
+			// temporary
 			return false;
 		}
 	}

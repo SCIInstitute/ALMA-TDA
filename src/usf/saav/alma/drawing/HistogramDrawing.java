@@ -31,6 +31,8 @@ import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 
+import usf.saav.alma.util.HistogramCache2D;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class HistogramDrawing.
@@ -54,8 +56,9 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 	 *
 	 * @param bins the bins
 	 */
-	public HistogramDrawing( int bins ){
-		binCount = bins;
+	public HistogramDrawing( int bins ) {
+		this( bins, false );
+		//binCount = bins;
 	}
 
 	/**
@@ -64,7 +67,7 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 	 * @param bins the bins
 	 * @param verbose the verbose
 	 */
-	public HistogramDrawing( int bins, boolean verbose ){
+	public HistogramDrawing( int bins, boolean verbose ) {
 		super(verbose);
 		binCount = bins;
 	}
@@ -112,16 +115,12 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 	public void setData( ScalarFieldND sf ){ _setData( sf ); }
 
 	protected void _setData( ScalarFieldND sf ){
-		// TODO: We need a better solution here. Precomputing some histogram data seems most logical. That could happen during the caching phase.
-		// want to sample 400k or fewer elements
-		int step = (sf.getSize()+399999) / 400000;
-		//System.err.println( sf.getSize() + ", " + step + ", " + (sf.getSize()/step) );
 		range = new FloatRange1D( );
-		for(int i = 0; i < sf.getSize(); i+=step){
+		for(int i = 0; i < sf.getSize(); i++){
 			range.expand( sf.getValue(i) );
 		}
 		histogram = new Histogram1D( range, binCount );
-		for(int i = 0; i < sf.getSize(); i+=step){
+		for(int i = 0; i < sf.getSize(); i++){
 			float v = sf.getValue(i);
 			if( !Float.isNaN(v) )
 				histogram.Add( v );
@@ -130,6 +129,37 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 		norm_dist = new Gaussian( histogram.getApproximateMean(), histogram.getApproximateStdev() );
 
 	}
+
+//	protected void _setData( ScalarFieldND sf ){
+//		// TODO: We need a better solution here. Precomputing some histogram data seems most logical.
+//		// That could happen during the caching phase.
+//		// want to sample 400k or fewer elements
+//		int step = (sf.getSize()+399999) / 400000;
+//System.out.println("[HistogramDrawing _setData] step=" + step);
+//		//System.err.println( sf.getSize() + ", " + step + ", " + (sf.getSize()/step) );
+//		range = new FloatRange1D( );
+//		for(int i = 0; i < sf.getSize(); i+=step){
+//			range.expand( sf.getValue(i) );
+//		}
+//		histogram = new Histogram1D( range, binCount );
+//System.out.println("[HistogramDrawing _setData] scalarfield size=" + sf.getSize());
+//int nancounter = 0;
+//		for(int i = 0; i < sf.getSize(); i+=step){
+//			float v = sf.getValue(i);
+//			if( !Float.isNaN(v) )
+//				histogram.Add( v );
+//            else nancounter+=1;
+//		}
+//
+//		binMax = histogram.GetMaximumBin() + histogram.GetMaximumBin()/20;
+//		norm_dist = new Gaussian( histogram.getApproximateMean(), histogram.getApproximateStdev() );
+//System.out.println("[HistogramDrawing _setData] #NaNs=" + nancounter);
+//System.out.println(histogram.GetBinCount());
+//System.out.println(histogram.GetMaximumBin());
+//System.out.println(binMax);
+//System.out.println(norm_dist.getMean());
+//System.out.println(norm_dist.getStdev());
+//	}
 
 	/* (non-Javadoc)
 	 * @see usf.saav.common.mvc.ViewComponent.Default#draw(usf.saav.common.mvc.swing.TGraphics)

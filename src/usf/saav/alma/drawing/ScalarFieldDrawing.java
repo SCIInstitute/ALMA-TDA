@@ -93,6 +93,9 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		if( sf == null ) return;
 		if( colormap == null ) return;
 
+System.out.println("[ScalarFieldDrawing update] scalarfield width=" + sf.getWidth());
+System.out.println("[ScalarFieldDrawing update] scalarfield height=" + sf.getHeight());
+
 		img = toPImage( papplet, sf, colormap );
 	}
 
@@ -103,6 +106,11 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 	public void draw(TGraphics g) {
 		if( !isEnabled() ) return;
 		if( img == null ) return;
+//System.out.println("[ScalarFieldDrawing draw] image: " +
+//(int)(winX.length()/2+tx) + ", " +
+//(int)(winY.length()/2+ty) + ", " +
+//(int)(zoom*winX.length()) +", " +
+//(int)(zoom*winY.length()));
 
 		g.imageMode(TGraphics.CENTER);
 		g.image( img, (int)(winX.length()/2+tx), (int)(winY.length()/2+ty), (int)(zoom*winX.length()), (int)(zoom*winY.length()) ); 
@@ -147,6 +155,8 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 	
 	
 	private static TImage toPImage( TGraphics g, ScalarField2D sf, Colormap colormap ){
+//System.out.println("[ScalarFieldDrawing toPImage] scalarfield width=" + sf.getWidth());
+//System.out.println("[ScalarFieldDrawing toPImage] scalarfield height=" + sf.getHeight());
 		TImage img = g.createImage( sf.getWidth(), sf.getHeight(), TGraphics.RGB);
 		int i = 0;
 		for(int h = 0; h < sf.getHeight(); h++){
