@@ -121,6 +121,7 @@ public class AlmaTDA extends TApp  {
 		menuStandard.monFileLoad.addMonitor(  this, "fileLoad" );
 		menuStandard.monFileAppend.addMonitor( this, "fileAppend" );
 		menuStandard.monFileClose.addMonitor(  this, "fileClose" );
+		menuStandard.monFileExport.addMonitor( this, "fileExport" );
 		menuStandard.monFileRefreshCache.addMonitor( this, "rebuildCache" );
 		menuStandard.monWindowProp.addMonitor( this, "showGeneralProperties" );
 		menuStandard.monWindowHist.addMonitor( this, "showHistory" );
@@ -187,6 +188,22 @@ public class AlmaTDA extends TApp  {
 	public void fileLoad( String filename ){
 		fileClose(); 
 		loadFile( filename, null ); 
+	}
+
+	public void fileExport( ) {
+		final JFileChooser fc = new JFileChooser();
+		fc.setFileFilter( new FitsFileFilter() );
+
+		switch( fc.showSaveDialog(this) ){
+		case JFileChooser.APPROVE_OPTION:
+System.out.println(fc.getSelectedFile().getAbsolutePath());
+			break;
+		case JFileChooser.CANCEL_OPTION:
+			return;
+		case JFileChooser.ERROR_OPTION:
+			System.err.println( "JFileChooser error" );
+			return;
+		};
 	}
 
 	public void rebuildCache( ){

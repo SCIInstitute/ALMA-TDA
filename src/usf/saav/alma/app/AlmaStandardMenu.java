@@ -43,6 +43,7 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 	private JMenuItem menuRefreshCache;
 	private JMenuItem menuClose;
 	private JMenuItem menuExit;
+	private JMenuItem menuExport;
 
 	private JMenu menuProperties;
 
@@ -50,6 +51,7 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 	public  MonitoredTrigger monFileAppend		 = new MonitoredTrigger("Append File");
 	public  MonitoredTrigger monFileRefreshCache = new MonitoredTrigger("Refresh Cache");
 	public  MonitoredTrigger monFileClose		 = new MonitoredTrigger("File Close");
+	public  MonitoredTrigger monFileExport = new MonitoredTrigger("File Export");
 
 	public  MonitoredTrigger monWindowProp = new MonitoredTrigger("Properties");
 	public  MonitoredTrigger monWindowHist = new MonitoredTrigger("History");
@@ -88,6 +90,10 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 		}
 
 
+		menuExport = new JMenuItem("Export", KeyEvent.VK_E);
+		menuExport.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
+		menuExport.addActionListener( this );
+
 		menuAppend = new JMenuItem("Append Volume", KeyEvent.VK_A );
 		menuAppend.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
 		menuAppend.addActionListener( this );
@@ -109,6 +115,7 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 		menuFile.add(menuAppend);
 		menuFile.add(menuRefreshCache);
 		menuFile.addSeparator();
+		menuFile.add(menuExport);
 		menuFile.add(menuClose);
 		menuFile.addSeparator();
 		menuFile.add(menuExit);
@@ -148,6 +155,7 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 		if( e.getSource() == menuProps		 ){ monWindowProp.trigger();	   }
 		if( e.getSource() == menuHist		 ){ monWindowHist.trigger();	   }
 		if( e.getSource() == menuVol		 ){ monWindowVol.trigger();		   }
+		if( e.getSource() == menuExport      ){ monFileExport.trigger();       }
 		for( int i = 0; i < recentItems.size(); i++){
 			if( e.getSource() == recentItems.get(i) ){
 				monFileLoad.set( recentItems.get(i).getText() );
