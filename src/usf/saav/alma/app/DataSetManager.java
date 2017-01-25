@@ -38,6 +38,7 @@ import usf.saav.alma.data.processors.Extended3D;
 import usf.saav.alma.data.processors.Extract2DFrom3D;
 import usf.saav.alma.data.processors.Subset2D;
 import usf.saav.common.range.IntRange1D;
+import usf.saav.common.range.FloatRange1D;
 import usf.saav.scalarfield.ScalarField2D;
 import usf.saav.scalarfield.ScalarField3D;
 
@@ -62,56 +63,14 @@ public class DataSetManager {
 
 		reader.add( new FitsAdder(fr0,fr1) );
 		data = reader.firstElement().getVolume(0);
-	
-		try {
-			settings = new Settings( filename + ".snapshot" );
-			x0 = settings.initInteger( "x0", getXCenter() );
-			y0 = settings.initInteger( "y0", getYCenter() );
-			z0 = settings.initInteger( "z0", 0 );
-			z1 = settings.initInteger( "z1", 20 );
-			curZ = settings.initInteger( "curZ", 0 );
-			zoom = settings.initDouble( "zoom", 1 );
-			
-			x0.setValidRange( reader.firstElement().getAxesSize()[0] );
-			y0.setValidRange( reader.firstElement().getAxesSize()[1] );
-			z0.setValidRange( reader.firstElement().getAxesSize()[2] );
-			z1.setValidRange( reader.firstElement().getAxesSize()[2] );
-			curZ.setValidRange( reader.firstElement().getAxesSize()[2] );
-			
-		} catch (JSONException e ) {
-			e.printStackTrace();
-		}
-		catch ( IOException e ) {
-			e.printStackTrace();
-		}
+		initSettings(filename);
 	}
-	
+
 	public DataSetManager( BuildCacheProgressView progress, String filename ) throws IOException, FitsException {
 
 		reader.add( new SafeFitsReader( new CachedFitsReader( new RawFitsReader(filename, true), progress, true ), true ) );
 		data = reader.firstElement().getVolume(0);
-	
-		try {
-			settings = new Settings( filename + ".snapshot" );
-			x0 = settings.initInteger( "x0", getXCenter() );
-			y0 = settings.initInteger( "y0", getYCenter() );
-			z0 = settings.initInteger( "z0", 0 );
-			z1 = settings.initInteger( "z1", 20 );
-			curZ = settings.initInteger( "curZ", 0 );
-			zoom = settings.initDouble( "zoom", 1 );
-			
-			x0.setValidRange( reader.firstElement().getAxesSize()[0] );
-			y0.setValidRange( reader.firstElement().getAxesSize()[1] );
-			z0.setValidRange( reader.firstElement().getAxesSize()[2] );
-			z1.setValidRange( reader.firstElement().getAxesSize()[2] );
-			curZ.setValidRange( reader.firstElement().getAxesSize()[2] );
-			
-		} catch (JSONException e ) {
-			e.printStackTrace();
-		}
-		catch ( IOException e ) {
-			e.printStackTrace();
-		}
+		initSettings(filename);
 	}
 
 	public void rebuildCache( BuildCacheProgressView progress ){
@@ -156,5 +115,37 @@ public class DataSetManager {
 		int min = reader.firstElement().getAxesSize()[1].start();
 		int max = reader.firstElement().getAxesSize()[1].end();
 		return (min+max)/2;
+	}
+
+	private void initSettings(String filename)
+	{
+		try {
+			settings = new Settings( filename + ".snapshot" );
+			x0 = settings.initInteger( "x0", getXCenter() );
+			y0 = settings.initInteger( "y0", getYCenter() );
+			z0 = settings.initInteger( "z0", 0 );
+			z1 = settings.initInteger( "z1", 20 );
+			curZ = settings.initInteger( "curZ", 0 );
+			zoom = settings.initDouble( "zoom", 1 );
+
+			x0.setValidRange( reader.firstElement().getAxesSize()[0] );
+			y0.setValidRange( reader.firstElement().getAxesSize()[1] );
+			z0.setValidRange( reader.firstElement().getAxesSize()[2] );
+			z1.setValidRange( reader.firstElement().getAxesSize()[2] );
+			curZ.setValidRange( reader.firstElement().getAxesSize()[2] );
+
+			int maxScaleFactor = 128;
+			int zoomX = reader.firstElement().getAxesSize()[0].end()/maxScaleFactor;
+			int zoomY = reader.firstElement().getAxesSize()[1].end()/maxScaleFactor;
+			// approximately limit zoom based on scalar field sizes
+			float maxZoom = (float)( zoomX > zoomY ? zoomX : zoomY );
+			zoom.setValidRange(new FloatRange1D(1e-02f, maxZoom));
+
+		} catch (JSONException e ) {
+			e.printStackTrace();
+		}
+		catch ( IOException e ) {
+			e.printStackTrace();
+		}
 	}
 }
