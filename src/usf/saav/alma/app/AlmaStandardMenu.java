@@ -90,7 +90,7 @@ public class AlmaStandardMenu extends JMenuBar implements ActionListener {
 		}
 
 
-		menuExport = new JMenuItem("Export", KeyEvent.VK_E);
+		menuExport = new JMenuItem("FITS File Export", KeyEvent.VK_E);
 		menuExport.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
 		menuExport.addActionListener( this );
 

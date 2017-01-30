@@ -29,7 +29,6 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.filechooser.FileFilter;
 
-import nom.tam.fits.common.FitsException;
 import usf.saav.alma.app.views.AlmaGui;
 import usf.saav.alma.app.views.BuildCacheProgressView;
 import usf.saav.alma.app.views.HistoryView;
@@ -39,6 +38,13 @@ import usf.saav.alma.app.views.VolumeRenderingView;
 import usf.saav.common.jocl.joclController;
 import usf.saav.common.mvc.swing.TApp;
 import usf.saav.common.mvc.swing.TGLFrame;
+import usf.saav.scalarfield.ScalarField3D;
+
+import nom.tam.fits.Fits;
+import nom.tam.fits.FitsFactory;
+import nom.tam.fits.common.FitsException;
+import nom.tam.util.BufferedFile;
+
 
 /**
  * The Class AlmaTDARelease.
@@ -174,7 +180,7 @@ public class AlmaTDA extends TApp  {
 		switch( fc.showOpenDialog(this) ){
 		case JFileChooser.APPROVE_OPTION: 
 			fileClose(); 
-			loadFile( fc.getSelectedFile().getAbsolutePath(), null ); 
+			loadFile( fc.getSelectedFile().getAbsolutePath(), null );
 			break;
 		case JFileChooser.CANCEL_OPTION:  
 			return;
@@ -190,13 +196,16 @@ public class AlmaTDA extends TApp  {
 		loadFile( filename, null ); 
 	}
 
-	public void fileExport( ) {
+	public void fileExport( ) throws FitsException {
 		final JFileChooser fc = new JFileChooser();
 		fc.setFileFilter( new FitsFileFilter() );
 
 		switch( fc.showSaveDialog(this) ){
 		case JFileChooser.APPROVE_OPTION:
-System.out.println(fc.getSelectedFile().getAbsolutePath());
+			String filepath = fc.getSelectedFile().getAbsolutePath();
+			if (! filepath.toLowerCase().endsWith(".fits"))
+				filepath += ".fits";
+			exportFile( filepath );
 			break;
 		case JFileChooser.CANCEL_OPTION:
 			return;
@@ -208,7 +217,7 @@ System.out.println(fc.getSelectedFile().getAbsolutePath());
 
 	public void rebuildCache( ){
 		new Thread() {
-            public void run() {
+			public void run() {
         		setVisible(false);
         		BuildCacheProgressView.resetGUI();
         		BuildCacheProgressView.showGUI();
@@ -268,6 +277,38 @@ System.out.println(fc.getSelectedFile().getAbsolutePath());
 
 		this.setTitle( "ALMA TDA" );
 		this.setJMenuBar( menuStartup );
+	}
+
+	public void exportFile( String filepath ) throws FitsException {
+		new Thread() {
+			public void run() {
+				ScalarField3D sf = dataVM.simp_sf3d.get();
+				final int w = sf.getWidth();
+				final int h = sf.getHeight();
+				final int d = sf.getDepth();
+
+				float [][][] data = new float[w][h][d];
+				try {
+					for (int i = 0; i < w; ++i) {
+						for (int j = 0; j < h; ++j) {
+							for (int k = 0; k < d; ++k) {
+								data[i][j][k] = sf.getValue(i, j, k);
+							}
+						}
+					}
+					Fits fits = new Fits();
+					fits.addHDU(FitsFactory.hduFactory(data));
+					BufferedFile bf = new BufferedFile(filepath, "rw");
+					fits.write(bf);
+					bf.close();
+					fits.close();
+				} catch (FitsException e) {
+					System.out.println("Fits export failed: " + e.getMessage());
+				} catch (IOException e) {
+					System.out.println("BufferedFile created failed: " + e.getMessage());
+				}
+            }
+		}.start();
 	}
 
 	public void loadFile( final String filename, final String filename2 ){
