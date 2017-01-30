@@ -39,9 +39,10 @@ import usf.saav.common.jocl.joclController;
 import usf.saav.common.mvc.swing.TApp;
 import usf.saav.common.mvc.swing.TGLFrame;
 import usf.saav.scalarfield.ScalarField3D;
-
+import nom.tam.fits.BasicHDU;
+import nom.tam.fits.BinaryTable;
 import nom.tam.fits.Fits;
-import nom.tam.fits.FitsFactory;
+//import nom.tam.fits.FitsFactory;
 import nom.tam.fits.common.FitsException;
 import nom.tam.util.BufferedFile;
 
@@ -296,9 +297,16 @@ public class AlmaTDA extends TApp  {
 							}
 						}
 					}
+
+					//fits.addHDU(FitsFactory.hduFactory(data));
+
+					BinaryTable btable = new BinaryTable();
+					btable.addColumn(data);
+
 					Fits fits = new Fits();
-					fits.addHDU(FitsFactory.hduFactory(data));
-					BufferedFile bf = new BufferedFile(filepath, "rw");
+					BasicHDU<BinaryTable> bhdu = Fits.makeHDU(btable);
+					fits.addHDU( bhdu );
+					BufferedFile bf = new BufferedFile(filepath);
 					fits.write(bf);
 					bf.close();
 					fits.close();
