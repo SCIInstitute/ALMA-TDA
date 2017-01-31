@@ -96,14 +96,14 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 					axesRange[i] = new IntRange1D(0);
 					print_info_message("Axis " + i + " " +axesRange[i].toString());
 				}
-			
+
 				//img.info( System.out );
 
-				coordOrigin = new double[nAxis];
-				coordDelta  = new double[nAxis];
+				this.coordOrigin = new double[nAxis];
+				this.coordDelta  = new double[nAxis];
 				for(int i = 0; i < nAxis; i++){
-					coordOrigin[i] = img.getHeader().getDoubleValue("CRVAL"+(i+1));
-					coordDelta[i] = img.getHeader().getDoubleValue("CDELT"+(i+1));
+					this.coordOrigin[i] = img.getHeader().getDoubleValue("CRVAL"+(i+1));
+					this.coordDelta[i] = img.getHeader().getDoubleValue("CDELT"+(i+1));
 				}
 				/*
 				coordOrigin[0] = img.getHeader().getDoubleValue("CRVAL1");
@@ -209,6 +209,15 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		return table;
 	}
 
+	@Override
+	public double [] getCoordOrigin() {
+		return coordOrigin;
+	}
+
+	@Override
+	public double [] getCoordDelta() {
+		return coordDelta;
+	}
 
 	@Override
 	public int getAxisCount(){

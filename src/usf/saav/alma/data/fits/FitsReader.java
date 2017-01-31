@@ -48,11 +48,13 @@ public interface FitsReader {
 	 */
 	public IntRange1D[] getAxesSize();
 
-public void close();
+	public void close();
 
 	public FitsHistory getHistory( );
 	public FitsProperties getProperties( );
 	public FitsTable getTable();
+	public double [] getCoordOrigin();
+	public double [] getCoordDelta();
 
 	public int getAxisCount();
 	
