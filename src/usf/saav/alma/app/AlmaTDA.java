@@ -23,6 +23,7 @@ package usf.saav.alma.app;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+//import java.util.Iterator;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -39,10 +40,11 @@ import usf.saav.common.jocl.joclController;
 import usf.saav.common.mvc.swing.TApp;
 import usf.saav.common.mvc.swing.TGLFrame;
 import usf.saav.scalarfield.ScalarField3D;
-import nom.tam.fits.BasicHDU;
-import nom.tam.fits.BinaryTable;
+import nom.tam.fits.ImageHDU;
 import nom.tam.fits.Fits;
-//import nom.tam.fits.FitsFactory;
+//import nom.tam.fits.HeaderCard;
+//import nom.tam.fits.HeaderCardException;
+import nom.tam.fits.FitsFactory;
 import nom.tam.fits.common.FitsException;
 import nom.tam.util.BufferedFile;
 
@@ -284,29 +286,56 @@ public class AlmaTDA extends TApp  {
 		new Thread() {
 			public void run() {
 				ScalarField3D sf = dataVM.simp_sf3d.get();
-				final int w = sf.getWidth();
-				final int h = sf.getHeight();
-				final int d = sf.getDepth();
 
-				float [][][] data = new float[w][h][d];
+				String originalFilename = dataSM.reader.get(0).getFile().getName();
+				String comment = "Propagated from " + originalFilename;
+				double [] coordOrigin = dataSM.reader.get(0).getCoordOrigin();
+				double [] coordDelta = dataSM.reader.get(0).getCoordDelta();
+
+				final int width = sf.getWidth();
+				final int height = sf.getHeight();
+				final int depth = sf.getDepth();
+
+				// TODO: this is very memory intensive
+				float [][][] data = new float[depth][height][width];
 				try {
-					for (int i = 0; i < w; ++i) {
-						for (int j = 0; j < h; ++j) {
-							for (int k = 0; k < d; ++k) {
-								data[i][j][k] = sf.getValue(i, j, k);
+					for (int i = 0; i < depth; ++i) {
+						for (int j = 0; j < height; ++j) {
+							for (int k = 0; k < width; ++k) {
+								data[i][j][k] = sf.getValue(k, j, i);
 							}
 						}
 					}
 
-					//fits.addHDU(FitsFactory.hduFactory(data));
-
-					BinaryTable btable = new BinaryTable();
-					btable.addColumn(data);
-
 					Fits fits = new Fits();
-					BasicHDU<BinaryTable> bhdu = Fits.makeHDU(btable);
-					fits.addHDU( bhdu );
-					BufferedFile bf = new BufferedFile(filepath);
+					fits.addHDU(FitsFactory.hduFactory(data));
+					ImageHDU ihdu = (ImageHDU) fits.getHDU(0);
+
+					// propagate header info from RawFitsReader
+					for(int i = 0; i < coordOrigin.length; i++) {
+						ihdu.getHeader().addValue("CRVAL"+(i+1), coordOrigin[i], comment);
+					}
+
+					for(int i = 0; i < coordDelta.length; i++) {
+						ihdu.getHeader().addValue("CDELT"+(i+1), coordDelta[i], comment);
+					}
+
+					// TODO: setting cards from FitsProperties results in a bad header
+//					FitsProperties properties = dataSM.reader.get(0).getProperties();
+//					Iterator<FitsProperty> iter = properties.iterator();
+//
+//					while( iter.hasNext() ) {
+//						try {
+//							FitsProperty property = iter.next();
+//							HeaderCard card = property.toHeaderCard();
+//							ihdu.getHeader().addLine(card);
+//						}
+//						catch (HeaderCardException e) {
+//							System.out.println("Creating HeaderCard failed: " + e.getMessage());
+//						}
+//					}
+
+					BufferedFile bf = new BufferedFile(filepath, "rw");
 					fits.write(bf);
 					bf.close();
 					fits.close();
