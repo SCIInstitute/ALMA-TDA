@@ -41,12 +41,12 @@ import usf.saav.common.mvc.swing.TApp;
 import usf.saav.common.mvc.swing.TGLFrame;
 import usf.saav.scalarfield.ScalarField3D;
 import nom.tam.fits.ImageHDU;
-import nom.tam.fits.Fits;
-//import nom.tam.fits.HeaderCard;
-//import nom.tam.fits.HeaderCardException;
 import nom.tam.fits.FitsFactory;
+import nom.tam.fits.FitsUtil;
 import nom.tam.fits.common.FitsException;
 import nom.tam.util.BufferedFile;
+//import nom.tam.fits.HeaderCard;
+//import nom.tam.fits.HeaderCardException;
 
 import com.google.common.base.Stopwatch;
 import java.util.concurrent.TimeUnit;
@@ -298,26 +298,23 @@ Stopwatch stopwatch = Stopwatch.createStarted();
 		double [] coordOrigin = dataSM.reader.get(0).getCoordOrigin();
 		double [] coordDelta = dataSM.reader.get(0).getCoordDelta();
 
-		final int width = sf.getWidth();
-		final int height = sf.getHeight();
-		final int depth = sf.getDepth();
+		// slice dims
+		final int SLICEWIDTH = sf.getWidth();
+		final int SLICEHEIGHT = sf.getHeight();
+		// channels
+		final int DEPTH = sf.getDepth();
+		final int WORDSIZE = 4;
 
-		// TODO: this is very memory intensive
-		float [][][] data = new float[depth][height][width];
 		try {
-			for (int i = 0; i < depth; ++i) {
-				for (int j = 0; j < height; ++j) {
-					for (int k = 0; k < width; ++k) {
-						data[i][j][k] = sf.getValue(k, j, i);
-					}
-				}
-			}
+			float [][][] data = new float[1][SLICEHEIGHT][SLICEWIDTH];
+			BufferedFile bf = new BufferedFile(filepath, "rw", 16384);
 
-			Fits fits = new Fits();
-			fits.addHDU(FitsFactory.hduFactory(data));
-			ImageHDU ihdu = (ImageHDU) fits.getHDU(0);
+			ImageHDU ihdu = (ImageHDU) FitsFactory.hduFactory(data);
+			ihdu.getHeader().addValue("NAXIS3", DEPTH, "Actual number of channels");
 
 			// propagate header info from RawFitsReader
+			// Note: assuming first reader was the one that read the displayed data cube.
+			// It's probably a reasonable assumption...
 			for(int i = 0; i < coordOrigin.length; i++) {
 				ihdu.getHeader().addValue("CRVAL"+(i+1), coordOrigin[i], comment);
 			}
@@ -341,14 +338,26 @@ Stopwatch stopwatch = Stopwatch.createStarted();
 //						}
 //					}
 
-			BufferedFile bf = new BufferedFile(filepath, "rw", 16384);
-			fits.write(bf);
+			ihdu.getHeader().write(bf);
+
+			// write out data cube by channel
+			for (int d = 0; d < DEPTH; ++d) {
+				for (int w = 0; w < SLICEWIDTH; ++w) {
+					for (int h = 0; h < SLICEHEIGHT; ++h) {
+						data[0][h][w] = sf.getValue(w, h, d);
+					}
+				}
+				bf.writeArray(data);
+			}
+
+			FitsUtil.pad(bf, SLICEWIDTH*SLICEHEIGHT*DEPTH*WORDSIZE);
 			bf.close();
-			fits.close();
 		} catch (FitsException e) {
 			System.out.println("Fits export failed: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("BufferedFile created failed: " + e.getMessage());
+		} catch (java.lang.OutOfMemoryError e) {
+			System.out.println("System is out of memory. Try zooming out and try again.");
 		}
 
 stopwatch.stop(); // optional
