@@ -48,11 +48,6 @@ import nom.tam.util.BufferedFile;
 //import nom.tam.fits.HeaderCard;
 //import nom.tam.fits.HeaderCardException;
 
-import com.google.common.base.Stopwatch;
-import java.util.concurrent.TimeUnit;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-
 
 /**
  * The Class AlmaTDARelease.
@@ -60,8 +55,6 @@ import java.text.SimpleDateFormat;
 public class AlmaTDA extends TApp  {
 
 	private static final long serialVersionUID = -226739546547617965L;
-
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH.mm.ss");
 
 	public static void main(String args[]) {
 		BuildCacheProgressView.createGUI();
@@ -289,8 +282,6 @@ public class AlmaTDA extends TApp  {
 	}
 
 	public void exportFile( String filepath ) throws FitsException {
-Stopwatch stopwatch = Stopwatch.createStarted();
-
 		ScalarField3D sf = dataVM.simp_sf3d.get();
 
 		String originalFilename = dataSM.reader.get(0).getFile().getName();
@@ -359,12 +350,6 @@ Stopwatch stopwatch = Stopwatch.createStarted();
 		} catch (java.lang.OutOfMemoryError e) {
 			System.out.println("System is out of memory. Try zooming out and try again.");
 		}
-
-stopwatch.stop(); // optional
-@SuppressWarnings("unused")
-long millis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
-Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-System.out.println("[exportFile] time: " + stopwatch + " " + sdf.format(timestamp));
 	}
 
 	public void loadFile( final String filename, final String filename2 ){
