@@ -48,6 +48,11 @@ import nom.tam.fits.FitsFactory;
 import nom.tam.fits.common.FitsException;
 import nom.tam.util.BufferedFile;
 
+import com.google.common.base.Stopwatch;
+import java.util.concurrent.TimeUnit;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 
 /**
  * The Class AlmaTDARelease.
@@ -56,6 +61,7 @@ public class AlmaTDA extends TApp  {
 
 	private static final long serialVersionUID = -226739546547617965L;
 
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH.mm.ss");
 
 	public static void main(String args[]) {
 		BuildCacheProgressView.createGUI();
@@ -283,44 +289,44 @@ public class AlmaTDA extends TApp  {
 	}
 
 	public void exportFile( String filepath ) throws FitsException {
-		new Thread() {
-			public void run() {
-				ScalarField3D sf = dataVM.simp_sf3d.get();
+Stopwatch stopwatch = Stopwatch.createStarted();
 
-				String originalFilename = dataSM.reader.get(0).getFile().getName();
-				String comment = "Propagated from " + originalFilename;
-				double [] coordOrigin = dataSM.reader.get(0).getCoordOrigin();
-				double [] coordDelta = dataSM.reader.get(0).getCoordDelta();
+		ScalarField3D sf = dataVM.simp_sf3d.get();
 
-				final int width = sf.getWidth();
-				final int height = sf.getHeight();
-				final int depth = sf.getDepth();
+		String originalFilename = dataSM.reader.get(0).getFile().getName();
+		String comment = "Propagated from " + originalFilename;
+		double [] coordOrigin = dataSM.reader.get(0).getCoordOrigin();
+		double [] coordDelta = dataSM.reader.get(0).getCoordDelta();
 
-				// TODO: this is very memory intensive
-				float [][][] data = new float[depth][height][width];
-				try {
-					for (int i = 0; i < depth; ++i) {
-						for (int j = 0; j < height; ++j) {
-							for (int k = 0; k < width; ++k) {
-								data[i][j][k] = sf.getValue(k, j, i);
-							}
-						}
+		final int width = sf.getWidth();
+		final int height = sf.getHeight();
+		final int depth = sf.getDepth();
+
+		// TODO: this is very memory intensive
+		float [][][] data = new float[depth][height][width];
+		try {
+			for (int i = 0; i < depth; ++i) {
+				for (int j = 0; j < height; ++j) {
+					for (int k = 0; k < width; ++k) {
+						data[i][j][k] = sf.getValue(k, j, i);
 					}
+				}
+			}
 
-					Fits fits = new Fits();
-					fits.addHDU(FitsFactory.hduFactory(data));
-					ImageHDU ihdu = (ImageHDU) fits.getHDU(0);
+			Fits fits = new Fits();
+			fits.addHDU(FitsFactory.hduFactory(data));
+			ImageHDU ihdu = (ImageHDU) fits.getHDU(0);
 
-					// propagate header info from RawFitsReader
-					for(int i = 0; i < coordOrigin.length; i++) {
-						ihdu.getHeader().addValue("CRVAL"+(i+1), coordOrigin[i], comment);
-					}
+			// propagate header info from RawFitsReader
+			for(int i = 0; i < coordOrigin.length; i++) {
+				ihdu.getHeader().addValue("CRVAL"+(i+1), coordOrigin[i], comment);
+			}
 
-					for(int i = 0; i < coordDelta.length; i++) {
-						ihdu.getHeader().addValue("CDELT"+(i+1), coordDelta[i], comment);
-					}
+			for(int i = 0; i < coordDelta.length; i++) {
+				ihdu.getHeader().addValue("CDELT"+(i+1), coordDelta[i], comment);
+			}
 
-					// TODO: setting cards from FitsProperties results in a bad header
+			// TODO: setting cards from FitsProperties results in a bad header
 //					FitsProperties properties = dataSM.reader.get(0).getProperties();
 //					Iterator<FitsProperty> iter = properties.iterator();
 //
@@ -335,17 +341,21 @@ public class AlmaTDA extends TApp  {
 //						}
 //					}
 
-					BufferedFile bf = new BufferedFile(filepath, "rw");
-					fits.write(bf);
-					bf.close();
-					fits.close();
-				} catch (FitsException e) {
-					System.out.println("Fits export failed: " + e.getMessage());
-				} catch (IOException e) {
-					System.out.println("BufferedFile created failed: " + e.getMessage());
-				}
-            }
-		}.start();
+			BufferedFile bf = new BufferedFile(filepath, "rw", 16384);
+			fits.write(bf);
+			bf.close();
+			fits.close();
+		} catch (FitsException e) {
+			System.out.println("Fits export failed: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("BufferedFile created failed: " + e.getMessage());
+		}
+
+stopwatch.stop(); // optional
+@SuppressWarnings("unused")
+long millis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+System.out.println("[exportFile] time: " + stopwatch + " " + sdf.format(timestamp));
 	}
 
 	public void loadFile( final String filename, final String filename2 ){
