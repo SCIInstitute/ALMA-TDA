@@ -28,6 +28,7 @@ import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import usf.saav.alma.app.views.AlmaGui;
@@ -348,7 +349,8 @@ public class AlmaTDA extends TApp  {
 		} catch (IOException e) {
 			System.out.println("BufferedFile created failed: " + e.getMessage());
 		} catch (java.lang.OutOfMemoryError e) {
-			System.out.println("System is out of memory. Try zooming out and try again.");
+			JOptionPane.showMessageDialog(this, "System is out of memory. Try zooming out and try again.",
+					                      "Out Of Memory Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
