@@ -20,7 +20,8 @@
  */
 package usf.saav.alma.data.fits;
 
-
+import nom.tam.fits.HeaderCard;
+import nom.tam.fits.HeaderCardException;
 
 public class FitsProperty {
 	String label;
@@ -31,12 +32,17 @@ public class FitsProperty {
 		value = _value;
 		comment = _comment;
 	}
+
 	@Override
-	public String toString( ){
+	public String toString() {
 		String ret = label;
 		if( value != null ) ret += ": " + value; 
 		if( comment != null ) ret += "\t// " + comment;
 		return ret;
+	}
+
+	public HeaderCard toHeaderCard() throws HeaderCardException {
+		return new HeaderCard(label, value, comment);
 	}
 }
 

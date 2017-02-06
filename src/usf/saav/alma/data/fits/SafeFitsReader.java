@@ -73,7 +73,16 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 	public FitsTable getTable( ){
 		return reader.getTable();
 	}
-	
+
+	@Override
+	public double [] getCoordOrigin() {
+		return reader.getCoordOrigin();
+	}
+
+	@Override
+	public double [] getCoordDelta() {
+		return reader.getCoordDelta();
+	}
 
 	@Override
 	public void close() {

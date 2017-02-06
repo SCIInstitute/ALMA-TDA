@@ -144,7 +144,16 @@ public class CachedFitsReader extends FitsReader.Default implements FitsReader {
 		return reader.getTable();
 	}
 
-	
+	@Override
+	public double [] getCoordOrigin() {
+		return reader.getCoordOrigin();
+	}
+
+	@Override
+	public double [] getCoordDelta() {
+		return reader.getCoordDelta();
+	}
+
 	private long getOffset( int x, int y, int z ){
 		if( use_zorder )
 			return page_size_elems + sliceOffset*z + partition.getOrdered2( x,  y );

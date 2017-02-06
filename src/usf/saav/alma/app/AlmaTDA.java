@@ -23,13 +23,14 @@ package usf.saav.alma.app;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+//import java.util.Iterator;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import nom.tam.fits.common.FitsException;
 import usf.saav.alma.app.views.AlmaGui;
 import usf.saav.alma.app.views.BuildCacheProgressView;
 import usf.saav.alma.app.views.HistoryView;
@@ -39,6 +40,15 @@ import usf.saav.alma.app.views.VolumeRenderingView;
 import usf.saav.common.jocl.joclController;
 import usf.saav.common.mvc.swing.TApp;
 import usf.saav.common.mvc.swing.TGLFrame;
+import usf.saav.scalarfield.ScalarField3D;
+import nom.tam.fits.ImageHDU;
+import nom.tam.fits.FitsFactory;
+import nom.tam.fits.FitsUtil;
+import nom.tam.fits.common.FitsException;
+import nom.tam.util.BufferedFile;
+//import nom.tam.fits.HeaderCard;
+//import nom.tam.fits.HeaderCardException;
+
 
 /**
  * The Class AlmaTDARelease.
@@ -46,7 +56,6 @@ import usf.saav.common.mvc.swing.TGLFrame;
 public class AlmaTDA extends TApp  {
 
 	private static final long serialVersionUID = -226739546547617965L;
-
 
 	public static void main(String args[]) {
 		BuildCacheProgressView.createGUI();
@@ -121,6 +130,7 @@ public class AlmaTDA extends TApp  {
 		menuStandard.monFileLoad.addMonitor(  this, "fileLoad" );
 		menuStandard.monFileAppend.addMonitor( this, "fileAppend" );
 		menuStandard.monFileClose.addMonitor(  this, "fileClose" );
+		menuStandard.monFileExport.addMonitor( this, "fileExport" );
 		menuStandard.monFileRefreshCache.addMonitor( this, "rebuildCache" );
 		menuStandard.monWindowProp.addMonitor( this, "showGeneralProperties" );
 		menuStandard.monWindowHist.addMonitor( this, "showHistory" );
@@ -173,7 +183,7 @@ public class AlmaTDA extends TApp  {
 		switch( fc.showOpenDialog(this) ){
 		case JFileChooser.APPROVE_OPTION: 
 			fileClose(); 
-			loadFile( fc.getSelectedFile().getAbsolutePath(), null ); 
+			loadFile( fc.getSelectedFile().getAbsolutePath(), null );
 			break;
 		case JFileChooser.CANCEL_OPTION:  
 			return;
@@ -189,9 +199,28 @@ public class AlmaTDA extends TApp  {
 		loadFile( filename, null ); 
 	}
 
+	public void fileExport( ) throws FitsException {
+		final JFileChooser fc = new JFileChooser();
+		fc.setFileFilter( new FitsFileFilter() );
+
+		switch( fc.showSaveDialog(this) ){
+		case JFileChooser.APPROVE_OPTION:
+			String filepath = fc.getSelectedFile().getAbsolutePath();
+			if (! filepath.toLowerCase().endsWith(".fits"))
+				filepath += ".fits";
+			exportFile( filepath );
+			break;
+		case JFileChooser.CANCEL_OPTION:
+			return;
+		case JFileChooser.ERROR_OPTION:
+			System.err.println( "JFileChooser error" );
+			return;
+		};
+	}
+
 	public void rebuildCache( ){
 		new Thread() {
-            public void run() {
+			public void run() {
         		setVisible(false);
         		BuildCacheProgressView.resetGUI();
         		BuildCacheProgressView.showGUI();
@@ -251,6 +280,78 @@ public class AlmaTDA extends TApp  {
 
 		this.setTitle( "ALMA TDA" );
 		this.setJMenuBar( menuStartup );
+	}
+
+	public void exportFile( String filepath ) throws FitsException {
+		ScalarField3D sf = dataVM.simp_sf3d.get();
+
+		String originalFilename = dataSM.reader.get(0).getFile().getName();
+		String comment = "Propagated from " + originalFilename;
+		double [] coordOrigin = dataSM.reader.get(0).getCoordOrigin();
+		double [] coordDelta = dataSM.reader.get(0).getCoordDelta();
+
+		// slice dims
+		final int SLICEWIDTH = sf.getWidth();
+		final int SLICEHEIGHT = sf.getHeight();
+		// channels
+		final int DEPTH = sf.getDepth();
+		final int WORDSIZE = 4;
+
+		try {
+			float [][][] data = new float[1][SLICEHEIGHT][SLICEWIDTH];
+			BufferedFile bf = new BufferedFile(filepath, "rw", 16384);
+
+			ImageHDU ihdu = (ImageHDU) FitsFactory.hduFactory(data);
+			ihdu.getHeader().addValue("NAXIS3", DEPTH, "Actual number of channels");
+
+			// propagate header info from RawFitsReader
+			// Note: assuming first reader was the one that read the displayed data cube.
+			// It's probably a reasonable assumption...
+			for(int i = 0; i < coordOrigin.length; i++) {
+				ihdu.getHeader().addValue("CRVAL"+(i+1), coordOrigin[i], comment);
+			}
+
+			for(int i = 0; i < coordDelta.length; i++) {
+				ihdu.getHeader().addValue("CDELT"+(i+1), coordDelta[i], comment);
+			}
+
+			// TODO: setting cards from FitsProperties results in a bad header
+//					FitsProperties properties = dataSM.reader.get(0).getProperties();
+//					Iterator<FitsProperty> iter = properties.iterator();
+//
+//					while( iter.hasNext() ) {
+//						try {
+//							FitsProperty property = iter.next();
+//							HeaderCard card = property.toHeaderCard();
+//							ihdu.getHeader().addLine(card);
+//						}
+//						catch (HeaderCardException e) {
+//							System.out.println("Creating HeaderCard failed: " + e.getMessage());
+//						}
+//					}
+
+			ihdu.getHeader().write(bf);
+
+			// write out data cube by channel
+			for (int d = 0; d < DEPTH; ++d) {
+				for (int w = 0; w < SLICEWIDTH; ++w) {
+					for (int h = 0; h < SLICEHEIGHT; ++h) {
+						data[0][h][w] = sf.getValue(w, h, d);
+					}
+				}
+				bf.writeArray(data);
+			}
+
+			FitsUtil.pad(bf, SLICEWIDTH*SLICEHEIGHT*DEPTH*WORDSIZE);
+			bf.close();
+		} catch (FitsException e) {
+			System.out.println("Fits export failed: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("BufferedFile created failed: " + e.getMessage());
+		} catch (java.lang.OutOfMemoryError e) {
+			JOptionPane.showMessageDialog(this, "System is out of memory. Try zooming out and try again.",
+					                      "Out Of Memory Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	public void loadFile( final String filename, final String filename2 ){
