@@ -47,11 +47,11 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	Fits fits;
 
 	ImageTiler tiler;
-	
+
 	int nAxis;
 
 	IntRange1D [] axesRange;
-	
+
 	double [] coordOrigin;// = new double[4];
 	double [] coordDelta;//  = new double[4];
 
@@ -73,15 +73,15 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		super(verbose);
 
 		file = new File(filename);
-		
+
 		//System.out.println( CompressionManager.isCompressed(file) );
-		
+
 		fits = new Fits( file );
-		
+
 		for(BasicHDU<?> header : fits.read() ){
 
 			if( header instanceof ImageHDU ){
-				
+
 				ImageHDU img = (ImageHDU)header;
 				int [] axes;
 				axes = img.getAxes();
@@ -90,11 +90,11 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 				axesRange = new IntRange1D[4];
 				for(int i = 0; i < nAxis; i++){
 					axesRange[i] = new IntRange1D(0,axes[axes.length-i-1]-1);
-					print_info_message("Axis " + i + " " +axesRange[i].toString());
+					print_info_message("Axis " + i + " -- " +axesRange[i].toString());
 				}
 				for(int i = nAxis; i < 4; i++){
 					axesRange[i] = new IntRange1D(0);
-					print_info_message("Axis " + i + " " +axesRange[i].toString());
+					print_info_message("Axis " + i + " -- " +axesRange[i].toString());
 				}
 
 				//img.info( System.out );
@@ -116,26 +116,26 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 				coordDelta[2] = img.getHeader().getDoubleValue("CDELT3");
 				coordDelta[3] = img.getHeader().getDoubleValue("CDELT4");
 				 */
-				
-      		   Cursor<String, HeaderCard> iter = img.getHeader().iterator();
-      		   HeaderCard card;
-      		   while( (card=iter.next()) != null ){
-      			   if( card.getKey().compareTo("HISTORY")==0 ){
-      				   history.add( card.getComment() );
-      			   }
-      			   else if( card.getKey().compareTo("END")==0 ){
-      				   break;
-      			   }
-      			   else if( card.getKey().length()==0 ){
-      				   continue;
-      			   }
-      			   else{
-      				 properties.add( new FitsProperty( card.getKey(), card.getValue(), card.getComment() ) );
-      				 //System.out.println( card.getKey() + " " + card.getValue() + " " + card.getComment() );
-      			   }
-      		   }
-      		   
-      		   //img.get
+
+				Cursor<String, HeaderCard> iter = img.getHeader().iterator();
+				HeaderCard card;
+				while( (card=iter.next()) != null ){
+					if( card.getKey().compareTo("HISTORY")==0 ){
+						history.add( card.getComment() );
+					}
+					else if( card.getKey().compareTo("END")==0 ){
+						break;
+					}
+					else if( card.getKey().length()==0 ){
+						continue;
+					}
+					else{
+						properties.add( new FitsProperty( card.getKey(), card.getValue(), card.getComment() ) );
+						//System.out.println( card.getKey() + " " + card.getValue() + " " + card.getComment() );
+					}
+				}
+
+				//img.get
 				tiler = img.getTiler();
 
 			}
@@ -147,32 +147,34 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 				for( int i = 0; i < bt.getNCols(); i++){
 					table.setColumnLabel(i, bt.getColumnName(i));
 				}
-				
+
 				for( int row = 0; row < bt.getNRows(); row++){
 					for(int col = 0; col < bt.getNCols(); col++){
 						table.setData( row, col, bt.getElement( row, col) );
 					}
 				}
 
+				/*
 				for( int s : bt.getAxes() ){
 					print_info_message( Integer.toString(s) );
 				}
-				
+
 				print_info_message( table.toString() );
-				
+				 */
+
 			}
 			else{
 				print_warning_message("Unknown Header Type: " + header.getClass().getSimpleName() );
 			}
 
 		}
-		
+
 		//System.exit(0);
 
 
 	}
 
-	
+
 
 	@Override
 	public void close() {
@@ -193,12 +195,12 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public FitsHistory getHistory( ){
 		return history;
 	}
-	
+
 	@Override
 	public FitsProperties getProperties( ){
 		return properties;
@@ -223,9 +225,9 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	public int getAxisCount(){
 		return nAxis;
 	}
-	
-	
-	
+
+
+
 
 	/* (non-Javadoc)
 	 * @see usf.saav.alma.data.fits.FitsReader#getAxesSize()
@@ -351,7 +353,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		public double getCoordinate( int x ){ 
 			return coordOrigin[0] + (x0+x)*coordDelta[0];
 		}
-		*/
+		 */
 
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
@@ -376,7 +378,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		public double getCoordinate( int y ){
 			return coordOrigin[1] + (y0+y)*coordDelta[1];
 		}
-		*/
+		 */
 
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
@@ -400,7 +402,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		public double getCoordinate( int z ){
 			return coordOrigin[2] + (z0+z)*coordDelta[2];
 		}
-		*/
+		 */
 
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
@@ -450,12 +452,12 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		 * @see usf.saav.common.algorithm.Surface2D#getWidth()
 		 */
 		@Override public int getWidth()  { return width; }
-		
+
 		/* (non-Javadoc)
 		 * @see usf.saav.common.algorithm.Surface2D#getHeight()
 		 */
 		@Override public int getHeight() { return height; }
-		
+
 		/* (non-Javadoc)
 		 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
 		 */
@@ -495,17 +497,17 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		 * @see usf.saav.alma.data.ScalarField3D#getWidth()
 		 */
 		@Override public int getWidth()  { return width; }
-		
+
 		/* (non-Javadoc)
 		 * @see usf.saav.alma.data.ScalarField3D#getHeight()
 		 */
 		@Override public int getHeight() { return height; }
-		
+
 		/* (non-Javadoc)
 		 * @see usf.saav.alma.data.ScalarField3D#getDepth()
 		 */
 		@Override public int getDepth()  { return depth; }
-		
+
 		/* (non-Javadoc)
 		 * @see usf.saav.alma.data.ScalarField3D#getValue(int, int, int)
 		 */

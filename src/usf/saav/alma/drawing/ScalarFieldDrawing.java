@@ -104,8 +104,9 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		if( !isEnabled() ) return;
 		if( img == null ) return;
 
+		g.fill(255);
 		g.imageMode(TGraphics.CENTER);
-		g.image( img, (int)(winX.length()/2+tx), (int)(winY.length()/2+ty), (int)(zoom*winX.length()), (int)(zoom*winY.length()) ); 
+		g.image( img, (int)(winX.middle()+tx), (int)(winY.middle()+ty), (int)(zoom*winX.length()), (int)(zoom*winY.length()) );
 
 	}
 

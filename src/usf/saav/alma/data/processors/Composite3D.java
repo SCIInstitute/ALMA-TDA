@@ -43,7 +43,7 @@ public class Composite3D extends ScalarField3D.Default implements ScalarField3D 
 	 * @param offY the off Y
 	 * @param offZ the off Z
 	 */
-	public Composite3D( ScalarField3D base, ScalarField3D composite, int offX, int offY, int offZ ){
+	public Composite3D( ScalarField3D base, ScalarFieldND composite, int offX, int offY, int offZ ){
 		this.base = base;
 		this.composite = composite;
 		this.offX = offX;

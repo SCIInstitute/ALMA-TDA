@@ -23,7 +23,7 @@ package usf.saav.alma.app.views;
 import java.util.Arrays;
 import java.util.Map.Entry;
 
-import usf.saav.alma.app.DataViewManager;
+import usf.saav.alma.app.old.DataViewManager;
 import usf.saav.alma.app.views.AlmaGui.MouseMode;
 import usf.saav.alma.app.views.AlmaGui.ViewMode;
 import usf.saav.alma.data.processors.Extract1Dfrom3D;

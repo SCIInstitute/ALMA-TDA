@@ -20,7 +20,7 @@
  */
 package usf.saav.alma.app.views;
 
-import usf.saav.alma.app.DataViewManager;
+import usf.saav.alma.app.old.DataViewManager;
 import usf.saav.alma.drawing.LabelDrawing;
 import usf.saav.alma.drawing.LabelDrawing.BasicLabel;
 import usf.saav.alma.drawing.VolumeRendering.InteractiveTF1D;
