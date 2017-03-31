@@ -150,6 +150,7 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 		if( !isEnabled() ) return;
 		if( rx == null && ry == null ) return;
 
+		
 		float [] p0 = cs.getWindowPosition(rx.start(), ry.start() );
 		float [] p1 = cs.getWindowPosition(rx.end(), ry.end() );
 
@@ -167,7 +168,7 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 
 
 		if( sf == null || cl == null || ct == null ) return;
-		
+
 		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 
 		g.strokeWeight(1);
@@ -207,9 +208,11 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 
 				float px = pp[0];
 				float py = pp[1];
+				
 
-				if( winX.inRange( (float)px ) && winY.inRange( (float)py ) )
+				if( winX.inRange( (float)px ) && winY.inRange( (float)py ) ){
 					g.ellipse( (float)px, (float)py, size, size, (int)(size*1.5) );
+				}
 
 				if( selected.contains(i) ) g.strokeWeight(1);
 
@@ -226,26 +229,27 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 		if( !isEnabled() ) return;
 		if( sf == null || cl == null || ct == null ) return;
 
+		float size = 25;
 		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 		
 		g.stroke(0);
 		g.fill(255,255,255,240);
-		g.rect( winX.end()-105, winY.end()-85, 100, 80);
+		g.rect( winX.end()-10.5f*size, winY.end()-8.5f*size, 10.0f*size, 8.0f*size );
 
-		g.fill(100,100,255); g.rect( winX.end()-100, winY.end()-80, 10, 10 );
-		g.fill(255,255,  0); g.rect( winX.end()-100, winY.end()-65, 10, 10 );
-		g.fill(255,  0,255); g.rect( winX.end()-100, winY.end()-50, 10, 10 );
-		g.fill(200,200,200); g.rect( winX.end()-100, winY.end()-35, 10, 10 );
-		g.fill(255,  0,  0); g.rect( winX.end()-100, winY.end()-20, 10, 10 );
+		g.fill(100,100,255); g.rect( winX.end()-10*size, winY.end()-8.0f*size, size, size );
+		g.fill(255,255,  0); g.rect( winX.end()-10*size, winY.end()-6.5f*size, size, size );
+		g.fill(255,  0,255); g.rect( winX.end()-10*size, winY.end()-5.0f*size, size, size );
+		g.fill(200,200,200); g.rect( winX.end()-10*size, winY.end()-3.5f*size, size, size );
+		g.fill(255,  0,  0); g.rect( winX.end()-10*size, winY.end()-2.0f*size, size, size );
 
 		g.fill(0);
-		g.textSize(10);
+		g.textSize((int)size);
 		g.textAlign( TGraphics.LEFT, TGraphics.TOP );
-		g.text("Leaf",			winX.end()-85, winY.end()-90+10);
-		g.text("Merge",			winX.end()-85, winY.end()-75+10);
-		g.text("Split",			winX.end()-85, winY.end()-60+10);
-		g.text("Out of Layer",  winX.end()-85, winY.end()-45+10);
-		g.text("Unknown/Error", winX.end()-85, winY.end()-30+10);
+		g.text("Leaf",			(int)(winX.end()-8.5f*size), (int)(winY.end()-9.0f*size+1.0f*size));
+		g.text("Merge",			(int)(winX.end()-8.5f*size), (int)(winY.end()-7.5f*size+1.0f*size));
+		g.text("Split",			(int)(winX.end()-8.5f*size), (int)(winY.end()-6.0f*size+1.0f*size));
+		g.text("Out of Layer",  (int)(winX.end()-8.5f*size), (int)(winY.end()-4.5f*size+1.0f*size));
+		g.text("Unknown/Error", (int)(winX.end()-8.5f*size), (int)(winY.end()-3.0f*size+1.0f*size));
 
 		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 

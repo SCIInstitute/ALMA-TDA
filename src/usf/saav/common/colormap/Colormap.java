@@ -29,7 +29,7 @@ import usf.saav.common.types.Float4;
 public interface Colormap {
 	    
 	    public Float4 getColor( float t );
-	    public void   drawScale( TGraphics g, int loc_x, int loc_y, int w, int h );
+	    public void   drawScale( TGraphics g, int loc_x, int loc_y, int w, int h, int textSize );
     
     
     public static abstract class VectorColormap implements Colormap {

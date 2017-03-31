@@ -120,10 +120,11 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		
 		g.hint( TGraphics.DISABLE_DEPTH_TEST );
 
+		float size = 25.0f;
 		g.stroke(0);
 		g.fill(255,255,255,240);
-		g.rect( winX.length()-105, 5, 100, 120);
-		colormap.drawScale(g, winX.length()-100, 10, 20, 110);
+		g.rect( winX.length()-10.5f*size, 5, 10.0f*size, 12.0f*size);
+		colormap.drawScale(g, (int)(winX.length()-10.0f*size), 10, 20, (int)(11.0f*size), (int)size );
 
 		g.hint( TGraphics.ENABLE_DEPTH_TEST );
 		

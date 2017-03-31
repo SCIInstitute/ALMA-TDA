@@ -11,12 +11,12 @@ import usf.saav.scalarfield.PersistenceSimplifier3D;
 import usf.saav.scalarfield.ScalarField3D;
 import usf.saav.topology.contour.PseudoContourTree;
 
-public class VolumeProcessor extends BasicObject {
+public class TDAProcessor3D extends BasicObject {
 
 	PersistenceSimplifier3D ps3d;
 	ScalarField3D vol;
 
-	public VolumeProcessor( ){
+	public TDAProcessor3D( ){
 		super(true);
 	}
 

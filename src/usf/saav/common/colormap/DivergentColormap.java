@@ -77,10 +77,10 @@ public class DivergentColormap implements Colormap {
 	
 
 	@Override
-	public void drawScale( TGraphics g, int loc_x, int loc_y, int w, int h ){
+	public void drawScale( TGraphics g, int loc_x, int loc_y, int w, int h, int textSize ){
 
 		g.hint( TGraphics.DISABLE_DEPTH_TEST );
-		g.textSize(12);
+		g.textSize(textSize);
 		g.noStroke( );
 		g.textAlign(TGraphics.LEFT, TGraphics.BOTTOM);
 		float step = (float)h/40.0f;
@@ -102,7 +102,7 @@ public class DivergentColormap implements Colormap {
 			else if( absMax < 0.01 ) d = new DecimalFormat("0.###E0");
 			else d = new DecimalFormat("#.###");
 			txt = " " + d.format(v);
-			g.text( txt, (int)(loc_x+w), (int) (loc_y+5+(float)i*step*1.01));
+			g.text( txt, (int)(loc_x+w), (int) (loc_y+textSize/2+(float)i*step*1.01));
 		}
 
 		g.hint( TGraphics.ENABLE_DEPTH_TEST );

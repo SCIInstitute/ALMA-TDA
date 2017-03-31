@@ -11,12 +11,12 @@ import usf.saav.scalarfield.PersistenceSimplifier2D;
 import usf.saav.scalarfield.ScalarField2D;
 import usf.saav.topology.contour.PseudoContourTree;
 
-public class SliceProcessor extends BasicObject {
+public class TDAProcessor2D extends BasicObject {
 
 	PersistenceSimplifier2D ps2d;
 	ScalarField2D slice;
 
-	public SliceProcessor( ){
+	public TDAProcessor2D( ){
 		super(true);
 	}
 
@@ -32,6 +32,7 @@ public class SliceProcessor extends BasicObject {
 	}
 
 	public void process( ScalarField2D _slice, float simplification ){
+		
 		slice = _slice;
 
 		this.print_info_message("Constructing Mesh");

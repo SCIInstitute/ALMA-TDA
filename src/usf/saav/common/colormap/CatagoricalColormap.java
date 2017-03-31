@@ -40,7 +40,7 @@ public class CatagoricalColormap extends Colormap.VectorColormap {
 
 
 	@Override
-	public void drawScale(TGraphics g, int loc_x, int loc_y, int w, int h) {
+	public void drawScale(TGraphics g, int loc_x, int loc_y, int w, int h, int textSize) {
 		/*
 	    glDisable(GL_DEPTH_TEST);
 	    glBegin(GL_QUAD_STRIP);

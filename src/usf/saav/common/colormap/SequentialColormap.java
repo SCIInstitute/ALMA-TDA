@@ -60,10 +60,10 @@ public class SequentialColormap extends Colormap.VectorColormap {
 	}
 
 	@Override
-	public void drawScale(TGraphics g, int loc_x, int loc_y, int w, int h) {
+	public void drawScale(TGraphics g, int loc_x, int loc_y, int w, int h, int textSize) {
 
 		g.hint( TGraphics.DISABLE_DEPTH_TEST );
-		g.textSize(16);
+		g.textSize(textSize);
 		g.noStroke( );
 		g.textAlign(TGraphics.LEFT, TGraphics.BOTTOM);
 		float step = (float)h/40.0f;

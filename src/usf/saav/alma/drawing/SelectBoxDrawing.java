@@ -20,7 +20,10 @@
  */
 package usf.saav.alma.drawing;
 
+import java.util.Vector;
+
 import usf.saav.alma.util.CoordinateSystem;
+import usf.saav.common.Callback;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
@@ -40,6 +43,8 @@ public class SelectBoxDrawing extends ControllerComponent.Default implements Vie
 	private float selV0, selV1;
 
 	private CoordinateSystem cs;
+
+	private Vector<Callback> cb_release = new Vector<Callback>();
 
 	/**
 	 * Instantiates a new select box drawing.
@@ -147,8 +152,19 @@ public class SelectBoxDrawing extends ControllerComponent.Default implements Vie
 	 */
 	@Override
 	public boolean mouseReleased( ) {
-		dragOn = false;
+		if( dragOn ){
+			dragOn = false;
+			for( Callback c : cb_release ){ c.call(); }
+		}
 		return false;
+	}
+	
+	public void addReleaseCallback( Object obj, String func ) {
+		try {
+			cb_release.add(new Callback( obj, func ) );
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
