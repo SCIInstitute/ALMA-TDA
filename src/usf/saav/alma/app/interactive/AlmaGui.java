@@ -1,3 +1,23 @@
+/*
+ *     ALMA TDA - Contour tree based simplification and visualization for ALMA
+ *     data cubes.
+ *     Copyright (C) 2016 PAUL ROSEN
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *     You may contact the Paul Rosen at <prosen@usf.edu>.
+ */
 package usf.saav.alma.app.interactive;
 
 import java.awt.Color;
@@ -88,7 +108,7 @@ public class AlmaGui extends JPanel implements ActionListener {
 	private void initControls( ){
 
 	    JPanel slicesubPanel = new JPanel(new GridLayout(0, 2));
-	    slicesubPanel.add( new  JLabel("Active Slice") );
+	    slicesubPanel.add( new  JLabel("View Slice") );
 	    slicesubPanel.add( guiZ = createTextfield( Integer.toString(model.monZ.get()) ) );
 	    slicesubPanel.setPreferredSize( new Dimension(125,20) );
 	    
@@ -99,16 +119,19 @@ public class AlmaGui extends JPanel implements ActionListener {
 	    JPanel slicePanel = new JPanel(new GridLayout(0, 1));
 	    slicePanel.setBorder( BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.black), "1. Navigate" ) );
 	    slicePanel.add(slicesubPanel);
-	    slicePanel.add( new JLabel("Active Volume") );
-	    slicePanel.add(volPanel);
+	    //slicePanel.add( new JLabel("Compute Volume") );
+	    //slicePanel.add(volPanel);
 
 	    
     	ButtonGroup rcDim;
 		rcDim = new ButtonGroup();
 		JPanel panelDim = new JPanel(new GridLayout(0, 1));
-		panelDim.setBorder( BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.black), "2. Set Tree Dimension" ) );
-		panelDim.add( guiDim2D      = createRadioButton("2D",         true, rcDim) );
-		panelDim.add( guiDim2DStack = createRadioButton("2D Stacked", false, rcDim) );
+		panelDim.setBorder( BorderFactory.createTitledBorder( BorderFactory.createLineBorder(Color.black), "2. Tree Configuration" ) );
+		//panelDim.add( guiDim2D      = createRadioButton("2D",         true, rcDim) );
+		//panelDim.add( guiDim2DStack = createRadioButton("2D Stacked", false, rcDim) );
+		panelDim.add( new JLabel("Compute Volume") );
+	    panelDim.add(volPanel);
+		panelDim.add( guiDim2DStack = createRadioButton("2D", true, rcDim) );
 		panelDim.add( guiDim3D      = createRadioButton("3D",         false, rcDim) );
 
     	ButtonGroup rcMM;
@@ -131,10 +154,10 @@ public class AlmaGui extends JPanel implements ActionListener {
 	    JPanel panelBtn = new JPanel(new GridLayout(0, 1));
 	    panelBtn.add( guiBuildTree  = createButton( "5. Calculate & Exit" ) );
 
-		slicePanel.setPreferredSize( new Dimension(160,90) );
-		viewPanel.setPreferredSize(  new Dimension(160,75) );
+		slicePanel.setPreferredSize( new Dimension(160,50) );
+		panelDim.setPreferredSize(   new Dimension(160,110) );
 		panelMM.setPreferredSize(    new Dimension(160,75) );
-		panelDim.setPreferredSize(   new Dimension(160,90) );
+		viewPanel.setPreferredSize(  new Dimension(160,75) );
 		panelBtn.setPreferredSize(   new Dimension(160,55) );
 
 		

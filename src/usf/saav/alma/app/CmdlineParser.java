@@ -1,3 +1,23 @@
+/*
+ *     ALMA TDA - Contour tree based simplification and visualization for ALMA
+ *     data cubes.
+ *     Copyright (C) 2016 PAUL ROSEN
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *     You may contact the Paul Rosen at <prosen@usf.edu>.
+ */
 package usf.saav.alma.app;
 
 import usf.saav.alma.app.TDAInteractive.TreeDimension;
@@ -8,7 +28,10 @@ public class CmdlineParser {
 	boolean	interactive = false;
 	
 	public CmdlineParser( TDAExec exec, String [] args) {
-		exec.filename = args[args.length-1];
+		
+		if( !args[args.length-1].equalsIgnoreCase("interactive") ) {
+			exec.filename = args[args.length-1];
+		}
 				
 		for( String arg : args ){
 			if( arg.startsWith("dim=") ){
@@ -79,24 +102,23 @@ public class CmdlineParser {
 		System.out.println("Usage: java -jar ALMA-TDA.jar [options] input_file" );
 		System.out.println();
 		System.out.println("  Required:");
-		System.out.println("    input_file     ---  Input file in fits format.");
+		System.out.println("    input_file      ---  Input file in fits format.");
 		System.out.println();
 		System.out.println("  Options:");
-		System.out.println("    interactive    ---  Places the application into interactive mode.");
-		System.out.println("    dim=DIM_TYPE   ---  Type of contour tree to create. Options: 2D or 3D");
-		System.out.println("    x=RANGE        ---  Range of pixels in x direction. Valid options included single values and inclusive/exclusive ranges.");
-		System.out.println("    y=RANGE        ---  Range of pixels in y direction.");
-		System.out.println("    z=RANGE        ---  Range of pixels in z direction.");
-		System.out.println("    simplify=RANGE ---  Maximum persistence to simplify.");
-		System.out.println("    output=FILE    ---  The place to save the results.");
+		System.out.println("    dim=DIM_TYPE    ---  Type of contour tree to create. Options: 2D or 3D. (default: 2D)");
+		System.out.println("    x=RANGE         ---  Range of pixels in x direction. Valid options included single values and inclusive/exclusive ranges. (default: width of image)");
+		System.out.println("    y=RANGE         ---  Range of pixels in y direction. (default: height of image)");
+		System.out.println("    z=RANGE         ---  Range of pixels in z direction. (default: depth of image)");
+		System.out.println("    simplify=AMOUNT ---  Maximum persistence to simplify. (default: 0, no simplification)");
+		System.out.println("    output=FILE     ---  The place to save the results. (default: not saved)");
+		System.out.println("    interactive     ---  Places the application into interactive mode.");
 		System.out.println( );
 		System.out.println("  Example: ");
-		System.out.println("    java -jar ALMA-TDA.jar x=[0, 512) y=[0, 512) z=0 output=output.fits input.fits");
+		System.out.println("    java -jar ALMA-TDA.jar x=[0,512) y=[0,512) z=0 output=output.fits input.fits");
 		System.out.println();
 	}
 	
 	
-	@SuppressWarnings("incomplete-switch")
 	public static void printReproduce( TDAExec exec ) {
 		System.out.println();
 		System.out.println("To reproduce this result, run: ");
@@ -104,6 +126,7 @@ public class CmdlineParser {
 		System.out.print(" dim=");
 		switch(exec.treedim){
 			case DIM_2D: 		System.out.print("2D"); 	break;
+			case DIM_2D_STACK:	System.out.print("2D"); 	break;
 			case DIM_3D:		System.out.print("3D"); 	break;
 		}
 		System.out.print(" x=" + exec.xr.toString() + " y=" + exec.yr.toString() + " z=" + exec.zr.toString());
