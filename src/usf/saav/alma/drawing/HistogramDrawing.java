@@ -24,9 +24,9 @@ import usf.saav.scalarfield.ScalarField1D;
 import usf.saav.scalarfield.ScalarField2D;
 import usf.saav.scalarfield.ScalarField3D;
 import usf.saav.scalarfield.ScalarFieldND;
-import usf.saav.common.MathXv1;
-import usf.saav.common.MathXv1.Gaussian;
-import usf.saav.common.histogram.Histogram1D;
+import usf.saav.common.MathX;
+import usf.saav.common.MathX.Gaussian;
+import usf.saav.common.histogram.deprecated.Histogram1D;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
@@ -252,7 +252,7 @@ public class HistogramDrawing extends ViewComponent.Default implements ViewCompo
 		g.stroke(100,0,0);
 		g.beginShape( TGraphics.LINE_STRIP );
 		for( int i = 0; i <= 100; i++ ){
-			double x = MathXv1.lerp(range.getMinimum(),range.getMaximum(),(float)i/(float)100);
+			double x = MathX.lerp(range.getMinimum(),range.getMaximum(),(float)i/(float)100);
 			double y = norm_dist.get(x)/norm_dist.get( norm_dist.getMean() );
 			double px = winX.interpolate( (float) range.getNormalized(x) );
 			double py = winY.interpolate( (float) (1-y) );

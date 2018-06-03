@@ -31,9 +31,9 @@ import usf.saav.alma.data.processors.Subset2D;
 import usf.saav.alma.drawing.HistogramDrawing;
 import usf.saav.alma.drawing.ScalarFieldDrawing;
 import usf.saav.alma.drawing.SelectBoxDrawing;
-import usf.saav.common.MathXv1;
+import usf.saav.common.MathX;
 import usf.saav.common.colormap.DivergentColormap;
-import usf.saav.common.monitor.MonitoredObject;
+import usf.saav.common.monitoredvariables.MonitoredObject;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.DefaultGLPanel;
 import usf.saav.common.mvc.PositionedComponent;
@@ -245,8 +245,8 @@ public class AlmaGL extends DefaultGLPanel {
 					
 					ScalarField2D _sf2D = new Subset2D(tmpSlice,xr,yr);
 		 
-					int stepX = (int)MathXv1.nextLargerPowerOf2( 2.0 * (double)_sf2D.getWidth()  / (double)winX.length() );
-					int stepY = (int)MathXv1.nextLargerPowerOf2( 2.0 * (double)_sf2D.getHeight() / (double)winY.length() );
+					int stepX = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf2D.getWidth()  / (double)winX.length() );
+					int stepY = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf2D.getHeight() / (double)winY.length() );
 					
 					vol.addLayers( new Subsample2D( _sf2D, stepX, stepY ) );
 				}
@@ -265,8 +265,8 @@ public class AlmaGL extends DefaultGLPanel {
 				
 				ScalarField2D _sf2D = new Subset2D(tmpSlice,xr,yr);
 	 
-				int stepX = (int)MathXv1.nextLargerPowerOf2( 2.0 * (double)_sf2D.getWidth()  / (double)winX.length() );
-				int stepY = (int)MathXv1.nextLargerPowerOf2( 2.0 * (double)_sf2D.getHeight() / (double)winY.length() );
+				int stepX = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf2D.getWidth()  / (double)winX.length() );
+				int stepY = (int)MathX.nextLargerPowerOf2( 2.0 * (double)_sf2D.getHeight() / (double)winY.length() );
 				
 				view_sf2d.set( new Subsample2D( _sf2D, stepX, stepY ) );
 	

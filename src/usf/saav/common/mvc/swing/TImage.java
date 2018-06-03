@@ -29,7 +29,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
-import usf.saav.common.MathXv1;
+import usf.saav.common.MathX;
 
 public class TImage {
 
@@ -60,10 +60,10 @@ public class TImage {
 	}
 	public void set( int x, int y, int r, int g, int b, int a ){
 		
-		r = MathXv1.clamp(r, 0, 255);
-		g = MathXv1.clamp(g, 0, 255);
-		b = MathXv1.clamp(b, 0, 255);
-		a = MathXv1.clamp(a, 0, 255);
+		r = MathX.clamp(r, 0, 255);
+		g = MathX.clamp(g, 0, 255);
+		b = MathX.clamp(b, 0, 255);
+		a = MathX.clamp(a, 0, 255);
 		
 		int col = ((r&0xFF) << 16)
 				| ((g&0xFF) <<  8)

@@ -32,11 +32,11 @@ import usf.saav.alma.data.fits.RawFitsReader;
 import usf.saav.alma.data.fits.SafeFitsReader;
 import usf.saav.alma.util.CoordinateSystemController;
 import usf.saav.common.BasicObject;
-import usf.saav.common.monitor.MonitoredBoolean;
-import usf.saav.common.monitor.MonitoredDouble;
-import usf.saav.common.monitor.MonitoredEnum;
-import usf.saav.common.monitor.MonitoredInteger;
-import usf.saav.common.monitor.MonitoredTrigger;
+import usf.saav.common.monitoredvariables.MonitoredBoolean;
+import usf.saav.common.monitoredvariables.MonitoredDouble;
+import usf.saav.common.monitoredvariables.MonitoredEnum;
+import usf.saav.common.monitoredvariables.MonitoredTrigger;
+import usf.saav.common.monitoredvariables.MonitoredInteger;
 import usf.saav.common.range.IntRange1D;
 
 public class AlmaModel extends BasicObject {

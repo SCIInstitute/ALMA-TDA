@@ -22,9 +22,9 @@ package usf.saav.alma.util;
 
 import java.util.Vector;
 
-import usf.saav.common.Callback;
-import usf.saav.common.monitor.MonitoredDouble;
-import usf.saav.common.monitor.MonitoredInteger;
+import usf.saav.common.monitoredvariables.Callback;
+import usf.saav.common.monitoredvariables.MonitoredDouble;
+import usf.saav.common.monitoredvariables.MonitoredInteger;
 import usf.saav.common.mvc.ControllerComponent;
 
 // TODO: Auto-generated Javadoc

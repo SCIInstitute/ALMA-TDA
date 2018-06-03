@@ -48,7 +48,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
-import usf.saav.common.MathXv1;
+import usf.saav.common.MathX;
 import usf.saav.common.types.Float4;
 
 public abstract class TGraphics implements GLEventListener, MouseListener, MouseMotionListener, KeyListener, MouseWheelListener {
@@ -226,10 +226,10 @@ public abstract class TGraphics implements GLEventListener, MouseListener, Mouse
 
 	public static int color( int r, int g, int b, int a ){
 		
-		r = MathXv1.clamp(r, 0, 255);
-		g = MathXv1.clamp(g, 0, 255);
-		b = MathXv1.clamp(b, 0, 255);
-		a = MathXv1.clamp(a, 0, 255);
+		r = MathX.clamp(r, 0, 255);
+		g = MathX.clamp(g, 0, 255);
+		b = MathX.clamp(b, 0, 255);
+		a = MathX.clamp(a, 0, 255);
 		
 		int col = ((r&0xFF) << 16)
 				| ((g&0xFF) <<  8)

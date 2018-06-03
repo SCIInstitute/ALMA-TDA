@@ -22,7 +22,7 @@ package usf.saav.common.spline;
 
 import java.util.Vector;
 
-import usf.saav.common.MathXv1;
+import usf.saav.common.MathX;
 import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.types.Float2;
 
@@ -33,8 +33,8 @@ public abstract class LinearSpline extends Spline {
 	
 	@Override
 	public Float2 interpolate(float t) {
-		int idx0 = MathXv1.clamp( (int)(t * size() + 0), 0, size()-1 );
-		int idx1 = MathXv1.clamp( (int)(t * size() + 1), 0, size()-1 );
+		int idx0 = MathX.clamp( (int)(t * size() + 0), 0, size()-1 );
+		int idx1 = MathX.clamp( (int)(t * size() + 1), 0, size()-1 );
 		float off = (float) (t * size() - Math.floor( t * size() ));
 		return Float2.lerp( getControlPoint(idx0),  getControlPoint(idx1), off );	
 	}

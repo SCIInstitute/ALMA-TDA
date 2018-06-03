@@ -22,7 +22,7 @@ package usf.saav.common.colormap;
 
 import java.text.DecimalFormat;
 
-import usf.saav.common.MathXv1;
+import usf.saav.common.MathX;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.types.Float3;
@@ -68,7 +68,7 @@ public class SequentialColormap extends Colormap.VectorColormap {
 		g.textAlign(TGraphics.LEFT, TGraphics.BOTTOM);
 		float step = (float)h/40.0f;
 		for ( int i = 0; i <= 40; i++ ) {
-			float v = MathXv1.lerp( (float)br.getMinimum(), (float)br.getMaximum(), 1.0f - (float)i/40.0f );
+			float v = MathX.lerp( (float)br.getMinimum(), (float)br.getMaximum(), 1.0f - (float)i/40.0f );
 			Float4 col = getColor( v );
 			g.fill( col.GetRed(), col.GetGreen(), col.GetBlue(), 255 );
 
@@ -76,8 +76,8 @@ public class SequentialColormap extends Colormap.VectorColormap {
 		}
 
 		for( int j = 0; j <= 8; j++){
-			float i = MathXv1.lerp( 1.0f, 39.0f, (float)j/8.0f );
-			float v = MathXv1.lerp( (float)br.getMinimum(), (float)br.getMaximum(), 1.0f - (float)i/40.0f );
+			float i = MathX.lerp( 1.0f, 39.0f, (float)j/8.0f );
+			float v = MathX.lerp( (float)br.getMinimum(), (float)br.getMaximum(), 1.0f - (float)i/40.0f );
 			g.fill(0);
 			String txt = " " + new DecimalFormat("#.###").format(v); 
 			g.text( txt, (int)(loc_x+w), (int) (loc_y+10+(float)i*step*1.01));

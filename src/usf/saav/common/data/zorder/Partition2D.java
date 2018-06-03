@@ -20,7 +20,7 @@
  */
 package usf.saav.common.data.zorder;
 
-import usf.saav.common.MathXv1;
+import usf.saav.common.MathX;
 import usf.saav.common.algorithm.ZOrder;
 
 public class Partition2D {
@@ -37,7 +37,7 @@ public class Partition2D {
 		//long main_tile = MathX.nextSmallerPowerOf2( dim_size );
 		//long x_rem = MathX.nextLargerPowerOf2( sizeX - main_tile );
 		//long y_rem = MathX.nextLargerPowerOf2( sizeY - main_tile );
-		dim_size = Math.min( 1024,  MathXv1.nextLargerPowerOf2( Math.max(sizeX,sizeY) ) );
+		dim_size = Math.min( 1024,  MathX.nextLargerPowerOf2( Math.max(sizeX,sizeY) ) );
 		x_rep = (sizeX+dim_size-1)/dim_size;
 		y_rep = (sizeY+dim_size-1)/dim_size;
 		//System.out.println( dim_size );

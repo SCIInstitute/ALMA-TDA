@@ -30,7 +30,7 @@ import usf.saav.alma.data.processors.Subset1D;
 import usf.saav.alma.data.processors.Subset2D;
 import usf.saav.alma.data.processors.Subset3D;
 import usf.saav.common.BasicObject;
-import usf.saav.common.Callback;
+import usf.saav.common.monitoredvariables.Callback;
 import usf.saav.common.range.IntRange1D;
 import usf.saav.mesh.ConnectedComponentMesh;
 import usf.saav.mesh.Mesh;

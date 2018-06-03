@@ -20,7 +20,7 @@
  */
 package usf.saav.alma.drawing.VolumeRendering;
 
-import usf.saav.common.monitor.MonitoredTrigger;
+import usf.saav.common.monitoredvariables.MonitoredTrigger;
 import usf.saav.common.types.Float4;
 
 // TODO: Auto-generated Javadoc

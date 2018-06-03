@@ -23,8 +23,8 @@ package usf.saav.alma.drawing;
 import java.util.Set;
 
 import usf.saav.alma.util.CoordinateSystem;
-import usf.saav.common.MathXv1;
-import usf.saav.common.monitor.MonitoredInteger;
+import usf.saav.common.MathX;
+import usf.saav.common.monitoredvariables.MonitoredInteger;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.IntRange1D;
@@ -187,7 +187,7 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 				float [] pos = getComponentMidpoint( cl.get(n.getPosition()), sf );
 
 				if( selected.contains(i) ) g.strokeWeight(3);
-				float size = MathXv1.lerp(4,10,per/maxPersistence);
+				float size = MathX.lerp(4,10,per/maxPersistence);
 				if( Float.isNaN(size) ) size = 4;
 				if( size > 10 ) size = 10;
 

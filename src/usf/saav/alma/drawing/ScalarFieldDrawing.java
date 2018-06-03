@@ -153,7 +153,12 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 		int i = 0;
 		for(int h = 0; h < sf.getHeight(); h++){
 			for(int w = 0; w < sf.getWidth(); w++){
-				Float4 c = colormap.getColor( sf.getValue(i) );
+				float v = sf.getValue(i);
+				
+				Float4 c = colormap.getColor( v );
+				if( Float.isNaN(v) ) c = new Float4(1,0,1,1);
+				else if( Float.isInfinite(v) ) c = new Float4(1,1,0,1);
+				else System.out.print(v + " " );
 				img.set( w, h, c.x,c.y,c.z,c.w );
 				//img.set( w, h, c.x*255,c.y*255,c.z*255,c.w*255 );
 				//System.out.print(c + " ");
@@ -161,7 +166,9 @@ public class ScalarFieldDrawing extends ViewComponent.Default implements ViewCom
 				//img.pixels[i] = TGraphics.color(c.x,c.y,c.z,c.w);
 				i++;
 			}
+			System.out.println();
 		}
+		System.out.println();
 		return img;
 	}
 	

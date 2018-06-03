@@ -23,7 +23,7 @@ package usf.saav.alma.drawing;
 import java.util.Vector;
 
 import usf.saav.alma.util.CoordinateSystem;
-import usf.saav.common.Callback;
+import usf.saav.common.monitoredvariables.Callback;
 import usf.saav.common.mvc.ControllerComponent;
 import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;

@@ -20,7 +20,7 @@
  */
 package usf.saav.alma.util;
 
-import usf.saav.common.histogram.Histogram1D;
+import usf.saav.common.histogram.deprecated.Histogram1D;
 import usf.saav.common.range.FloatRange1D;
 import usf.saav.scalarfield.ScalarField2D;
 

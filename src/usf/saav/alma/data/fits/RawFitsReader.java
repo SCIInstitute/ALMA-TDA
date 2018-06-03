@@ -79,10 +79,12 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		fits = new Fits( file );
 
 		for(BasicHDU<?> header : fits.read() ){
-
 			if( header instanceof ImageHDU ){
 
 				ImageHDU img = (ImageHDU)header;
+
+				if( !("FLUX").equals(img.getHeader().getStringValue("EXTNAME")) ) continue;
+				
 				int [] axes;
 				axes = img.getAxes();
 				nAxis = axes.length;
