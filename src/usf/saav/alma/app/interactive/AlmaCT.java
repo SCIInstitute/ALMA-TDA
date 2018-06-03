@@ -40,7 +40,7 @@ import usf.saav.scalarfield.PersistenceSimplifier3D;
 import usf.saav.scalarfield.ScalarField2D;
 import usf.saav.scalarfield.ScalarField3D;
 import usf.saav.topology.TopoTree;
-import usf.saav.topology.contour.PseudoContourTree;
+import usf.saav.topology.PseudoContourTree;
 
 public class AlmaCT extends BasicObject {
 	private ContourTreeDrawing		  ctv;

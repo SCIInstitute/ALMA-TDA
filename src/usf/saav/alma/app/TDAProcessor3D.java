@@ -29,7 +29,7 @@ import usf.saav.mesh.ConnectedComponentMesh;
 import usf.saav.mesh.ScalarFieldMesh;
 import usf.saav.scalarfield.PersistenceSimplifier3D;
 import usf.saav.scalarfield.ScalarField3D;
-import usf.saav.topology.contour.PseudoContourTree;
+import usf.saav.topology.PseudoContourTree;
 
 public class TDAProcessor3D extends BasicObject {
 

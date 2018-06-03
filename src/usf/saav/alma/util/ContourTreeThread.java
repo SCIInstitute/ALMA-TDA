@@ -36,7 +36,7 @@ import usf.saav.mesh.ConnectedComponentMesh;
 import usf.saav.mesh.Mesh;
 import usf.saav.mesh.ScalarFieldMesh;
 import usf.saav.topology.TopoTree;
-import usf.saav.topology.contour.PseudoContourTree;
+import usf.saav.topology.PseudoContourTree;
 
 // TODO: Auto-generated Javadoc
 /**
